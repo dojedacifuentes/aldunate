@@ -190,3 +190,79 @@ en un widget de dashboard.
 Menor escaneabilidad instantánea del estado. Se compensa con orden: los ítems se
 ordenan por relevancia y año, y el estado aparece siempre en la misma posición de
 la tarjeta.
+
+---
+
+## ADR-005 — Máscaras por `mask-position`, no por centro del degradado
+
+**Fecha:** 2026-08-29
+**Estado:** Aceptada
+
+### Decisión
+
+El revelado por cursor mantiene el degradado radial **fijo** y anima
+`mask-position`. La luz propiamente dicha va un paso más allá: es un elemento
+hijo de tamaño fijo movido con `translate3d`.
+
+### Motivo
+
+La forma intuitiva de escribirlo es
+`radial-gradient(500px circle at var(--mx) var(--my), …)`. Eso obliga al
+navegador a **regenerar y rasterizar el degradado en cada frame**, sobre un
+elemento a pantalla completa. Es el camino directo a perder los 60 fps en
+pantallas grandes.
+
+Dejando el degradado quieto y desplazando su posición, se rasteriza una vez.
+En el caso de la luz, un `translate3d` se compone en GPU y no repinta nada.
+
+### Alternativas consideradas
+
+- **`at var(--mx) var(--my)`.** Rechazada por coste de repintado.
+- **Sólo `mix-blend-mode` sin máscaras.** Más barato todavía, pero un
+  `screen` uniforme ilumina también los huecos entre curvas: produce el
+  "círculo evidente siguiendo al ratón" que el brief prohíbe, en vez de hacer
+  aparecer las líneas.
+
+### Consecuencia
+
+El código es menos obvio de leer, y por eso está explicado en
+`INTERACTION-SYSTEM.md § 7`. Como las capas iluminadas viven dentro de los
+contenedores de paralaje, el área revelada se desfasa hasta 13 px respecto del
+cursor; a ese tamaño de luz (520 px de radio) es imperceptible.
+
+---
+
+## ADR-006 — El guardián de rendimiento descarta los frames estrangulados
+
+**Fecha:** 2026-08-29
+**Estado:** Aceptada
+
+### Decisión
+
+El guardián que degrada el hero (`is-lowfx`) ignora cualquier frame de más de
+`perf.stallMs` (120 ms) en lugar de promediarlo.
+
+### Motivo
+
+Detectado durante la verificación: en un panel de previsualización el navegador
+estranguló `requestAnimationFrame` a ~1 fps. Con la media simple, el guardián
+habría concluido "esta máquina no puede" y retirado las máscaras de forma
+**permanente** — degradando el hero por un motivo que no tiene nada que ver ni
+con la máquina ni con el hero.
+
+Los mismos frames anómalos aparecen con la pestaña en segundo plano, la ventana
+oculta o el depurador detenido.
+
+### Alternativas consideradas
+
+- **Medir sólo cuando `document.visibilityState === 'visible'`.** No cubre el
+  caso: en la prueba la pestaña se declaraba visible y aun así estaba
+  estrangulada.
+- **Permitir que el estado degradado se revierta.** Añade oscilación: el hero
+  entraría y saldría de modo reducido a mitad de uso.
+
+### Consecuencia
+
+Una máquina genuinamente lenta que produzca frames de más de 120 ms (menos de
+8 fps) no se detecta. Es un caso en el que el problema de rendimiento ya no está
+en el hero.

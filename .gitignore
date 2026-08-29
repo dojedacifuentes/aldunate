@@ -19,3 +19,6 @@ Desktop.ini
 node_modules/
 dist/
 .cache/
+
+# Previsualizaciones temporales de trabajo
+_preview-*.html
