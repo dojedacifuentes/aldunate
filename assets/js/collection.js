@@ -205,7 +205,10 @@ DL.collection = (function () {
     dialog.addEventListener('close', function () {
       dialog.innerHTML = '';
       try {
-        history.replaceState(null, '', location.pathname + location.search);
+        // Se recorta el hash de la URL actual en lugar de reconstruirla desde
+        // pathname + search: bajo file:// la ruta viene codificada (%20 en el
+        // nombre de la carpeta) y rehacerla a mano la deforma.
+        history.replaceState(null, '', location.href.split('#')[0]);
       } catch (e) { /* ídem */ }
     });
   }

@@ -42,3 +42,25 @@ Cambios relevantes por sesión. No se registran cambios triviales.
 - El contenido de `/data/` es **material de ejemplo (PLACEHOLDER)**.
 - La dirección `hola@diogeneslab.cl` es un **PLACEHOLDER** presente en el
   marcado de las 5 páginas.
+
+### Fixed — accesibilidad
+- `--ink-040` pasa de `#5E686D` a `#747F84`. Es el color de toda la tipografía
+  mono a 11px, y a 3.53:1 no alcanzaba el 4.5:1 que exige la AA para texto
+  pequeño. Ahora da 4.91:1 sobre el fondo del documento y 4.53:1 sobre la
+  superficie más clara del sistema.
+- `--ink-020` pasa de `#39423F` a `#545F64`: sube a 3.07:1 (mínimo AA para
+  texto grande) y vuelve a la familia de grises fríos — el valor anterior era
+  verdoso, fuera del sistema.
+- `.card__year` deja de usar `--ink-020`: es información y se muestra a 11px,
+  así que necesita `--ink-040`.
+- Al cerrar la ficha, la URL se limpia recortando el hash de `location.href` en
+  vez de reconstruirla desde `pathname + search`, que bajo `file://` deforma
+  las rutas con caracteres codificados.
+
+### Verificado
+- 5 páginas sin errores de consola; 26 assets comprobados, ningún enlace roto.
+- Sin desbordamiento horizontal en 375px ni en escritorio.
+- Contraste medido en navegador: todo el texto cumple AA.
+- Foco: la ficha atrapa el foco y lo devuelve al cerrarse.
+- Móvil: menú abre/cierra con `Esc`; luz, máscaras y campo semántico se
+  desactivan por CSS.

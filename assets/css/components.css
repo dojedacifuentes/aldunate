@@ -216,7 +216,9 @@
   padding-top: var(--sp-4);
 }
 
-.card__year { color: var(--ink-020); }
+/* El año es información, y va a 11px: necesita --ink-040, no --ink-020
+   (que sólo cumple contraste a partir de 24px). */
+.card__year { color: var(--ink-040); }
 
 .card:hover .arrow { color: var(--accent); }
 .card:hover .arrow svg { transform: translateX(4px); }

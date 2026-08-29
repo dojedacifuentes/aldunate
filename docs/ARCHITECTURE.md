@@ -22,7 +22,7 @@ tres secciones y se revela progresivamente.
 | Marcado | HTML5 estático, multi-página | 5 páginas, sin plantillas |
 | Estilos | CSS moderno (custom properties, `clamp()`, grid) | 6 hojas, sin preprocesador |
 | Comportamiento | JavaScript ES2019, scripts clásicos con `defer` | sin módulos, sin bundler |
-| Gráfica del hero | SVG inline + capas CSS | ver `INTERACTION-SYSTEM.md` |
+| Gráfica del hero | 3 SVG estáticos + capas CSS | generados; ver `INTERACTION-SYSTEM.md` |
 | Datos | Objetos JS planos en `/data/*.js` | ver §6 |
 | Dependencias | **ninguna** | sólo 2 webfonts de Google Fonts |
 | Build | **ninguno** | se despliega copiando la carpeta |
@@ -48,7 +48,7 @@ todo lo demás — degradación, no rotura.
 ├── sobre.html              Sobre el Lab (portal 04, fuera del nav principal)
 │
 ├── data/                   ← capa de contenido: es lo único que se edita a diario
-│   ├── site.js               metadatos del sitio, campo semántico, enlaces
+│   ├── site.js               campo semántico del hero (el correo NO está aquí)
 │   ├── projects.js           Lab
 │   ├── knowledge.js          Conocimiento
 │   └── training.js           Formación
@@ -70,7 +70,10 @@ todo lo demás — degradación, no rotura.
 │   │   ├── reveal.js         aparición en scroll (IntersectionObserver)
 │   │   ├── hero-field.js     bucle rAF: cursor, inercia, paralaje, revelado
 │   │   └── main.js           arranque por página
-│   └── img/                  (vacío por ahora — ver §7)
+│   └── img/
+│       ├── field-back.svg    capas del relieve del hero.
+│       ├── field-mid.svg     GENERADAS: no editar a mano,
+│       └── field-front.svg   regenerar con tools/generate-field.ps1
 │
 ├── docs/
 │   ├── ARCHITECTURE.md       este fichero
@@ -80,7 +83,8 @@ todo lo demás — degradación, no rotura.
 │   └── CHANGELOG.md          cambios por sesión
 │
 ├── tools/
-│   └── serve.ps1             servidor estático local, sin dependencias
+│   ├── serve.ps1             servidor estático local, sin dependencias
+│   └── generate-field.ps1    regenera assets/img/field-*.svg
 │
 ├── .nojekyll                 para despliegue en GitHub Pages
 └── README.md
@@ -114,7 +118,7 @@ el footer y desde enlaces contextuales.
 
 1. Hero
 2. Cuatro portales al ecosistema
-3. Selección destacada (`featured: true`, máximo 3)
+3. Selección destacada (`featured: true`, máximo 4, mezclando las tres colecciones)
 4. Identidad / propósito breve
 5. Footer
 
@@ -196,9 +200,18 @@ aparecer su filtro solo; no hay que tocar el HTML.
 
 ## 7. Imágenes
 
-`assets/img/` está vacío a propósito. El diseño **no depende de imágenes**: las
-tarjetas sin `image` usan una cifra de índice y una regla tipográfica. Si más
-adelante se añaden imágenes, el campo `image` ya está soportado en el renderizado.
+`assets/img/` contiene **sólo** las tres capas generadas del relieve del hero.
+No hay fotografía ni ilustración en ninguna parte del sitio, y es deliberado:
+el diseño **no depende de imágenes**. Ninguna tarjeta lleva miniatura; el peso
+visual lo llevan la tipografía y los filetes.
+
+Los tres `field-*.svg` son **artefactos generados**. No se editan a mano: se
+cambian los parámetros de la cabecera de `tools/generate-field.ps1` y se
+regeneran. Están versionados en git, así que el sitio no depende del script para
+funcionar.
+
+El campo `image` del esquema de datos está soportado en el renderizado por si
+alguna vez hace falta, pero hoy no lo usa ningún ítem.
 
 ---
 

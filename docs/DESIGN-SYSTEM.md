@@ -47,8 +47,8 @@ profundidad óptica en pantallas OLED y en paneles IPS por igual.
 | `--ink-100` | `#F3F0EA` | títulos, blanco cálido — nunca `#FFF` |
 | `--ink-080` | `#C9CDCF` | cuerpo de texto principal |
 | `--ink-060` | `#8E979B` | descripciones secundarias |
-| `--ink-040` | `#5E686D` | metadatos, mono, etiquetas |
-| `--ink-020` | `#39423F` | texto desactivado |
+| `--ink-040` | `#747F84` | **toda** la tipografía mono: metadatos, estados, años, eyebrows |
+| `--ink-020` | `#545F64` | **sólo** texto grande (≥24px): la numeración de los portales |
 
 El blanco es **cálido** (`#F3F0EA`) contra fondos **fríos**. Ese contraste de
 temperatura es la mitad de la sofisticación percibida; el blanco puro sobre negro
@@ -72,17 +72,26 @@ punto, o luz. Si necesitas acento en un bloque, el diseño está mal.
 | `--line` | `rgba(243,240,234,.10)` |
 | `--line-strong` | `rgba(243,240,234,.18)` |
 
-### Contraste (verificado)
+### Contraste (medido en navegador, 2026-08-29)
 
 | Combinación | Ratio | AA |
 |---|---|---|
-| `--ink-100` sobre `--bg-010` | 16.8:1 | ✅ |
-| `--ink-080` sobre `--bg-010` | 11.4:1 | ✅ |
-| `--ink-060` sobre `--bg-010` | 5.9:1 | ✅ texto normal |
-| `--ink-040` sobre `--bg-010` | 3.2:1 | ✅ sólo ≥18.66px o ≥14px bold, y sólo metadatos |
-| `--accent` sobre `--bg-010` | 10.1:1 | ✅ |
+| `--ink-100` sobre `--bg-010` | 17.74:1 | ✅ |
+| `--ink-080` sobre `--bg-010` | 12.60:1 | ✅ |
+| `--ink-060` sobre `--bg-010` | 6.77:1 | ✅ texto normal |
+| `--ink-060` sobre `--bg-020` | 6.45:1 | ✅ tarjeta en hover |
+| `--ink-040` sobre `--bg-010` | 4.91:1 | ✅ texto normal |
+| `--ink-040` sobre `--bg-030` | 4.53:1 | ✅ el caso peor: ficha de detalle |
+| `--ink-020` sobre `--bg-010` | 3.07:1 | ✅ **sólo** texto grande |
+| `--accent` sobre `--bg-010` | 11.96:1 | ✅ |
 
-`--ink-020` es decorativo: nunca lleva información que no esté disponible en otro sitio.
+Dos reglas que se derivan de esta tabla y conviene no romper:
+
+1. **`--ink-040` no puede oscurecerse.** Es el color de toda la mono a 11px, y a
+   ese tamaño la AA exige 4.5:1. El valor está elegido para cumplirlo incluso
+   sobre `--bg-030`, la superficie más clara del sistema.
+2. **`--ink-020` sólo vale a partir de 24px.** Hoy lo usa únicamente
+   `.portal__num`. Si aparece en texto pequeño, es un error de contraste.
 
 ---
 

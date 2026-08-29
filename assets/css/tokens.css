@@ -18,8 +18,16 @@
   --ink-100: #f3f0ea;
   --ink-080: #c9cdcf;
   --ink-060: #8e979b;
-  --ink-040: #5e686d;
-  --ink-020: #39423f;
+
+  /* --ink-040 es el color de TODA la tipografía mono (11px): tipos, estados,
+     años, eyebrows. A ese tamaño la AA exige 4.5:1, así que este valor está
+     elegido para cumplirlo incluso sobre la superficie más clara del sistema
+     (--bg-030 → 4.53:1). No oscurecerlo. */
+  --ink-040: #747f84;
+
+  /* Sólo para texto grande (≥24px): la numeración de los portales.
+     3.07:1 sobre --bg-010, que es el mínimo AA para texto grande. */
+  --ink-020: #545f64;
 
   /* --- Acento único ------------------------------------------------------
      Cian desaturado. Nunca rellena áreas grandes: línea, punto o luz. */
