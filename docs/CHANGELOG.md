@@ -64,3 +64,14 @@ Cambios relevantes por sesión. No se registran cambios triviales.
 - Foco: la ficha atrapa el foco y lo devuelve al cerrarse.
 - Móvil: menú abre/cierra con `Esc`; luz, máscaras y campo semántico se
   desactivan por CSS.
+
+### Added — despliegue y traspaso
+- `vercel.json`: despliegue determinista sin build (`framework: null`,
+  `outputDirectory: "."`), cabeceras de seguridad y una CSP **verificada en
+  navegador con cero violaciones**. `cleanUrls` queda desactivado a propósito
+  para que los enlaces `.html` sigan siendo válidos también con doble clic y en
+  GitHub Pages.
+- `docs/GUIA-RAPIDA.md`: comandos y tareas frecuentes, para el dueño del sitio.
+- `docs/HANDOFF.md`: documento de traspaso — restricciones del entorno, estado
+  verificado y no verificado, trampas ya descubiertas, qué falta y cómo
+  comprobar que nada se rompió.

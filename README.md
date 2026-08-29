@@ -48,6 +48,7 @@ El esquema completo de campos está en
 | Documento | Responde a |
 |---|---|
 | [`docs/GUIA-RAPIDA.md`](docs/GUIA-RAPIDA.md) | **empieza aquí** — comandos y tareas frecuentes |
+| [`docs/HANDOFF.md`](docs/HANDOFF.md) | **para quien continúe el trabajo** — estado, trampas y pendientes |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | qué hay, dónde, y por qué está ahí |
 | [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) | color, tipografía, espacio, reglas de animación |
 | [`docs/INTERACTION-SYSTEM.md`](docs/INTERACTION-SYSTEM.md) | el hero al detalle + parámetros ajustables |
@@ -70,3 +71,15 @@ Copiar la carpeta a cualquier hosting estático. No hay comando de build.
 > Ante espectacularidad vs. claridad → claridad.
 > Ante complejidad técnica vs. estabilidad → estabilidad.
 > Ante cantidad de información vs. navegación → mostrar menos y revelar progresivamente.
+
+---
+
+## Desplegar en Vercel
+
+`vercel.json` ya está configurado: sin build, con cabeceras de seguridad.
+
+1. <https://vercel.com/new> → **Import Git Repository** → `dojedacifuentes/aldunate`
+2. No cambiar nada (Framework **Other**, Build Command vacío).
+3. **Deploy.**
+
+Cada `git push` a `main` vuelve a desplegar solo.
