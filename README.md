@@ -47,6 +47,7 @@ El esquema completo de campos está en
 
 | Documento | Responde a |
 |---|---|
+| [`docs/GUIA-RAPIDA.md`](docs/GUIA-RAPIDA.md) | **empieza aquí** — comandos y tareas frecuentes |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | qué hay, dónde, y por qué está ahí |
 | [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) | color, tipografía, espacio, reglas de animación |
 | [`docs/INTERACTION-SYSTEM.md`](docs/INTERACTION-SYSTEM.md) | el hero al detalle + parámetros ajustables |
