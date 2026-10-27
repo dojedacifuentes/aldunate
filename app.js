@@ -9,6 +9,10 @@ if (captura) document.documentElement.classList.add('quieto');
 const raiz = document.documentElement;
 try { const t = localStorage.getItem('panel:tema'); if (t) raiz.dataset.tema = t; } catch {}
 if (location.search.includes('oscuro')) raiz.dataset.tema = 'oscuro';
+raiz.dataset.estilo = 'vidrio';
+try { const e = localStorage.getItem('panel:estilo'); if (e) raiz.dataset.estilo = e; } catch {}
+if (location.search.includes('vidrio')) raiz.dataset.estilo = 'vidrio';
+if (location.search.includes('plano')) raiz.dataset.estilo = 'plano';
 
 /* ---------- Íconos de línea ---------- */
 const I = (d, w = 20) => `<svg class="icono" width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
@@ -34,6 +38,7 @@ const IC = {
   racha: '<path d="M12 3c1 3 4 4.5 4 9a4 4 0 0 1-8 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 0-8z"/>',
   ok: '<path d="m5 12 5 5 9-10"/>',
   enviar: '<path d="M4 12 20 4l-6 16-3-7z"/>',
+  capas: '<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>',
   enlace: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
 };
 
@@ -62,7 +67,25 @@ $('.marca').addEventListener('pointermove', (e) => {
   escLat.firstElementChild.style.transform = `rotateY(${x * 40}deg) rotateX(${-y * 30}deg)`;
 });
 $('.marca').addEventListener('pointerleave', () => { escLat.firstElementChild.style.transform = ''; });
-$('#marca-tel').innerHTML = `${escudo('var(--rojo)', 'var(--rojo)', false)}<span>Derecho PUCV<small>con EVA</small></span>`;
+// Detrás del vidrio: el escudo en línea fina, grande y flotando, para que el esmerilado tenga qué difuminar.
+$('#fondo-vidrio').insertAdjacentHTML('beforeend', `<svg viewBox="-20 -20 870 1130"><g fill="none" stroke="var(--rojo)" stroke-width="6" stroke-linejoin="round">
+  <path d="${E.exterior}"/><path d="${E.campo}" stroke-width="2"/><path d="${E.escudete}"/></g>
+  <g fill="none" stroke="var(--rojo)" stroke-width="5">${[270, 415, 560].map((x) => `<path d="${cruz(x, 212)}"/>`).join('')}</g></svg>`);
+$('#marca-tel').innerHTML =`${escudo('var(--rojo)', 'var(--rojo)', false)}<span>Derecho PUCV<small>con EVA</small></span>`;
+
+// El borde de luz del vidrio toma su ángulo de la posición del puntero, como la luz del efecto Glass de Figma.
+if (!quieto) {
+  let pendiente = false;
+  addEventListener('pointermove', (e) => {
+    if (pendiente || raiz.dataset.estilo !== 'vidrio') return;
+    pendiente = true;
+    requestAnimationFrame(() => {
+      const a = Math.atan2(e.clientY - innerHeight / 2, e.clientX - innerWidth / 2) * 180 / Math.PI + 270;
+      raiz.style.setProperty('--luz', a.toFixed(0) + 'deg');
+      pendiente = false;
+    });
+  });
+}
 
 /* ---------- Datos ---------- */
 const COLORES = ['#a81916', '#1f4e9c', '#c98a12', '#2d7d46', '#6b3fa0', '#d9661f', '#2b8ec0', '#8a6d3b'];
@@ -101,6 +124,14 @@ const pintarTema = () => {
   $('#tema').setAttribute('aria-label', osc ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
 };
 pintarTema();
+$('#estilo').innerHTML = I(IC.capas);
+const pintarEstilo = () => $('#estilo').setAttribute('aria-label', raiz.dataset.estilo === 'vidrio' ? 'Cambiar a estilo plano' : 'Cambiar a estilo vidrio');
+pintarEstilo();
+$('#estilo').addEventListener('click', () => {
+  raiz.dataset.estilo = raiz.dataset.estilo === 'vidrio' ? 'plano' : 'vidrio';
+  try { localStorage.setItem('panel:estilo', raiz.dataset.estilo); } catch {}
+  pintarEstilo();
+});
 $('#tema').addEventListener('click', () => {
   raiz.dataset.tema = raiz.dataset.tema === 'oscuro' ? 'claro' : 'oscuro';
   try { localStorage.setItem('panel:tema', raiz.dataset.tema); } catch {}

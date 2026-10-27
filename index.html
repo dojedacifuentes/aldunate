@@ -310,9 +310,98 @@ main { min-width: 0; }
   *, *::before, *::after { animation-duration: .001s !important; animation-iteration-count: 1 !important; transition-duration: .001s !important; }
 }
 .quieto *, .quieto *::before, .quieto *::after { animation-duration: .001s !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .001s !important; }
+
+/* ---------- Estilo «vidrio» ----------
+   Técnicas: receta Acrylic de Fluent (desenfoque + tinte + grano), regla de Apple Liquid Glass (vidrio claro para la
+   navegación, material más opaco para el contenido, sin vidrio sobre vidrio, tinte sólo en la acción principal) y el
+   borde de luz del efecto Glass de Figma, cuyo ángulo sigue al puntero. */
+.fondo-vidrio { display: none; }
+:root[data-estilo="vidrio"] {
+  --fondo: #eeeceb; --panel: rgba(255,255,255,.76); --nav: rgba(255,255,255,.50); --suave: rgba(255,255,255,.46);
+  --borde: rgba(255,255,255,.70); --linea: rgba(20,20,20,.09);
+  --sombra: 0 10px 32px rgba(70,12,12,.08), inset 0 1px 0 rgba(255,255,255,.9);
+  --lateral: rgba(150,20,18,.84); --lateral-2: rgba(255,255,255,.88);
+  --vidrio: blur(22px) saturate(170%); --vidrio-nav: blur(16px) saturate(180%);
+  --brillo: rgba(255,255,255,.95); --brillo-2: rgba(255,255,255,.35);
+  --grano: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+:root[data-estilo="vidrio"][data-tema="oscuro"] {
+  --fondo: #050505; --panel: rgba(24,24,24,.70); --nav: rgba(28,28,28,.46); --suave: rgba(255,255,255,.05);
+  --borde: rgba(255,255,255,.10); --linea: rgba(255,255,255,.08);
+  --sombra: 0 10px 32px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.07);
+  --lateral: rgba(14,14,14,.58); --lateral-2: #b4b4b0;
+  --brillo: rgba(255,255,255,.30); --brillo-2: rgba(255,255,255,.06);
+}
+:root[data-estilo="vidrio"] body { background: var(--fondo); }
+:root[data-estilo="vidrio"] .fondo-vidrio { display: block; position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.fondo-vidrio i { position: absolute; border-radius: 50%; filter: blur(70px); animation: deriva 26s ease-in-out infinite alternate; }
+.fondo-vidrio i:nth-child(1) { width: 620px; height: 620px; left: 8%; top: -180px; background: rgba(168,25,22,.26); }
+.fondo-vidrio i:nth-child(2) { width: 520px; height: 520px; right: -120px; top: 30%; background: rgba(214,120,96,.24); animation-duration: 32s; animation-delay: -8s; }
+.fondo-vidrio i:nth-child(3) { width: 460px; height: 460px; left: 34%; bottom: -220px; background: rgba(110,16,30,.20); animation-duration: 38s; animation-delay: -14s; }
+:root[data-tema="oscuro"] .fondo-vidrio i:nth-child(1) { background: rgba(229,89,78,.30); }
+:root[data-tema="oscuro"] .fondo-vidrio i:nth-child(2) { background: rgba(150,30,40,.34); }
+:root[data-tema="oscuro"] .fondo-vidrio i:nth-child(3) { background: rgba(229,89,78,.16); }
+.fondo-vidrio svg { position: absolute; right: -3%; top: 62%; height: 96vh; transform: translateY(-50%) rotateY(-18deg); opacity: .24; animation: flota 18s ease-in-out infinite alternate; }
+:root[data-tema="oscuro"] .fondo-vidrio svg { opacity: .4; }
+.fondo-vidrio .rejilla-f { position: absolute; inset: 0; background-image: linear-gradient(var(--linea) 1px, transparent 1px), linear-gradient(90deg, var(--linea) 1px, transparent 1px); background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at 60% 40%, #000 20%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse at 60% 40%, #000 20%, transparent 75%); }
+@keyframes deriva { to { transform: translate(80px, 60px) scale(1.12); } }
+@keyframes flota { to { transform: translateY(-47%) rotateY(-6deg); } }
+
+/* Contenido: material más opaco, con grano. Navegación y controles: vidrio más claro. */
+:root[data-estilo="vidrio"] :is(.caja, .sesion, .seccion-datos div, .checks label) {
+  -webkit-backdrop-filter: var(--vidrio); backdrop-filter: var(--vidrio); background-image: var(--grano);
+}
+:root[data-estilo="vidrio"] :is(.cabecera, .lateral, .abajo-tel, .buscador, .redondo, .perfil, .mods button, .filtros button, .btn:not(.lleno):not(.suave)) {
+  -webkit-backdrop-filter: var(--vidrio-nav); backdrop-filter: var(--vidrio-nav); background-image: var(--grano);
+}
+:root[data-estilo="vidrio"] :is(.cabecera, .abajo-tel, .buscador, .redondo, .perfil, .mods button:not([aria-selected="true"]), .filtros button:not([aria-pressed="true"]), .btn:not(.lleno):not(.suave)) { background-color: var(--nav); }
+:root[data-estilo="vidrio"] .lateral { background-color: var(--lateral); border-right: 1px solid rgba(255,255,255,.22); }
+/* Sin vidrio sobre vidrio: lo que flota encima (el desplegable) es casi opaco. */
+:root[data-estilo="vidrio"] .lista-cursos { background: var(--panel); -webkit-backdrop-filter: blur(30px); backdrop-filter: blur(30px); }
+:root[data-estilo="vidrio"][data-tema="claro"] .lista-cursos { background: rgba(255,255,255,.94); }
+:root[data-estilo="vidrio"] :is(.caja, .sesion, .mods button) { border-radius: 16px; }
+
+/* Borde de luz: un filo de 1 px más brillante del lado de donde viene la luz. */
+:root[data-estilo="vidrio"] :is(.caja, .sesion, .mods button, .redondo, .perfil, .buscador):not(.lado) { position: relative; }
+:root[data-estilo="vidrio"] :is(.caja, .sesion, .mods button, .redondo, .perfil, .buscador)::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(var(--luz, 135deg), var(--brillo), var(--brillo-2) 35%, transparent 60%, var(--brillo-2));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+:root[data-estilo="vidrio"] .btn.lleno { box-shadow: 0 6px 18px rgba(168,25,22,.28), inset 0 1px 0 rgba(255,255,255,.28); }
+:root[data-estilo="vidrio"] .btn.suave { background: rgba(168,25,22,.10); -webkit-backdrop-filter: var(--vidrio-nav); backdrop-filter: var(--vidrio-nav); }
+:root[data-estilo="vidrio"][data-tema="oscuro"] .btn.suave { background: rgba(229,89,78,.14); }
+:root[data-estilo="vidrio"] .mensajes { background: transparent; }
+:root[data-estilo="vidrio"] :is(.cuerpo .in, .pestanas, .conv header, .enviar, .tabla td, .conv-lista) { border-color: var(--linea); }
+:root[data-estilo="vidrio"] .pista { background: rgba(0,0,0,.06); border-color: transparent; }
+:root[data-estilo="vidrio"][data-tema="oscuro"] .pista { background: rgba(255,255,255,.07); }
+:root[data-estilo="vidrio"] .progreso { background: rgba(0,0,0,.07); }
+:root[data-estilo="vidrio"][data-tema="oscuro"] .progreso { background: rgba(255,255,255,.08); }
+:root[data-estilo="vidrio"] .mini { background: rgba(14,14,14,.88); }
+:root[data-estilo="vidrio"] .dato .ic { background: rgba(168,25,22,.10); }
+@media (max-width: 860px) {
+  :root[data-estilo="vidrio"] { --vidrio: blur(14px) saturate(160%); --vidrio-nav: blur(12px) saturate(170%); }
+  .fondo-vidrio svg { right: -30%; top: 78%; height: 72vh; opacity: .16; }
+}
+
+/* Quien pide menos transparencia, o un navegador sin desenfoque, recibe superficies sólidas. */
+@media (prefers-reduced-transparency: reduce) {
+  :root[data-estilo="vidrio"] { --panel: #fff; --nav: #fff; --suave: #f6f6f4; --borde: #e2e1dc; --lateral: #a81916; }
+  :root[data-estilo="vidrio"][data-tema="oscuro"] { --panel: #0f0f0f; --nav: #0f0f0f; --suave: #171716; --borde: #262624; --lateral: #0a0a0a; }
+  :root[data-estilo="vidrio"] * { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  :root[data-estilo="vidrio"] .fondo-vidrio { display: none; }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root[data-estilo="vidrio"] { --panel: rgba(255,255,255,.94); --nav: rgba(255,255,255,.9); }
+  :root[data-estilo="vidrio"][data-tema="oscuro"] { --panel: rgba(18,18,18,.95); --nav: rgba(18,18,18,.92); }
+}
+@media (forced-colors: active) { .fondo-vidrio { display: none !important; } }
 </style>
 </head>
 <body>
+<div class="fondo-vidrio" id="fondo-vidrio" aria-hidden="true"><i></i><i></i><i></i><span class="rejilla-f"></span></div>
 <div class="app">
   <aside class="lateral" aria-label="Menú">
     <a class="marca" href="#inicio" aria-label="Derecho PUCV, inicio">
@@ -331,6 +420,7 @@ main { min-width: 0; }
       <label class="buscador"><span id="ic-buscar"></span><input id="buscar" placeholder="Buscar cursos, videocápsulas o términos" aria-label="Buscar"><kbd>Ctrl K</kbd></label>
       <div class="der">
         <button class="redondo solo-pc" id="ayuda" aria-label="Ayuda"></button>
+        <button class="redondo" id="estilo" aria-label="Cambiar a estilo vidrio" title="Estilo: plano o vidrio"></button>
         <button class="redondo" id="tema" aria-label="Cambiar a modo oscuro"></button>
         <span class="perfil" title="No hay cuentas: tu nombre se guarda sólo en este navegador">
           <span class="ini">Tú</span>
