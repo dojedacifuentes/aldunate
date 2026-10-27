@@ -10,9 +10,6 @@ const raiz = document.documentElement;
 try { const t = localStorage.getItem('panel:tema'); if (t) raiz.dataset.tema = t; } catch {}
 if (location.search.includes('oscuro')) raiz.dataset.tema = 'oscuro';
 raiz.dataset.estilo = 'vidrio';
-try { const e = localStorage.getItem('panel:estilo'); if (e) raiz.dataset.estilo = e; } catch {}
-if (location.search.includes('vidrio')) raiz.dataset.estilo = 'vidrio';
-if (location.search.includes('plano')) raiz.dataset.estilo = 'plano';
 // Paleta del modo claro: «marfil» (marfil y burdeos), la elegida. Para comparar: ?paleta=vino | tinta | noche | blanco.
 raiz.dataset.paleta = new URLSearchParams(location.search).get('paleta') || 'marfil';
 
@@ -40,7 +37,6 @@ const IC = {
   racha: '<path d="M12 3c1 3 4 4.5 4 9a4 4 0 0 1-8 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 0-8z"/>',
   ok: '<path d="m5 12 5 5 9-10"/>',
   enviar: '<path d="M4 12 20 4l-6 16-3-7z"/>',
-  capas: '<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>',
   enlace: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
 };
 
@@ -77,15 +73,6 @@ function isotipo({ brillo = true } = {}) {
     ${brillo ? `<g clip-path="url(#${id}-c)"><rect class="iso-brillo" x="-420" y="-80" width="260" height="1260" fill="url(#${id}-g)"/></g>` : ''}
   </svg>`;
 }
-// El mismo isotipo en línea fina, para el fondo del vidrio.
-function isotipoLinea() {
-  const id = 'iso' + nIso++;
-  return `<svg viewBox="-20 -20 870 1130"><defs><path id="${id}-iz" d="${E.izquierda}"/><path id="${id}-de" d="${E.derecha}"/></defs>
-    <g fill="none" stroke="var(--rojo)" stroke-linejoin="round">
-      <path d="${E.exterior}" stroke-width="6"/><path d="${E.campo}" stroke-width="2.5"/><path d="${E.escudete}" stroke-width="5"/>
-      <path d="${E.campoInterior}" stroke-width="2.5"/><g stroke-width="4">${CRUCES}</g><path d="${E.leon}" stroke-width="2.5"/></g>
-    ${LEMA(id, 'var(--rojo)')}</svg>`;
-}
 const escLat = $('#esc-lat');
 escLat.innerHTML = isotipo();
 $('.marca').addEventListener('pointermove', (e) => {
@@ -94,15 +81,13 @@ $('.marca').addEventListener('pointermove', (e) => {
   escLat.firstElementChild.style.transform = `rotateY(${x * 40}deg) rotateX(${-y * 30}deg)`;
 });
 $('.marca').addEventListener('pointerleave', () => { escLat.firstElementChild.style.transform = ''; });
-// Detrás del vidrio: el escudo en línea fina, grande y flotando, para que el esmerilado tenga qué difuminar.
-$('#fondo-vidrio').insertAdjacentHTML('beforeend', isotipoLinea());
 $('#marca-tel').innerHTML = `${isotipo({ brillo: false })}<span>Derecho PUCV<small>con EVA</small></span>`;
 
 // El borde de luz del vidrio toma su ángulo de la posición del puntero, como la luz del efecto Glass de Figma.
 if (!quieto) {
   let pendiente = false;
   addEventListener('pointermove', (e) => {
-    if (pendiente || raiz.dataset.estilo !== 'vidrio') return;
+    if (pendiente) return;
     pendiente = true;
     requestAnimationFrame(() => {
       const a = Math.atan2(e.clientY - innerHeight / 2, e.clientX - innerWidth / 2) * 180 / Math.PI + 270;
@@ -161,14 +146,6 @@ const pintarTema = () => {
   $('#tema').setAttribute('aria-label', osc ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
 };
 pintarTema();
-$('#estilo').innerHTML = I(IC.capas);
-const pintarEstilo = () => $('#estilo').setAttribute('aria-label', raiz.dataset.estilo === 'vidrio' ? 'Cambiar a estilo plano' : 'Cambiar a estilo vidrio');
-pintarEstilo();
-$('#estilo').addEventListener('click', () => {
-  raiz.dataset.estilo = raiz.dataset.estilo === 'vidrio' ? 'plano' : 'vidrio';
-  try { localStorage.setItem('panel:estilo', raiz.dataset.estilo); } catch {}
-  pintarEstilo();
-});
 $('#tema').addEventListener('click', () => {
   raiz.dataset.tema = raiz.dataset.tema === 'oscuro' ? 'claro' : 'oscuro';
   try { localStorage.setItem('panel:tema', raiz.dataset.tema); } catch {}
