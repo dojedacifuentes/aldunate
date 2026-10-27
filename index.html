@@ -317,16 +317,16 @@ main { min-width: 0; }
    borde de luz del efecto Glass de Figma, cuyo ángulo sigue al puntero. */
 .fondo-vidrio { display: none; }
 :root[data-estilo="vidrio"] {
-  --fondo: #eeeceb; --panel: rgba(255,255,255,.76); --nav: rgba(255,255,255,.50); --suave: rgba(255,255,255,.46);
+  --fondo: #ebeae7; --panel: rgba(255,255,255,.82); --nav: rgba(255,255,255,.58); --rojo: #8f1411; --rojo-suave: #f3e3e2; --suave: rgba(255,255,255,.46);
   --borde: rgba(255,255,255,.70); --linea: rgba(20,20,20,.09);
-  --sombra: 0 10px 32px rgba(70,12,12,.08), inset 0 1px 0 rgba(255,255,255,.9);
-  --lateral: rgba(150,20,18,.84); --lateral-2: rgba(255,255,255,.88);
+  --sombra: 0 10px 32px rgba(20,20,20,.07), inset 0 1px 0 rgba(255,255,255,.9);
+  --lateral: rgba(112,12,12,.95); --lateral-2: rgba(255,255,255,.86);
   --vidrio: blur(22px) saturate(170%); --vidrio-nav: blur(16px) saturate(180%);
   --brillo: rgba(255,255,255,.95); --brillo-2: rgba(255,255,255,.35);
   --grano: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 :root[data-estilo="vidrio"][data-tema="oscuro"] {
-  --fondo: #050505; --panel: rgba(24,24,24,.70); --nav: rgba(28,28,28,.46); --suave: rgba(255,255,255,.05);
+  --fondo: #050505; --rojo: #e5594e; --rojo-suave: #2a1210; --panel: rgba(24,24,24,.70); --nav: rgba(28,28,28,.46); --suave: rgba(255,255,255,.05);
   --borde: rgba(255,255,255,.10); --linea: rgba(255,255,255,.08);
   --sombra: 0 10px 32px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.07);
   --lateral: rgba(14,14,14,.58); --lateral-2: #b4b4b0;
@@ -335,9 +335,9 @@ main { min-width: 0; }
 :root[data-estilo="vidrio"] body { background: var(--fondo); }
 :root[data-estilo="vidrio"] .fondo-vidrio { display: block; position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
 .fondo-vidrio i { position: absolute; border-radius: 50%; filter: blur(70px); animation: deriva 26s ease-in-out infinite alternate; }
-.fondo-vidrio i:nth-child(1) { width: 620px; height: 620px; left: 8%; top: -180px; background: rgba(168,25,22,.26); }
-.fondo-vidrio i:nth-child(2) { width: 520px; height: 520px; right: -120px; top: 30%; background: rgba(214,120,96,.24); animation-duration: 32s; animation-delay: -8s; }
-.fondo-vidrio i:nth-child(3) { width: 460px; height: 460px; left: 34%; bottom: -220px; background: rgba(110,16,30,.20); animation-duration: 38s; animation-delay: -14s; }
+.fondo-vidrio i:nth-child(1) { width: 620px; height: 620px; left: 8%; top: -180px; background: rgba(143,20,17,.14); }
+.fondo-vidrio i:nth-child(2) { width: 520px; height: 520px; right: -120px; top: 30%; background: rgba(70,72,84,.12); animation-duration: 32s; animation-delay: -8s; }
+.fondo-vidrio i:nth-child(3) { width: 460px; height: 460px; left: 34%; bottom: -220px; background: rgba(110,14,14,.12); animation-duration: 38s; animation-delay: -14s; }
 :root[data-tema="oscuro"] .fondo-vidrio i:nth-child(1) { background: rgba(229,89,78,.30); }
 :root[data-tema="oscuro"] .fondo-vidrio i:nth-child(2) { background: rgba(150,30,40,.34); }
 :root[data-tema="oscuro"] .fondo-vidrio i:nth-child(3) { background: rgba(229,89,78,.16); }
@@ -370,8 +370,8 @@ main { min-width: 0; }
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
 }
-:root[data-estilo="vidrio"] .btn.lleno { box-shadow: 0 6px 18px rgba(168,25,22,.28), inset 0 1px 0 rgba(255,255,255,.28); }
-:root[data-estilo="vidrio"] .btn.suave { background: rgba(168,25,22,.10); -webkit-backdrop-filter: var(--vidrio-nav); backdrop-filter: var(--vidrio-nav); }
+:root[data-estilo="vidrio"] .btn.lleno { box-shadow: 0 6px 18px rgba(143,20,17,.26), inset 0 1px 0 rgba(255,255,255,.28); }
+:root[data-estilo="vidrio"] .btn.suave { background: rgba(143,20,17,.09); -webkit-backdrop-filter: var(--vidrio-nav); backdrop-filter: var(--vidrio-nav); }
 :root[data-estilo="vidrio"][data-tema="oscuro"] .btn.suave { background: rgba(229,89,78,.14); }
 :root[data-estilo="vidrio"] .mensajes { background: transparent; }
 :root[data-estilo="vidrio"] :is(.cuerpo .in, .pestanas, .conv header, .enviar, .tabla td, .conv-lista) { border-color: var(--linea); }
@@ -380,7 +380,8 @@ main { min-width: 0; }
 :root[data-estilo="vidrio"] .progreso { background: rgba(0,0,0,.07); }
 :root[data-estilo="vidrio"][data-tema="oscuro"] .progreso { background: rgba(255,255,255,.08); }
 :root[data-estilo="vidrio"] .mini { background: rgba(14,14,14,.88); }
-:root[data-estilo="vidrio"] .dato .ic { background: rgba(168,25,22,.10); }
+:root[data-estilo="vidrio"] .dato .ic { background: rgba(143,20,17,.08); }
+:root[data-estilo="vidrio"][data-tema="oscuro"] .dato .ic { background: rgba(229,89,78,.12); }
 @media (max-width: 860px) {
   :root[data-estilo="vidrio"] { --vidrio: blur(14px) saturate(160%); --vidrio-nav: blur(12px) saturate(170%); }
   .fondo-vidrio svg { right: -30%; top: 78%; height: 72vh; opacity: .16; }
