@@ -13,6 +13,8 @@ raiz.dataset.estilo = 'vidrio';
 try { const e = localStorage.getItem('panel:estilo'); if (e) raiz.dataset.estilo = e; } catch {}
 if (location.search.includes('vidrio')) raiz.dataset.estilo = 'vidrio';
 if (location.search.includes('plano')) raiz.dataset.estilo = 'plano';
+// Paleta del modo claro: «marfil» (marfil y burdeos), la elegida. Para comparar: ?paleta=vino | tinta | noche | blanco.
+raiz.dataset.paleta = new URLSearchParams(location.search).get('paleta') || 'marfil';
 
 /* ---------- Íconos de línea ---------- */
 const I = (d, w = 20) => `<svg class="icono" width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
@@ -48,19 +50,44 @@ function cruz(x, y) {
   const a = 9, l = 34, r = 13, e = 6;
   return `M${x - a} ${y - l + e} H${x - r} V${y - l - e} H${x + r} V${y - l + e} H${x + a} V${y - a} H${x + l - e} V${y - r} H${x + l + e} V${y + r} H${x + l - e} V${y + a} H${x + a} V${y + l - e} H${x + r} V${y + l + e} H${x - r} V${y + l - e} H${x - a} V${y + a} H${x - l + e} V${y + r} H${x - l - e} V${y - r} H${x - l + e} V${y - a} H${x - a} Z`;
 }
-// El escudo se dibuja al abrir, brotan las tres cruces y un «tren» rojo recorre el contorno; se inclina hacia el puntero.
-function escudo(color, acento, tren = true) {
-  return `<svg viewBox="-20 -20 870 1130" aria-hidden="true">
-    <g fill="none" stroke="${color}" stroke-linejoin="round">
-      <path class="trazo" pathLength="1" d="${E.exterior}" stroke-width="44"/>
-      <path class="trazo" pathLength="1" d="${E.escudete}" stroke-width="30" style="animation-delay:.5s"/>
+// El isotipo completo, con los colores del logo publicado por la Facultad (borde dorado, campo rojo, escudete con tres
+// cruces, león rampante y lema). Al abrir se traza el contorno, aparece el relleno y de vez en cuando lo cruza un brillo.
+const ORO = '#b59a62', ROJO = '#a8372a';
+const LEMA = (id, color) => `<g fill="${color}" font-family="'Times New Roman', Times, serif">
+    <text x="415" y="128" font-size="84" text-anchor="middle" letter-spacing="20">SS.CC</text>
+    <text font-size="86"><textPath href="#${id}-iz" textLength="700" lengthAdjust="spacing">PRO JURE</textPath></text>
+    <text font-size="86"><textPath href="#${id}-de" textLength="770" lengthAdjust="spacing">AEQUITATE</textPath></text>
+    <text x="415" y="1038" font-size="84" text-anchor="middle" letter-spacing="6">ET</text></g>`;
+const CRUCES = [270, 415, 560].map((x) => `<path d="${cruz(x, 212)}"/>`).join('');
+let nIso = 0;
+function isotipo({ brillo = true } = {}) {
+  const id = 'iso' + nIso++;
+  return `<svg viewBox="-12 -12 854 1114" aria-hidden="true">
+    <defs><path id="${id}-iz" d="${E.izquierda}"/><path id="${id}-de" d="${E.derecha}"/>
+      <clipPath id="${id}-c"><path d="${E.exterior}"/></clipPath>
+      <linearGradient id="${id}-g"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+    <path class="trazo" pathLength="1" d="${E.exterior}" fill="none" stroke="${ORO}" stroke-width="16" stroke-linejoin="round"/>
+    <g class="iso-relleno">
+      <path d="${E.exterior}" fill="${ORO}"/><path d="${E.campo}" fill="${ROJO}"/>
+      <path d="${E.escudete}" fill="${ORO}"/><path d="${E.campoInterior}" fill="${ROJO}"/>
+      <g fill="${ROJO}">${CRUCES}</g>
+      <path d="${E.leon}" fill="${ORO}"/>
+      ${LEMA(id, '#fff')}
     </g>
-    ${tren ? `<path class="tren" pathLength="1" d="${E.exterior}" fill="none" stroke="${acento}" stroke-width="44" stroke-linecap="round" style="animation-delay:1.8s"/>` : ''}
-    <g fill="${color}">${[270, 415, 560].map((x, k) => `<path class="cruz-l" style="transform-origin:${x}px 212px;animation-delay:${1.1 + k * 0.15}s" d="${cruz(x, 212)}"/>`).join('')}</g>
+    ${brillo ? `<g clip-path="url(#${id}-c)"><rect class="iso-brillo" x="-420" y="-80" width="260" height="1260" fill="url(#${id}-g)"/></g>` : ''}
   </svg>`;
 }
+// El mismo isotipo en línea fina, para el fondo del vidrio.
+function isotipoLinea() {
+  const id = 'iso' + nIso++;
+  return `<svg viewBox="-20 -20 870 1130"><defs><path id="${id}-iz" d="${E.izquierda}"/><path id="${id}-de" d="${E.derecha}"/></defs>
+    <g fill="none" stroke="var(--rojo)" stroke-linejoin="round">
+      <path d="${E.exterior}" stroke-width="6"/><path d="${E.campo}" stroke-width="2.5"/><path d="${E.escudete}" stroke-width="5"/>
+      <path d="${E.campoInterior}" stroke-width="2.5"/><g stroke-width="4">${CRUCES}</g><path d="${E.leon}" stroke-width="2.5"/></g>
+    ${LEMA(id, 'var(--rojo)')}</svg>`;
+}
 const escLat = $('#esc-lat');
-escLat.innerHTML = escudo('currentColor', raiz.dataset.tema === 'oscuro' ? '#e5594e' : 'rgba(255,255,255,.45)');
+escLat.innerHTML = isotipo();
 $('.marca').addEventListener('pointermove', (e) => {
   const r = escLat.getBoundingClientRect();
   const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
@@ -68,10 +95,8 @@ $('.marca').addEventListener('pointermove', (e) => {
 });
 $('.marca').addEventListener('pointerleave', () => { escLat.firstElementChild.style.transform = ''; });
 // Detrás del vidrio: el escudo en línea fina, grande y flotando, para que el esmerilado tenga qué difuminar.
-$('#fondo-vidrio').insertAdjacentHTML('beforeend', `<svg viewBox="-20 -20 870 1130"><g fill="none" stroke="var(--rojo)" stroke-width="6" stroke-linejoin="round">
-  <path d="${E.exterior}"/><path d="${E.campo}" stroke-width="2"/><path d="${E.escudete}"/></g>
-  <g fill="none" stroke="var(--rojo)" stroke-width="5">${[270, 415, 560].map((x) => `<path d="${cruz(x, 212)}"/>`).join('')}</g></svg>`);
-$('#marca-tel').innerHTML =`${escudo('var(--rojo)', 'var(--rojo)', false)}<span>Derecho PUCV<small>con EVA</small></span>`;
+$('#fondo-vidrio').insertAdjacentHTML('beforeend', isotipoLinea());
+$('#marca-tel').innerHTML = `${isotipo({ brillo: false })}<span>Derecho PUCV<small>con EVA</small></span>`;
 
 // El borde de luz del vidrio toma su ángulo de la posición del puntero, como la luz del efecto Glass de Figma.
 if (!quieto) {
@@ -100,16 +125,28 @@ const CURSOS = [
   ['Prueba digital y deepfakes', ['Qué es un deepfake', 'Autenticidad y custodia', 'Cuándo pedir un peritaje', 'Valorar la prueba']],
   ['Regulación de la IA', ['El modelo europeo', 'El proyecto chileno', 'Datos personales e IA', 'Derechos fundamentales']],
 ];
-// Avance simulado (en la plataforma real se cuenta en el navegador de cada estudiante).
-const AVANCE_INICIAL = { '0': [4, 4, 4, 4], '1': [4, 4, 2, 0], '2': [1, 0, 0, 0] };
+// Quien entra por primera vez no tiene avance: todo parte en cero. «?demo» muestra un avance simulado y «?nuevo» simula
+// la primera visita aunque el navegador ya tenga avance guardado.
+const AVANCE_DEMO = { '0': [4, 4, 4, 4], '1': [4, 4, 2, 0], '2': [1, 0, 0, 0] };
 const TAREAS = ['Mirar la videocápsula (5 min)', 'Hacer el ejercicio con la IA', 'Comprobar en la fuente', 'Responder la autoevaluación'];
-let avance;
-try { avance = JSON.parse(localStorage.getItem('panel:avance')) || AVANCE_INICIAL; } catch { avance = AVANCE_INICIAL; }
-const guardar = () => { try { localStorage.setItem('panel:avance', JSON.stringify(avance)); } catch {} };
+const demo = location.search.includes('demo'), simulaNuevo = location.search.includes('nuevo');
+let avance = {};
+try { if (!simulaNuevo) avance = JSON.parse(localStorage.getItem('panel:avance')) || {}; } catch {}
+if (demo) avance = AVANCE_DEMO;
+const guardar = () => { if (demo || simulaNuevo) return; try { localStorage.setItem('panel:avance', JSON.stringify(avance)); } catch {} };
 const hechas = (c, m) => (avance[c] || [])[m] || 0;
 const totalCurso = (c) => [0, 1, 2, 3].reduce((s, m) => s + hechas(c, m), 0);
 const modulosListos = (c) => [0, 1, 2, 3].filter((m) => hechas(c, m) === 4).length;
-let cursoActual = 1, moduloActual = 2;
+const pasosTotales = () => CURSOS.reduce((s, _, c) => s + totalCurso(c), 0);
+// El lugar donde sigue: el primer módulo que no está completo.
+function dondeSigue() {
+  for (let c = 0; c < CURSOS.length; c++) for (let m = 0; m < 4; m++) if (hechas(c, m) < 4) return [c, m];
+  return [0, 0];
+}
+let [cursoActual, moduloActual] = dondeSigue();
+let nombre = '';
+try { if (!simulaNuevo) nombre = localStorage.getItem('panel:nombre') || ''; } catch {}
+const limpio = (t) => t.replace(/[<>&"]/g, '');
 
 /* ---------- Menú ---------- */
 const VISTAS = [['inicio', 'Inicio'], ['cursos', 'Cursos'], ['videos', 'Videocápsulas'], ['docentes', 'Docentes'], ['eva', 'Pregunta a EVA']];
@@ -160,33 +197,41 @@ const chip = (k) => `<span class="chip-n" style="background:${COLORES[k]}">${k +
 /* ---------- Inicio ---------- */
 function vistaInicio() {
   const listos = CURSOS.reduce((s, _, c) => s + modulosListos(c), 0);
+  const nuevo = pasosTotales() === 0;
+  const [sc, sm] = dondeSigue();
+  const h = hechas(sc, sm);
+  const recordatorio = nuevo ? ['Para empezar', 'Curso 1 · Qué es la IA', '5 minutos'] : ['Recordatorio', `Termina el módulo ${sc + 1}.${sm + 1}`, `Te faltan ${4 - h} pasos`];
+  const tarjeta = nuevo
+    ? `<span class="eti">Empieza aquí</span><span class="num">1.1</span><h2>${CURSOS[0][1][0]}</h2>
+       <p>Curso 1 · Qué es la IA. Antes de usarla, mira qué dicen las leyes que es. Una videocápsula de cinco minutos y un ejercicio corto.</p>
+       <div class="pasos-mod" aria-label="Curso 1 sin empezar"><i></i><i></i><i></i><i></i></div>
+       <a class="btn lleno" href="#cursos">Empezar el curso 1<span class="flecha">${I(IC.flecha, 18)}</span></a>`
+    : `<span class="eti">Sigues en</span><span class="num">${sc + 1}.${sm + 1}</span><h2>${CURSOS[sc][1][sm]}</h2>
+       <p>Curso ${sc + 1} · ${CURSOS[sc][0]}. Llevas ${h} de 4 pasos de este módulo.</p>
+       <div class="pasos-mod" aria-label="Avance del curso ${sc + 1}">${[0, 1, 2, 3].map((m) => `<i class="${hechas(sc, m) === 4 ? 'ok' : hechas(sc, m) ? 'va' : ''}"></i>`).join('')}</div>
+       <a class="btn lleno" href="#cursos">Continuar<span class="flecha">${I(IC.flecha, 18)}</span></a>`;
   const DIAS = [
     ['Lun', 27, '#a81916', [['Abre la videocápsula 2.4', 'Cómo pedirle bien', 'Nueva']]],
-    ['Mar', 28, '#1f4e9c', [['Curso 4 · Fuentes chilenas', 'Taller con tu profesor', '10:15 – 11:30'], ['Recordatorio', 'Termina el módulo 2.3', 'Te falta 1 paso']]],
+    ['Mar', 28, '#1f4e9c', [['Curso 4 · Fuentes chilenas', 'Taller con tu profesor', '10:15 – 11:30'], recordatorio]],
     ['Mié', 29, '#c98a12', [['Abre el curso 6', 'Ética profesional y responsabilidad', 'Nuevo curso']]],
     ['Jue', 30, '#2d7d46', [['Pregunta de la semana', '¿Basta con citar un fallo?', 'EVA']]],
     ['Vie', 31, '#6b3fa0', [['Abre la videocápsula 3.2', 'Analizar un fallo', 'Nueva']]],
   ];
   return `
   <div class="titulo">
-    <div><h1>Inicio</h1><p>Hola. Aprende a usar la IA en el Derecho sin perder el criterio. Sin crear cuenta.</p></div>
+    <div><h1>${nombre ? `Hola, ${nombre}` : 'Inicio'}</h1><p>${nuevo ? 'Te damos la bienvenida. ' : ''}Aprende a usar la IA en el Derecho sin perder el criterio. Sin crear cuenta.</p></div>
     <div class="acciones"><a class="btn suave" href="#videos">${I(IC.videos, 18)}Ver videocápsulas</a><a class="btn suave" href="#eva">${I(IC.eva, 18)}Preguntar a EVA</a></div>
   </div>
   <div class="tablero">
     <div class="caja dato"><div><div class="n" data-n="8">8</div><div class="l">Cursos abiertos</div></div><span class="ic">${I(IC.cursos)}</span></div>
     <div class="caja dato"><div><div class="n" data-n="32">32</div><div class="l">Videocápsulas de 5 min</div></div><span class="ic">${I(IC.videos)}</span></div>
     <div class="caja dato"><div><div class="n"><span data-n="${listos}">${listos}</span><small> / 32</small></div><div class="l">Módulos terminados</div></div><span class="ic">${I(IC.ok)}</span></div>
-    <div class="caja dato"><div><div class="n"><span data-n="3">3</span><small> días</small></div><div class="l">Seguidos estudiando</div></div><span class="ic">${I(IC.racha)}</span></div>
-    <section class="caja sigues">
-      <span class="eti">Sigues en</span>
-      <span class="num">2.3</span>
-      <h2>Por qué inventa</h2>
-      <p>Curso 2 · Cómo funciona y por qué se equivoca. Le pides un fallo y te entrega uno que no existe: aquí ves por qué pasa y cómo pillarlo.</p>
-      <div class="pasos-mod" aria-label="Avance del curso 2: módulos 1 y 2 listos, el 3 a medias"><i class="ok"></i><i class="ok"></i><i class="va"></i><i></i></div>
-      <a class="btn lleno" href="#cursos">Continuar<span class="flecha">${I(IC.flecha, 18)}</span></a>
-    </section>
+    ${nuevo
+      ? `<div class="caja dato"><div><div class="n">Hoy</div><div class="l">Tu primer día</div></div><span class="ic">${I(IC.racha)}</span></div>`
+      : `<div class="caja dato"><div><div class="n"><span data-n="${demo ? 3 : 1}">${demo ? 3 : 1}</span><small> ${demo ? 'días' : 'día'}</small></div><div class="l">Seguidos estudiando</div></div><span class="ic">${I(IC.racha)}</span></div>`}
+    <section class="caja sigues">${tarjeta}</section>
     <section class="caja avance">
-      <header><h2>Tu avance por curso</h2><span class="muestra">MUESTRA</span><button class="selector" type="button">Todos los cursos ${I(IC.abajo, 14)}</button></header>
+      <header><h2>Tu avance por curso</h2><span class="muestra">${nuevo ? 'AQUÍ APARECERÁ LO QUE VAYAS HACIENDO' : demo ? 'MUESTRA' : 'GUARDADO EN ESTE NAVEGADOR'}</span><button class="selector" type="button">Todos los cursos ${I(IC.abajo, 14)}</button></header>
       <ol class="barras">${CURSOS.map(([t], k) => `<li>${chip(k)}<span class="t">${t}</span><span class="pista"><b data-w="${totalCurso(k) / 16 * 100}"></b></span><span class="v">${modulosListos(k)}/4</span></li>`).join('')}</ol>
     </section>
     <aside class="caja semana">
@@ -443,4 +488,49 @@ function ruta() {
 }
 addEventListener('hashchange', ruta);
 addEventListener('resize', () => document.querySelectorAll('.pestanas').forEach(rayaPestanas));
+
+/* ---------- Perfil y bienvenida (sólo la primera vez) ---------- */
+function pintarPerfil() {
+  $('.perfil .ini').textContent = nombre ? nombre.slice(0, 2) : 'Tú';
+  $('.perfil b').textContent = nombre || 'Estudiante';
+}
+pintarPerfil();
+let vista0 = false;
+try { vista0 = !simulaNuevo && localStorage.getItem('panel:bienvenida') === '1'; } catch {}
+if (location.search.includes('sinbienvenida') || demo) vista0 = true;
+function bienvenida() {
+  document.body.insertAdjacentHTML('beforeend', `
+  <div class="bienvenida" id="bienvenida" role="dialog" aria-modal="true" aria-labelledby="bv-t">
+    <div class="bv-caja">
+      <div class="bv-esc">${isotipo()}</div>
+      <p class="bv-eti mono">Escuela de Derecho PUCV · con EVA</p>
+      <h1 id="bv-t">IA y Derecho, en cursos de cinco minutos</h1>
+      <p class="bv-txt">Ocho cursos para usar la inteligencia artificial en la carrera sin perder el criterio. No necesitas crear cuenta: lo que avances se guarda en este navegador.</p>
+      <ol class="bv-pasos">
+        <li><b>1</b>Mira una videocápsula de 5 minutos.</li>
+        <li><b>2</b>Hazlo tú con una IA, guiado.</li>
+        <li><b>3</b>Comprueba en la fuente lo que te dijo.</li>
+      </ol>
+      <label class="bv-nombre">¿Cómo te llamamos? <span>(opcional, queda sólo aquí)</span><input id="bv-nombre" maxlength="24" autocomplete="given-name" placeholder="Tu nombre"></label>
+      <div class="bv-botones">
+        <button class="btn lleno" data-ir="inicio">Soy estudiante<span class="flecha">${I(IC.flecha, 18)}</span></button>
+        <button class="btn" data-ir="docentes">${I(IC.docentes, 18)}Soy docente</button>
+        <button class="btn bv-mirar" data-ir="">Sólo quiero mirar</button>
+      </div>
+    </div>
+  </div>`);
+  const bv = $('#bienvenida');
+  if (!quieto) requestAnimationFrame(() => bv.classList.add('ver')); else bv.classList.add('ver');
+  bv.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-ir]'); if (!b) return;
+    const n = limpio($('#bv-nombre').value.trim());
+    if (n) { nombre = n; try { localStorage.setItem('panel:nombre', n); } catch {} pintarPerfil(); }
+    try { localStorage.setItem('panel:bienvenida', '1'); } catch {}
+    bv.classList.remove('ver');
+    setTimeout(() => bv.remove(), quieto ? 0 : 300);
+    if (b.dataset.ir && location.hash.slice(1) !== b.dataset.ir) location.hash = b.dataset.ir; else ruta();
+  });
+  setTimeout(() => $('#bv-nombre').focus({ preventScroll: true }), quieto ? 0 : 400);
+}
 ruta();
+if (!vista0) bienvenida();

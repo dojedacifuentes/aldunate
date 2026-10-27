@@ -5,13 +5,14 @@ Maqueta de la plataforma de IA y Derecho para la Escuela de Derecho PUCV, con EV
 inspira en el archivo de la comunidad de Figma «Dashboard Instituto UIN»; el código y el diseño visual son propios.
 
 - Cinco pantallas: Inicio, Cursos (un curso por dentro), Videocápsulas, Docentes y Pregunta a EVA (`#inicio`, `#cursos`…).
-- Sin cuentas: el avance que marca cada estudiante se guarda sólo en su navegador.
-- Modo claro y oscuro, y dos estilos: «vidrio» (por defecto: paneles esmerilados con grano, borde de luz que sigue al
+- Sin cuentas: el avance que marca cada estudiante se guarda sólo en su navegador. La primera visita muestra una
+  bienvenida (con nombre opcional) y el avance en cero; `?demo` muestra un avance simulado.
+- Modo claro «Marfil y burdeos» (otras paletas para comparar con `?paleta=vino|tinta|noche|blanco`) y oscuro, y dos estilos: «vidrio» (por defecto: paneles esmerilados con grano, borde de luz que sigue al
   puntero y el escudo flotando detrás) y «plano». Respeta «reducir transparencia» y «reducir movimiento».
 - Sitio estático: `index.html`, `app.js` y `escudo.js`. Sin dependencias ni compilación.
 - Es una **maqueta**: el avance, las fechas, la sección docente y los textos de las sesiones son de muestra, y las
   respuestas de EVA están escritas de antemano. Los textos jurídicos están pendientes de revisión.
-- El escudo de Derecho PUCV es una reconstrucción del archivo publicado por la Facultad; su uso está pendiente de
+- El escudo aparece siempre completo (cruces, león y lema). Es una reconstrucción del archivo publicado por la Facultad; su uso está pendiente de
   autorización de la Escuela.
 
 Las versiones anteriores de este repositorio («Plano azul», «Holograma» y DIÓGENES LAB) siguen en el historial de git.
