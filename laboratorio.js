@@ -274,7 +274,7 @@ function vistaLab() {
     <p>Seis experimentos breves sobre inteligencia artificial, decisiones y Derecho. No todo es lo que parece.</p></div>
   <div class="vitrina lab-grid">${EXPERIMENTOS.map((x) => `
     <a class="caja tarjeta exp-tarjeta" href="#laboratorio/${x.id}">
-      <div class="portada lab-portada"><svg viewBox="0 0 160 90" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${x.motivo}</g></svg><span class="p-num mono">${x.id}</span>${labHechos[x.id] ? '<span class="hecho-lab mono">HECHO ✓</span>' : ''}</div>
+      <div class="portada lab-portada con-img">${imgPortada(`lab-${x.id}`)}<span class="p-num mono">${x.id}</span>${labHechos[x.id] ? '<span class="hecho-lab mono">HECHO ✓</span>' : ''}</div>
       <div class="t-cuerpo"><span class="t-eti">${x.tema} · ${x.min} min</span><h2>${x.t}</h2><p>${x.d}</p>
         <span class="btn ${labHechos[x.id] ? '' : 'lleno'} exp-ir">${labHechos[x.id] ? 'Repetir' : 'Empezar'}</span></div>
     </a>`).join('')}</div>

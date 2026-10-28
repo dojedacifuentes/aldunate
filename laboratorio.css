@@ -10,6 +10,9 @@
 .lab-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
 .lab-portada { --c: var(--lab-luz); background: var(--lab-fondo) !important; color: var(--lab-luz) !important; border-bottom: 0; }
 .lab-portada::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(111,219,212,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(111,219,212,.07) 1px, transparent 1px); background-size: 20px 20px; }
+.lab-portada.con-img { border-bottom: 3px solid var(--lab-luz); }
+.lab-portada.con-img::before { display: none; }
+.hecho-lab { background: rgba(11,11,12,.6); }
 .lab-portada .p-num { font-size: 34px !important; letter-spacing: -.03em; color: #fff; top: 10px !important; }
 .hecho-lab { position: absolute; right: 12px; top: 12px; font-size: 10px; letter-spacing: .08em; color: var(--lab-luz); border: 1px solid rgba(111,219,212,.5); border-radius: 999px; padding: 2px 8px; }
 .exp-ir { align-self: flex-start; margin-top: 12px; height: 36px; }

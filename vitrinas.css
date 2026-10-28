@@ -38,6 +38,14 @@ a.tarjeta:hover .portada svg { transform: scale(1.04); }
 .portada .p-num { position: absolute; left: 16px; top: 12px; font-size: 13px; font-weight: 600; letter-spacing: .08em; }
 .vista-cursos .portada .p-num { font-size: 34px; letter-spacing: -.03em; top: 10px; }
 :root[data-tema="oscuro"] .portada { background: color-mix(in srgb, var(--c) 18%, #0d0d0d); color: color-mix(in srgb, var(--c) 55%, #fff); }
+/* Portadas con imagen (Flow): la imagen llena el marco; el número va en blanco sobre una sombra suave arriba a la
+   izquierda y una raya fina abajo lleva el color de la tarjeta. Igual en claro y en oscuro. */
+.portada.con-img, :root[data-tema="oscuro"] .portada.con-img { background: #0b0b0c; color: #fff; border-bottom: 3px solid var(--c); }
+.portada.con-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform var(--m-normal-t) var(--m-normal); }
+a.tarjeta:hover .portada.con-img img { transform: scale(1.04); }
+.portada.con-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(160deg, rgba(0,0,0,.6), transparent 45%); pointer-events: none; }
+.portada.con-img .p-num, .portada.con-img .hecho-lab { z-index: 1; }
+.portada.con-img .p-num { color: #fff; }
 .t-cuerpo { padding: 14px 18px 16px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
 .t-eti { font: 500 11px 'IBM Plex Mono', monospace; color: var(--texto-2); letter-spacing: .03em; }
 .tarjeta h2 { margin: 2px 0 0; font-size: 17px; line-height: 1.3; }

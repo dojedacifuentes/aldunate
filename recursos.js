@@ -21,7 +21,55 @@ const MOTIVOS = [
   // 8 Regulación: páginas con párrafo
   '<path d="M52 24h40v50H52z"/><path d="M60 18h40v50"/><path d="M68 12h40v50"/><path d="M70 38c0-4 8-4 8 0s-8 4-8 8 8 4 8 0"/>',
 ];
-function portada(k, color, num, motivo = MOTIVOS[k]) {
+/* Imágenes de portada, hechas en Google Flow el 28-10-2026 (img/tarjetas/, WebP de 800 y 480 px): un objeto
+   tecnológico que cuenta el contenido, sobre fondo grafito y con el color de la tarjeta. Sin personas ni texto.
+   Cursos: curso-N · Recursos: rec-NN (posición en RECURSOS) · Laboratorio: lab-NN · Guías: guia-<id> o la del recurso igual. */
+const IMG_ALT = {
+  'curso-1': 'Un diccionario jurídico abierto del que las líneas se desprenden y forman una red de nodos rojos.',
+  'curso-2': 'Fichas de vidrio en fila, como palabras; sobre el hueco final, barras de luz azul que eligen la siguiente.',
+  'curso-3': 'Una balanza en equilibrio: un chip en un platillo y un cuaderno con lápiz en el otro, con una burbuja de diálogo.',
+  'curso-4': 'Expedientes unidos por hilos de luz; bajo una lupa las conexiones brillan en verde y una lleva a una carpeta vacía.',
+  'curso-5': 'Una aplicación pequeña que se arma en el aire con piezas de vidrio, junto a un compás de dibujo.',
+  'curso-6': 'Un documento entra en una máquina y barras negras tapan sus datos; en la máquina, un candado de circuitos.',
+  'curso-7': 'Un fotograma partido: mitad paisaje real, mitad malla digital, cruzado por una línea de escaneo, y una tarjeta de memoria en una bolsa de evidencia.',
+  'curso-8': 'Una pirámide de cuatro losas de vidrio; la de arriba, la de mayor riesgo, brilla en dorado.',
+  'rec-01': 'Un mapa de niveles de vidrio unido por un camino de luz azul, con un libro, un matraz y un dado.',
+  'rec-02': 'Un cubo de vidrio con un signo de pregunta de luz adentro, reflejado en un espejo redondo.',
+  'rec-03': 'Un mazo de tarjetas de vidrio en abanico, con una tarjeta girando en el aire.',
+  'rec-04': 'Un cuaderno abierto y, sobre él, un aparato con forma de burbuja de diálogo que le lanza preguntas de luz azul.',
+  'rec-05': 'Un archivo de fallos en estanterías que se pierden en la oscuridad, recorrido por un haz verde.',
+  'rec-06': 'Una ley como láminas de vidrio en fila, una por versión; la del frente, la vigente, con borde verde.',
+  'rec-07': 'Una papeleta de cita que avanza por un riel a través de cinco arcos de vidrio verde.',
+  'rec-08': 'Una tesis abierta con marcadores de fibra óptica: algunos verdes, la mayoría blancos.',
+  'rec-09': 'Dos vasos de laboratorio con hilos de luz violeta: en uno enredados, en el otro ordenados.',
+  'rec-10': 'Un maletín de herramientas con piezas de vidrio y aluminio y un hueco que brilla en violeta.',
+  'rec-11': 'Una torre de bloques de vidrio esmerilado; el de arriba brilla en violeta.',
+  'rec-12': 'Piezas de juego en miniatura: bloques apilados, un camino de luz en forma de serpiente y fichas de memoria.',
+  'rec-13': 'Un tomo legal oficial de pie, rodeado por un anillo de doce puntos de luz roja.',
+  'rec-14': 'Haces de luz roja levantan palabras de un documento y dejan barras negras en su lugar.',
+  'rec-15': 'Una huella digital hecha de puntos de datos rojos, protegida dentro de un escudo de vidrio.',
+  'rec-16': 'Un fichero de biblioteca con cajones abiertos llenos de fichas que brillan en ocre.',
+  'rec-17': 'Una prueba con preguntas como bloques de vidrio; un haz de luz las atraviesa todas menos un bloque ocre.',
+  'rec-18': 'Un atril de vidrio con una línea de tiempo de tres tramos de luz, junto a un cuaderno.',
+  'lab-01': 'Dos botones en un panel: uno grande y luminoso atrae una bola de acero; el otro, chico, casi no se ve.',
+  'lab-02': 'Una cuadrícula de nueve fichas de vidrio como las de una verificación, con marcas de visto.',
+  'lab-03': 'Una barra de progreso detenida antes del final, sobre libros de Derecho que se vuelven circuitos.',
+  'lab-04': 'Una máquina imprime una decisión; al lado, una pluma sobre una línea de firma que espera.',
+  'lab-05': 'Un larguísimo rollo de condiciones de uso que cae de la mesa, con una sola línea encendida en el medio.',
+  'lab-06': 'Una sala de audiencias en miniatura con un chip en el banquillo, bajo un foco.',
+  'guia-verificar-cita': 'Una lupa de inspección escanea con un láser rojo una cita y la une a uno de los tomos oficiales.',
+  'guia-declarar-ia': 'Un trabajo encuadernado con una etiqueta de vidrio roja prendida en su última página.',
+  'guia-patrones-oscuros': 'Un panel con dos interruptores: uno grande ya encendido y otro chico escondido tras un vidrio.',
+  'guia-evaluar-con-ia': 'Una prueba con la maqueta de un expediente y un micrófono; el haz de la IA lo rodea sin atravesarlo.',
+  'guia-prueba-con-ia': 'Un aparato de vidrio proyecta cinco tarjetas de preguntas, junto a un cuaderno y un lápiz.',
+  'guia-comparar-fuente': 'Tres paneles de vidrio como columnas de una tabla, unidos por hilos de luz verde; uno queda cortado.',
+};
+function imgPortada(clave) {
+  const b = `img/tarjetas/${clave}`;
+  return `<img src="${b}-800.webp" srcset="${b}-480.webp 480w, ${b}-800.webp 800w" sizes="(max-width: 860px) 100vw, 340px" width="800" height="450" alt="${IMG_ALT[clave]}" loading="lazy" decoding="async">`;
+}
+function portada(k, color, num, motivo = MOTIVOS[k], img = '') {
+  if (img) return `<div class="portada con-img" style="--c:${color}">${imgPortada(img)}<span class="p-num mono">${num}</span></div>`;
   return `<div class="portada" style="--c:${color}"><svg viewBox="0 0 160 90" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${motivo}</g></svg><span class="p-num mono">${num}</span></div>`;
 }
 const DESCRIPCIONES = [
@@ -43,7 +91,7 @@ function vistaCatalogo() {
   <div class="vitrina" id="vitrina">${CURSOS.map(([t], k) => {
     const pct = Math.round(totalCurso(k) / 16 * 100), listo = modulosListos(k) === 4;
     return `<a class="caja tarjeta" href="#cursos/${k + 1}" data-texto="${sinTildes(t + ' ' + DESCRIPCIONES[k] + ' ' + CURSOS[k][1].join(' '))}">
-      ${portada(k, COLORES[k], String(k + 1).padStart(2, '0'))}
+      ${portada(k, COLORES[k], String(k + 1).padStart(2, '0'), MOTIVOS[k], `curso-${k + 1}`)}
       <div class="t-cuerpo"><span class="t-eti">Curso ${k + 1} · 4 módulos · 20 min</span><h2>${t}</h2><p>${DESCRIPCIONES[k]}</p>
         <div class="t-pie"><span class="pista"><b style="width:${pct}%;background:${COLORES[k]}"></b></span><span class="mono">${listo ? 'Terminado ✓' : pct ? pct + ' %' : 'Sin empezar'}</span></div></div>
     </a>`;
@@ -106,11 +154,11 @@ function vistaRecursos() {
   <p class="r-nada" id="rec-nada" hidden>Nada con ese filtro. Prueba «fuente», «prompts» o «datos».</p>
   <p class="muestra" style="margin-top:16px">ENLACES EXTERNOS REVISADOS EL 28-10-2026 · LO DEMÁS ES MUESTRA</p>`;
 }
-function tarjetaRecurso([t, d, cat, tipo, estado, url, etiq]) {
+function tarjetaRecurso([t, d, cat, tipo, estado, url, etiq], i) {
   const fuera = url.startsWith('http'), tag = url ? 'a' : 'div';
   const attr = url ? `href="${url}"${fuera ? ' target="_blank" rel="noopener"' : ''}` : 'aria-disabled="true"';
   return `<${tag} class="caja tarjeta rec${url ? '' : ' sin-enlace'}" ${attr} data-cat="${cat}" data-texto="${sinTildes([t, d, tipo, ...etiq].join(' '))}">
-    ${portada(0, COLOR_CAT[cat], tipo === 'fuente' ? 'FUENTE' : tipo.toUpperCase(), TIPO_MOTIVO[tipo])}
+    ${portada(0, COLOR_CAT[cat], tipo === 'fuente' ? 'FUENTE' : tipo.toUpperCase(), TIPO_MOTIVO[tipo], `rec-${String(i + 1).padStart(2, '0')}`)}
     <div class="t-cuerpo"><span class="t-eti">${CATEGORIAS.find(([k]) => k === cat)[1]}</span><h2>${t}</h2><p>${d}</p>
       <div class="t-pie"><span class="estado-r ${estado.replace(' ', '-')}">${estado === 'en línea' ? 'En línea ↗' : estado === 'muestra' ? 'Muestra' : 'Pendiente'}</span>${etiq.map((e) => `<span class="etq">${e}</span>`).join('')}</div></div>
   </${tag}>`;
@@ -166,6 +214,8 @@ const GUIAS = [
     pasos: ['Columna 1: cada afirmación de la IA, una por fila.', 'Columna 2: dónde la comprobaste (norma, fallo, libro) o «sin fuente».', 'Columna 3: lo que dice la fuente, con tus palabras.', 'Lo que quede «sin fuente» no entra en tu trabajo.'],
     ir: [['Curso 4 · Verificar antes de firmar', 'curso:3-0']] },
 ];
+// Guías que tratan lo mismo que un recurso usan su imagen.
+const IMG_GUIA = { 'antes-de-pegar': 'rec-14', 'estudiar-con-ia': 'rec-04', 'ley-chile': 'rec-06' };
 let tipoGuia = 'Todas';
 function vistaGuias() {
   const abierta = location.hash.split('/')[1];
@@ -174,7 +224,7 @@ function vistaGuias() {
   <div class="filtros" id="tipo-guia">${['Todas', 'Guía', 'Protocolo', 'Tutorial'].map((t) => `<button aria-pressed="${tipoGuia === t}" data-t="${t}">${t === 'Todas' ? 'Todas' : t + (t === 'Protocolo' ? 's' : 's')}</button>`).join('')}</div>
   <div class="vitrina" id="vitrina-guias">${GUIAS.map((g) => `
     <article class="caja tarjeta guia-t${abierta === g.id ? ' abierta' : ''}" id="g-${g.id}" data-tipo="${g.tipo}">
-      ${portada(0, g.tipo === 'Protocolo' ? '#a81916' : g.tipo === 'Guía' ? '#1f4e9c' : '#2d7d46', g.tipo.toUpperCase(), TIPO_MOTIVO[g.tipo === 'Protocolo' ? 'protocolo' : g.tipo === 'Guía' ? 'guia' : 'video'])}
+      ${portada(0, g.tipo === 'Protocolo' ? '#a81916' : g.tipo === 'Guía' ? '#1f4e9c' : '#2d7d46', g.tipo.toUpperCase(), TIPO_MOTIVO[g.tipo === 'Protocolo' ? 'protocolo' : g.tipo === 'Guía' ? 'guia' : 'video'], IMG_GUIA[g.id] || `guia-${g.id}`)}
       <div class="t-cuerpo"><span class="t-eti">${g.tipo} · ${g.min} min · ${g.pub}</span><h2>${g.t}</h2><p>${g.d}</p>
         <button class="btn suave g-abrir" aria-expanded="${abierta === g.id}">${abierta === g.id ? 'Cerrar' : 'Ver los pasos'}</button>
         <div class="g-pasos"${abierta === g.id ? '' : ' hidden'}><ol>${g.pasos.map((p) => `<li>${p}</li>`).join('')}</ol>
