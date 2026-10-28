@@ -218,6 +218,7 @@ function abrirAjustes(ancla) {
     ${sw('quieto', 'Menos movimiento', 'Sin animaciones ni cruces')}
     <button class="sw" role="switch" data-k="sonido" aria-checked="${EF.conSonido()}"><span>Sonido y vibración<small>Al marcar pasos y terminar módulos</small></span><i></i></button>
     <button class="btn ancho" id="ver-recorrido" style="margin-top:14px">${I(IC.ayuda, 18)}Ver cómo funciona el sitio</button>
+    <button class="btn ancho" id="ver-bienvenida" style="margin-top:8px">${I(IC.flecha, 18)}Ver la bienvenida otra vez</button>
   </div>`);
   const pop = $('#ajustes-pop');
   if (matchMedia('(min-width: 861px)').matches) {
@@ -237,6 +238,7 @@ function abrirAjustes(ancla) {
       ajustes[k] = !ajustes[k]; s.setAttribute('aria-checked', String(ajustes[k]));
     }
     if (e.target.closest('#ver-recorrido')) { cerrarAjustes(); recorrido(); return; }
+    if (e.target.closest('#ver-bienvenida')) { cerrarAjustes(); bienvenida(); return; }
     if (t || s) { EF.sonar('clic'); try { localStorage.setItem('panel:ajustes', JSON.stringify(ajustes)); } catch {} aplicarAjustes(); }
   });
 }
@@ -1003,13 +1005,16 @@ function pintarPerfil() {
   $('.perfil b').textContent = nombre || 'Estudiante';
 }
 pintarPerfil();
+// La clave lleva versión: al cambiar la bienvenida, quien vio la anterior ve la nueva una vez.
+const BIENVENIDA = 'panel:bienvenida:v2';
 let vista0 = false;
-try { vista0 = !simulaNuevo && localStorage.getItem('panel:bienvenida') === '1'; } catch {}
+try { vista0 = !simulaNuevo && localStorage.getItem(BIENVENIDA) === '1'; } catch {}
 if (location.search.includes('sinbienvenida') || demo) vista0 = true;
 /* La bienvenida tiene tres etapas: 1) la pregunta con trampa (el experimento SÍ/NO de EVA Lab, en breve); 2) la
    revelación; 3) la entrada de siempre (nombre opcional y quién eres). Se puede omitir desde el primer momento y no se
-   repite: queda marcada en panel:bienvenida. El experimento se puede repetir en EVA Lab. */
+   repite: queda marcada en panel:bienvenida:v2 (v2: quien vio la bienvenida anterior ve la nueva una vez). El experimento se puede repetir en EVA Lab. */
 function bienvenida() {
+  if ($('#bienvenida')) return;
   document.body.insertAdjacentHTML('beforeend', `
   <div class="bienvenida" id="bienvenida" role="dialog" aria-modal="true" aria-label="Bienvenida">
     <div class="bv-caja bv-grande">
@@ -1044,7 +1049,7 @@ function bienvenida() {
     EF.sonar('llega');
     const n = limpio($('#bv-nombre').value.trim());
     if (n) { nombre = n; try { localStorage.setItem('panel:nombre', n); } catch {} pintarPerfil(); }
-    try { localStorage.setItem('panel:bienvenida', '1'); } catch {}
+    try { localStorage.setItem(BIENVENIDA, '1'); } catch {}
     bv.classList.remove('ver');
     setTimeout(() => bv.remove(), quieto ? 0 : 300);
     if (b.dataset.ir && location.hash.slice(1) !== b.dataset.ir) location.hash = b.dataset.ir; else ruta();

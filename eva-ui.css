@@ -64,3 +64,24 @@
 /* Que lo último de cada pantalla se pueda ver sin quedar bajo EVA. */
 .vista { padding-bottom: 104px; }
 @media (max-width: 860px) { .vista { padding-bottom: 150px; } }
+
+/* Panel por sección: pestañas, «Estás en», acciones, preguntas y mapa de todas las secciones. */
+.eva-pest { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 10px 14px 0; padding: 3px; border-radius: 10px; background: var(--suave); border: 1px solid var(--borde); }
+.eva-pest button { border: 0; background: none; border-radius: 8px; padding: 7px 8px; font-size: 13px; font-weight: 600; color: var(--texto-2); }
+.eva-pest button[aria-selected="true"] { background: var(--panel); color: var(--texto); box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+.eva-donde { display: flex; align-items: center; gap: 8px; margin: 2px 0 8px; font-size: 16px; color: var(--rojo); }
+.eva-donde .mono { font-size: 10px; letter-spacing: .08em; color: var(--texto-2); margin-right: 2px; }
+.eva-donde b { color: var(--texto); }
+.eva-sub { margin: 14px 0 6px; font-size: 10px; letter-spacing: .08em; color: var(--texto-2); }
+.eva-preg { display: flex; flex-wrap: wrap; gap: 6px; }
+.eva-preg button { border: 1px solid var(--borde); background: none; border-radius: 999px; padding: 6px 12px; font-size: 13px; text-align: left; color: var(--texto); }
+.eva-preg button:hover { border-color: #5a60ff; }
+.eva-mapa { display: grid; gap: 6px; }
+.eva-mapa button { display: flex; align-items: center; gap: 12px; text-align: left; padding: 10px 12px; border: 1px solid var(--borde); border-radius: 12px; background: var(--panel); color: var(--texto); }
+.eva-mapa button:hover { border-color: var(--rojo); }
+.eva-mapa button[aria-current="true"] { background: var(--rojo-suave); border-color: transparent; }
+.eva-mapa svg { color: var(--rojo); flex: none; }
+.eva-mapa b { display: block; font-size: 14px; } .eva-mapa small { display: block; font-size: 12px; color: var(--texto-2); }
+.eva-faq p { margin: 0 0 8px; font-size: 13px; color: var(--texto-2); } .eva-faq b { color: var(--texto); }
+.eva-cuerpo .eva-acc { margin-bottom: 4px; }
+.eva-cuerpo > .eva-acc + .eva-sub { margin-top: 12px; }
