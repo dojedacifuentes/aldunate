@@ -15,6 +15,10 @@
   --lateral: #a81916; --lateral-texto: #fff; --lateral-2: rgba(255,255,255,.72); --lateral-activo: rgba(255,255,255,.16);
   --verde: #2d7d46; --ambar: #b7790f; --sombra: 0 1px 2px rgba(0,0,0,.05), 0 2px 10px rgba(0,0,0,.04);
   --r: 10px; color-scheme: light;
+  /* Muelles: efectos.js los reemplaza por curvas linear() calculadas; éstas son el respaldo. */
+  --m-agil: cubic-bezier(.3,1.3,.5,1); --m-agil-t: .3s;
+  --m-normal: cubic-bezier(.25,1.1,.4,1); --m-normal-t: .45s;
+  --m-pesado: cubic-bezier(.2,.8,.2,1); --m-pesado-t: .6s;
 }
 :root[data-tema="oscuro"] {
   --fondo: #000; --panel: #0f0f0f; --texto: #f1f1ef; --texto-2: #a2a29e; --borde: #262624; --suave: #171716;
@@ -36,7 +40,7 @@ button { cursor: pointer; }
   display: flex; flex-direction: column; padding: 22px 14px 18px; border-right: 1px solid var(--borde); }
 .marca { display: flex; align-items: center; gap: 12px; padding: 0 8px 26px; text-decoration: none; color: inherit; }
 .marca .esc { width: 46px; height: 60px; perspective: 300px; flex: none; }
-.marca .esc svg { width: 100%; height: 100%; transition: transform .25s ease-out; overflow: visible; }
+.marca .esc svg { width: 100%; height: 100%; transition: transform var(--m-agil-t) var(--m-agil); overflow: visible; }
 .marca b { display: block; font-size: 15px; line-height: 1.15; }
 .marca span { font-size: 12px; color: var(--lateral-2); }
 .trazo { stroke-dasharray: 1; stroke-dashoffset: 1; animation: trazar 1.6s cubic-bezier(.6,.1,.2,1) .1s forwards; }
@@ -69,7 +73,7 @@ button { cursor: pointer; }
 .buscador kbd { font: 500 11px 'IBM Plex Mono', monospace; border: 1px solid var(--borde); border-radius: 4px; padding: 1px 6px; }
 .cabecera .der { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 .redondo { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--borde); background: var(--panel);
-  display: grid; place-items: center; transition: border-color .15s, transform .15s; }
+  display: grid; place-items: center; transition: border-color .15s, transform var(--m-agil-t) var(--m-agil); }
 .redondo:hover { border-color: var(--texto-2); transform: translateY(-1px); }
 .perfil { display: flex; align-items: center; gap: 10px; padding: 4px 14px 4px 4px; border-radius: 999px; border: 1px solid var(--borde); background: var(--panel); }
 .perfil .ini { width: 34px; height: 34px; border-radius: 50%; background: var(--rojo-suave); color: var(--rojo); display: grid; place-items: center; font-weight: 700; font-size: 13px; }
@@ -78,20 +82,20 @@ button { cursor: pointer; }
 .solo-tel { display: none; }
 
 main { min-width: 0; }
-.vista { padding: 22px 28px 32px; animation: entra .35s ease-out; }
-@keyframes entra { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.vista { padding: 22px 28px 32px; }
+@keyframes entra { from { opacity: 0; transform: translateY(8px) scale(.96); } }
 .titulo { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
 .titulo h1 { margin: 0; font-size: 26px; line-height: 1.2; letter-spacing: -.01em; }
 .titulo p { margin: 2px 0 0; color: var(--texto-2); }
 .titulo .acciones { margin-left: auto; display: flex; gap: 10px; flex-wrap: wrap; }
 
 .btn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 8px; border: 1px solid var(--borde);
-  background: var(--panel); font-weight: 600; font-size: 14px; text-decoration: none; color: var(--texto); transition: transform .15s, background .15s, border-color .15s; }
+  background: var(--panel); font-weight: 600; font-size: 14px; text-decoration: none; color: var(--texto); transition: transform var(--m-agil-t) var(--m-agil), background .15s, border-color .15s; }
 .btn:hover { transform: translateY(-1px); border-color: var(--texto-2); }
 .btn.lleno { background: var(--rojo); border-color: var(--rojo); color: var(--rojo-texto); }
 .btn.suave { background: var(--rojo-suave); border-color: transparent; color: var(--rojo); }
 .btn.ancho { width: 100%; justify-content: center; }
-.btn .flecha { transition: transform .2s; }
+.btn .flecha { transition: transform var(--m-agil-t) var(--m-agil); }
 .btn:hover .flecha { transform: translateX(3px); }
 
 .caja { background: var(--panel); border: 1px solid var(--borde); border-radius: var(--r); box-shadow: var(--sombra); min-width: 0; }
@@ -125,13 +129,13 @@ main { min-width: 0; }
 .chip-n { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; font: 600 12px 'IBM Plex Mono', monospace; color: #fff; }
 .barras .t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pista { height: 10px; border-radius: 5px; background: var(--suave); border: 1px solid var(--borde); overflow: hidden; }
-.pista b { display: block; height: 100%; width: 0; background: var(--rojo); border-radius: 5px; transition: width 1s cubic-bezier(.3,.7,.2,1); }
+.pista b { display: block; height: 100%; width: 0; background: var(--rojo); border-radius: 5px; transition: width var(--m-pesado-t) var(--m-pesado); }
 .barras .v { text-align: right; color: var(--texto-2); font: 500 13px 'IBM Plex Mono', monospace; }
 .semana { grid-column: 4; grid-row: 1 / 4; padding: 0 0 12px; display: flex; flex-direction: column; }
 .pestanas { display: flex; border-bottom: 1px solid var(--borde); position: relative; }
 .pestanas button { flex: 1; border: 0; background: none; padding: 16px 8px 14px; font-weight: 600; color: var(--texto-2); }
 .pestanas button[aria-selected="true"] { color: var(--texto); }
-.pestanas .raya { position: absolute; bottom: -1px; height: 2px; background: var(--rojo); transition: left .25s, width .25s; }
+.pestanas .raya { position: absolute; bottom: -1px; height: 2px; background: var(--rojo); }
 .semana header { padding: 14px 20px 0; margin: 0; font-size: 13px; font-weight: 600; }
 .semana header .flechas { margin-left: auto; display: flex; gap: 4px; }
 .semana header .flechas button { border: 0; background: none; padding: 4px; border-radius: 6px; color: var(--texto-2); }
@@ -156,24 +160,26 @@ main { min-width: 0; }
 .lista-cursos button:hover, .lista-cursos button[aria-current="true"] { background: var(--suave); }
 .progreso { height: 22px; border-radius: 11px; background: var(--borde); overflow: hidden; margin-bottom: 20px; }
 .progreso b { display: flex; align-items: center; height: 100%; padding-left: 10px; background: var(--rojo); color: var(--rojo-texto); font: 600 12px 'IBM Plex Mono', monospace;
-  min-width: 46px; border-radius: 11px; transition: width .6s cubic-bezier(.3,.7,.2,1); }
+  min-width: 46px; border-radius: 11px; transition: width var(--m-normal-t) var(--m-normal); }
 .curso { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 18px; align-items: start; }
 .mods { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
 .mods button { height: 46px; border-radius: 8px; border: 1px solid var(--borde); background: var(--panel); font-weight: 600; color: var(--texto); box-shadow: var(--sombra);
-  transition: background .15s, color .15s, transform .15s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 10px; }
+  transition: background .15s, color .15s, transform var(--m-agil-t) var(--m-agil); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 10px; }
 .mods button:hover { transform: translateY(-1px); }
 .mods button[aria-selected="true"] { background: var(--rojo); border-color: var(--rojo); color: var(--rojo-texto); }
 .mods button .hecho { margin-left: 6px; }
 .sesiones { display: grid; gap: 12px; }
 .sesion { background: var(--panel); border: 1px solid var(--borde); border-radius: var(--r); overflow: hidden; }
 .sesion > button { width: 100%; display: flex; align-items: center; gap: 12px; border: 0; background: none; padding: 14px 18px; text-align: left; font-weight: 600; font-size: 15px; }
-.sesion > button .ch { margin-left: auto; transition: transform .25s; color: var(--texto-2); }
+.sesion > button .ch { margin-left: auto; transition: transform var(--m-agil-t) var(--m-agil); color: var(--texto-2); }
 .sesion.abierta > button .ch { transform: rotate(180deg); }
 .sesion > button .nro { font: 600 12px 'IBM Plex Mono', monospace; color: var(--texto-2); }
-.cuerpo { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s ease; }
+.cuerpo { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--m-pesado-t) var(--m-pesado); }
 .sesion.abierta .cuerpo { grid-template-rows: 1fr; }
 .cuerpo > div { overflow: hidden; }
-.cuerpo .in { padding: 4px 18px 18px; border-top: 1px solid var(--borde); }
+.cuerpo .in { padding: 4px 18px 18px; border-top: 1px solid var(--borde); opacity: 0; transform: translateY(-8px);
+  transition: opacity .15s, transform var(--m-normal-t) var(--m-normal); }
+.sesion.abierta .cuerpo .in { opacity: 1; transform: none; transition-delay: .05s; }
 .cuerpo h3 { font-size: 14px; margin: 14px 0 4px; }
 .cuerpo p, .cuerpo li { font-size: 14px; color: var(--texto); margin: 0; }
 .cuerpo ul { margin: 4px 0 0; padding-left: 20px; display: grid; gap: 3px; }
@@ -191,6 +197,8 @@ main { min-width: 0; }
 .checks input:checked { background: var(--rojo); border-color: var(--rojo); }
 .checks input:checked::after { content: ''; width: 5px; height: 10px; border: solid var(--rojo-texto); border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px, -1px); }
 .checks label:has(input:checked) { background: var(--rojo-suave); border-color: transparent; }
+.checks input.pulso { animation: pulso var(--m-agil-t) var(--m-agil); }
+@keyframes pulso { from { transform: scale(.55); } }
 .checks small { display: block; color: var(--texto-2); font-size: 12px; }
 
 /* ---------- Videocápsulas ---------- */
@@ -198,7 +206,7 @@ main { min-width: 0; }
 .filtros button { height: 34px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--borde); background: var(--panel); font-size: 13px; font-weight: 600; }
 .filtros button[aria-pressed="true"] { background: var(--texto); color: var(--fondo); border-color: var(--texto); }
 .rejilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
-.video { overflow: hidden; transition: transform .2s, box-shadow .2s; text-decoration: none; color: inherit; display: block; }
+.video { overflow: hidden; transition: transform var(--m-agil-t) var(--m-agil), box-shadow .2s; text-decoration: none; color: inherit; display: block; }
 .video:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,.08); }
 .mini { aspect-ratio: 16 / 9; background: #121212; color: #fff; position: relative; overflow: hidden; display: grid; place-items: center; }
 .mini .gr { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 22px 22px; }
@@ -241,7 +249,8 @@ main { min-width: 0; }
 .conv header .vivo { width: 8px; height: 8px; border-radius: 50%; background: var(--verde); display: inline-block; margin-right: 6px; animation: late 2s ease-in-out infinite; }
 @keyframes late { 50% { opacity: .3; } }
 .mensajes { flex: 1; overflow: auto; padding: 22px; display: flex; flex-direction: column; gap: 14px; background: var(--suave); }
-.msj { max-width: 74%; padding: 12px 16px; border-radius: 14px; font-size: 14px; animation: entra .3s ease-out; }
+.msj { max-width: 74%; padding: 12px 16px; border-radius: 14px; font-size: 14px; animation: entra var(--m-agil-t) var(--m-agil); transform-origin: left bottom; }
+.msj.yo { transform-origin: right bottom; }
 .msj.yo { align-self: flex-end; background: var(--rojo); color: var(--rojo-texto); border-bottom-right-radius: 4px; }
 .msj.eva { align-self: flex-start; background: var(--panel); border: 1px solid var(--borde); border-bottom-left-radius: 4px; }
 .msj p { margin: 0; }
@@ -353,7 +362,7 @@ main { min-width: 0; }
   .chat { grid-template-columns: minmax(0, 1fr); height: auto; min-height: 0; }
   .conv-lista { border-right: 0; border-bottom: 1px solid var(--borde); display: flex; gap: 6px; overflow-x: auto; padding: 10px; }
   .conv-lista h2 { display: none; }
-  .conv-lista button { width: auto; white-space: nowrap; border: 1px solid var(--borde); border-radius: 999px; padding: 6px 12px; }
+  .conv-lista button { width: auto; flex: none; white-space: nowrap; border: 1px solid var(--borde); border-radius: 999px; padding: 6px 12px; }
   .mensajes { min-height: 340px; }
   .msj { max-width: 90%; }
   .bv-caja { padding: 24px 18px 18px; border-radius: 18px; }
@@ -369,6 +378,43 @@ main { min-width: 0; }
   .abajo-tel a { display: grid; justify-items: center; gap: 2px; font-size: 11px; color: var(--texto-2); text-decoration: none; padding: 4px 0; border-radius: 8px; }
   .abajo-tel a[aria-current="page"] { color: var(--rojo); font-weight: 600; }
 }
+/* ---------- Efectos (efectos.js) ---------- */
+/* Al presionar, el control se hunde un poco y vuelve con muelle. */
+:is(.btn, .redondo, .mods button, .filtros button, .video, .sesion > button, .pestanas button, .lista-cursos button):active { transform: scale(.97); transition-duration: .08s; }
+.sesion > button:active, .pestanas button:active { transform: scale(.99); }
+.menu a[role="button"] { cursor: pointer; }
+.cabecera #sonido-tel { align-items: center; justify-content: center; }
+/* Cruces del escudo que saltan al terminar un módulo. */
+.chispa { position: fixed; z-index: 30; width: 14px; height: 14px; pointer-events: none; background: #b59a62;
+  clip-path: polygon(36% 0, 64% 0, 64% 36%, 100% 36%, 100% 64%, 64% 64%, 64% 100%, 36% 100%, 36% 64%, 0 64%, 0 36%, 36% 36%); }
+.chispa.roja { background: var(--rojo); }
+/* Avisos: suben desde abajo con muelle; el escudo se traza dentro. */
+.avisos { position: fixed; z-index: 25; right: 24px; bottom: 24px; display: grid; gap: 10px; justify-items: end; pointer-events: none; }
+.aviso { display: flex; align-items: center; gap: 14px; min-width: 280px; max-width: 360px; padding: 12px 18px 12px 12px; border-radius: 16px;
+  background: var(--panel); border: 1px solid var(--borde); box-shadow: 0 18px 40px rgba(0,0,0,.18); color: var(--texto);
+  -webkit-backdrop-filter: blur(24px) saturate(170%); backdrop-filter: blur(24px) saturate(170%);
+  opacity: 0; transform: translateY(26px) scale(.96); transition: opacity .16s, transform var(--m-normal-t) var(--m-normal); }
+.aviso.ver { opacity: 1; transform: none; }
+.aviso.sale { opacity: 0; transform: translateY(10px) scale(.98); transition: opacity .2s, transform .25s ease-in; }
+.aviso b { display: block; font-size: 15px; }
+.aviso div span { font-size: 13px; color: var(--texto-2); }
+.av-esc { width: 30px; height: 40px; flex: none; }
+.av-esc svg { width: 100%; height: 100%; overflow: visible; }
+.aviso .trazo { animation-duration: .7s; }
+.aviso .iso-relleno { animation-delay: .35s; }
+.aviso .iso-brillo { animation-delay: .8s; }
+.aviso.grande { min-width: 320px; padding: 16px 22px 16px 16px; border-color: #b59a62; }
+.aviso.grande .av-esc { width: 46px; height: 60px; }
+.aviso.grande b { font-size: 17px; }
+/* Cambio de tema: el color nuevo se abre en círculo desde el botón (View Transitions). */
+:root.vt-tema::view-transition-old(root), :root.vt-tema::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+:root.vt-tema::view-transition-new(root) { z-index: 2; }
+.veredicto { display: inline-block; }
+@media (max-width: 860px) {
+  .avisos { left: 12px; right: 12px; bottom: calc(80px + env(safe-area-inset-bottom)); justify-items: stretch; }
+  .aviso, .aviso.grande { min-width: 0; max-width: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001s !important; animation-iteration-count: 1 !important; transition-duration: .001s !important; }
 }
@@ -467,6 +513,7 @@ main { min-width: 0; }
       <label class="buscador"><span id="ic-buscar"></span><input id="buscar" placeholder="Buscar cursos, videocápsulas o términos" aria-label="Buscar"><kbd>Ctrl K</kbd></label>
       <div class="der">
         <button class="redondo solo-pc" id="ayuda" aria-label="Ayuda"></button>
+        <button class="redondo solo-tel" id="sonido-tel" aria-label="Apagar sonido y vibración"></button>
         <button class="redondo" id="tema" aria-label="Cambiar a modo oscuro"></button>
         <span class="perfil" title="No hay cuentas: tu nombre se guarda sólo en este navegador">
           <span class="ini">Tú</span>
@@ -479,6 +526,7 @@ main { min-width: 0; }
 </div>
 <nav class="abajo-tel" id="menu-tel" aria-label="Menú"></nav>
 <script src="escudo.js"></script>
+<script src="efectos.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

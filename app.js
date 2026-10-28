@@ -37,6 +37,8 @@ const IC = {
   racha: '<path d="M12 3c1 3 4 4.5 4 9a4 4 0 0 1-8 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 0-8z"/>',
   ok: '<path d="m5 12 5 5 9-10"/>',
   enviar: '<path d="M4 12 20 4l-6 16-3-7z"/>',
+  sonido: '<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/>',
+  mudo: '<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="m17 9 5 6M22 9l-5 6"/>',
   enlace: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
 };
 
@@ -136,7 +138,7 @@ const limpio = (t) => t.replace(/[<>&"]/g, '');
 /* ---------- Menú ---------- */
 const VISTAS = [['inicio', 'Inicio'], ['cursos', 'Cursos'], ['videos', 'Videocápsulas'], ['docentes', 'Docentes'], ['eva', 'Pregunta a EVA']];
 $('#menu').innerHTML = VISTAS.map(([id, t]) => `<li><a href="#${id}" data-v="${id}">${I(IC[id])}${t}</a></li>`).join('');
-$('#menu-abajo').innerHTML = `<li><a href="#ajustes" data-accion="letra">${I(IC.letra)}Letra y contraste</a></li>`;
+$('#menu-abajo').innerHTML = `<li><a href="#ajustes" id="sonido-lat" role="button"></a></li><li><a href="#ajustes" data-accion="letra">${I(IC.letra)}Letra y contraste</a></li>`;
 $('#menu-tel').innerHTML = VISTAS.map(([id, t]) => `<a href="#${id}" data-v="${id}">${I(IC[id], 22)}${id === 'eva' ? 'EVA' : id === 'videos' ? 'Videos' : t}</a>`).join('');
 $('#ic-buscar').innerHTML = I(IC.buscar);
 $('#ayuda').innerHTML = I(IC.ayuda);
@@ -146,11 +148,28 @@ const pintarTema = () => {
   $('#tema').setAttribute('aria-label', osc ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
 };
 pintarTema();
-$('#tema').addEventListener('click', () => {
-  raiz.dataset.tema = raiz.dataset.tema === 'oscuro' ? 'claro' : 'oscuro';
-  try { localStorage.setItem('panel:tema', raiz.dataset.tema); } catch {}
-  pintarTema();
+$('#tema').addEventListener('click', (e) => {
+  EF.sonar('tema');
+  EF.cambiarTema(e.currentTarget, () => {
+    raiz.dataset.tema = raiz.dataset.tema === 'oscuro' ? 'claro' : 'oscuro';
+    try { localStorage.setItem('panel:tema', raiz.dataset.tema); } catch {}
+    pintarTema();
+  });
 });
+// Sonido y vibración: encendidos, con un botón para apagarlos (en el menú lateral y, en el teléfono, en la cabecera).
+const pintarSonido = () => {
+  const si = EF.conSonido();
+  $('#sonido-lat').innerHTML = `${I(si ? IC.sonido : IC.mudo)}Sonido: ${si ? 'sí' : 'no'}`;
+  $('#sonido-tel').innerHTML = I(si ? IC.sonido : IC.mudo);
+  for (const b of [$('#sonido-lat'), $('#sonido-tel')]) {
+    b.setAttribute('aria-pressed', String(si));
+    b.setAttribute('aria-label', si ? 'Apagar sonido y vibración' : 'Encender sonido y vibración');
+  }
+};
+pintarSonido();
+for (const b of [$('#sonido-lat'), $('#sonido-tel')]) {
+  b.addEventListener('click', (e) => { e.preventDefault(); EF.ponerSonido(!EF.conSonido()); pintarSonido(); });
+}
 document.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); $('#buscar').focus(); }
 });
@@ -167,7 +186,7 @@ function contar(el, hasta, sufijo = '') {
 }
 function rayaPestanas(caja) {
   const b = $('[aria-selected="true"]', caja), raya = $('.raya', caja);
-  if (b && raya) { raya.style.left = b.offsetLeft + 'px'; raya.style.width = b.offsetWidth + 'px'; }
+  if (b && raya) EF.moverRaya(raya, b.offsetLeft, b.offsetWidth);
 }
 const chip = (k) => `<span class="chip-n" style="background:${COLORES[k]}">${k + 1}</span>`;
 
@@ -227,6 +246,7 @@ function alMontarInicio() {
   rayaPestanas(p);
   p.addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
+    if (b.getAttribute('aria-selected') !== 'true') EF.sonar('clic');
     p.querySelectorAll('button').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
     rayaPestanas(p);
   });
@@ -297,12 +317,16 @@ function alMontarCursos() {
   const abrir = $('#abrir-cursos'), lista = $('#lista-cursos');
   abrir.addEventListener('click', (e) => { e.stopPropagation(); lista.hidden = !lista.hidden; abrir.setAttribute('aria-expanded', String(!lista.hidden)); });
   document.addEventListener('click', () => { lista.hidden = true; abrir.setAttribute('aria-expanded', 'false'); }, { once: true });
-  lista.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; cursoActual = +b.dataset.c; moduloActual = 0; montar('cursos'); });
-  $('.mods').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; moduloActual = +b.dataset.m; montar('cursos'); });
+  lista.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; cursoActual = +b.dataset.c; moduloActual = 0; EF.sonar('clic'); montar('cursos', '.progreso, .mods, .sesion, .lado'); });
+  $('.mods').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b || +b.dataset.m === moduloActual) return;
+    moduloActual = +b.dataset.m; EF.sonar('clic'); montar('cursos', '.sesion, .lado .cont');
+  });
   $('.sesiones').addEventListener('click', (e) => {
     const b = e.target.closest('.sesion > button'); if (!b) return;
     const s = b.parentElement, abierta = !s.classList.contains('abierta');
     s.classList.toggle('abierta', abierta); b.setAttribute('aria-expanded', String(abierta));
+    if (abierta) EF.sonar('abre');
   });
   const pest = $('#pest-lado'), cont = $('#cont-lado');
   const mostrar = (p) => {
@@ -310,16 +334,36 @@ function alMontarCursos() {
     rayaPestanas(pest);
     cont.innerHTML = p === 'mat' ? ladoMateriales() : ladoActividad();
   };
-  pest.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) mostrar(b.dataset.p); });
+  pest.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b || b.getAttribute('aria-selected') === 'true') return;
+    EF.sonar('clic'); mostrar(b.dataset.p); EF.llegar(cont, ':scope > h3, :scope > ul, :scope > p, .checks li, .btns');
+  });
   cont.addEventListener('change', (e) => {
     const casillas = [...cont.querySelectorAll('input')];
     const n = casillas.filter((x) => x.checked).length;
+    const antes = hechas(cursoActual, moduloActual);
+    e.target.classList.remove('pulso'); void e.target.offsetWidth; e.target.classList.add('pulso');
     avance[cursoActual] = avance[cursoActual] || [0, 0, 0, 0];
     avance[cursoActual][moduloActual] = n; guardar();
     const pct = Math.round(totalCurso(cursoActual) / 16 * 100);
     const b = $('#barra-curso'); b.style.width = Math.max(pct, 4) + '%'; b.textContent = pct + '%';
-    $(`.mods button[data-m="${moduloActual}"] .hecho`).textContent = n === 4 ? '✓' : '';
+    const marca = $(`.mods button[data-m="${moduloActual}"] .hecho`);
+    marca.textContent = n === 4 ? '✓' : '';
     $('p', cont).textContent = `Módulo ${cursoActual + 1}.${moduloActual + 1}: ${n} de 4 pasos.`;
+    if (n === 4 && antes < 4) {
+      const r = e.target.getBoundingClientRect();
+      EF.cruces(r.left + r.width / 2, r.top + r.height / 2);
+      EF.brotar(marca);
+      if (modulosListos(cursoActual) === 4) {
+        const cursos = CURSOS.filter((_, k) => modulosListos(k) === 4).length;
+        EF.sonar('curso'); EF.vibrar([14, 60, 14, 60, 40]);
+        EF.aviso({ titulo: `Curso ${cursoActual + 1} terminado`, texto: `${CURSOS[cursoActual][0]}. Llevas ${cursos} de 8 cursos.`, icono: isotipo(), grande: true });
+      } else {
+        const listos = CURSOS.reduce((t, _, k) => t + modulosListos(k), 0);
+        EF.sonar('modulo'); EF.vibrar([12, 50, 20]);
+        EF.aviso({ titulo: `Módulo ${cursoActual + 1}.${moduloActual + 1} terminado`, texto: `Llevas ${listos} de 32 módulos.`, icono: isotipo({ brillo: false }) });
+      }
+    } else if (n > antes) { EF.sonar('marca'); EF.vibrar(8); } else EF.sonar('desmarca');
   });
   mostrar(location.search.includes('actividad') ? 'act' : 'mat');
 }
@@ -346,9 +390,11 @@ function vistaVideos() {
 function alMontarVideos() {
   $('#filtros').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
-    filtro = +b.dataset.c;
+    if (+b.dataset.c === filtro) return;
+    filtro = +b.dataset.c; EF.sonar('clic');
     $('#filtros').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     $('#rejilla').innerHTML = tarjetasVideos();
+    EF.llegar($('#rejilla'), '.video');
   });
   $('#rejilla').addEventListener('click', (e) => {
     const a = e.target.closest('.video'); if (!a) return;
@@ -394,6 +440,7 @@ function alMontarDocentes() {
     const b = e.target.closest('.sesion > button'); if (!b) return;
     const s = b.parentElement, abierta = !s.classList.contains('abierta');
     s.classList.toggle('abierta', abierta); b.setAttribute('aria-expanded', String(abierta));
+    if (abierta) EF.sonar('abre');
   });
 }
 
@@ -428,12 +475,14 @@ function alMontarEva() {
     const [, v, texto, ojo] = hallada;
     document.querySelectorAll('#conv-lista button').forEach((b) => b.setAttribute('aria-current', String(b.textContent === q)));
     clearInterval(escribiendo);
+    EF.sonar('envia');
     caja.insertAdjacentHTML('beforeend', `<div class="msj yo"><p>${q.replace(/</g, '&lt;')}</p></div>`);
     caja.insertAdjacentHTML('beforeend', `<div class="msj eva" id="pensando"><span class="escribe"><i></i><i></i><i></i></span></div>`);
     bajar();
     setTimeout(() => {
       const m = $('#pensando'); m.removeAttribute('id');
       m.innerHTML = `<span class="veredicto" style="background:${VEREDICTO[v][0]}">${VEREDICTO[v][1]}</span><p class="txt"></p>`;
+      EF.sonar('llega'); EF.brotar($('.veredicto', m));
       const t = $('.txt', m); let n = 0;
       const fin = () => { m.insertAdjacentHTML('beforeend', `<p class="ojo">Ojo: ${ojo}</p>`); bajar(); };
       if (quieto) { t.textContent = texto; fin(); return; }
@@ -450,10 +499,13 @@ const PANTALLAS = {
   inicio: [vistaInicio, alMontarInicio], cursos: [vistaCursos, alMontarCursos], videos: [vistaVideos, alMontarVideos],
   docentes: [vistaDocentes, alMontarDocentes], eva: [vistaEva, alMontarEva],
 };
-function montar(id) {
+// Las piezas que entran subiendo, una tras otra, al llegar a una pantalla.
+const PIEZAS = '.titulo, .tablero > *, .barra-herr, .progreso, .mods, .sesion, .lado, .filtros, .video, .chat';
+function montar(id, piezas = PIEZAS) {
   const [html, despues] = PANTALLAS[id] || PANTALLAS.inicio;
   const v = $('#vista');
   v.innerHTML = `<div class="vista">${html()}</div>`;
+  EF.llegar(v, piezas);
   document.querySelectorAll('[data-v]').forEach((a) => (a.dataset.v === id ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
   despues();
 }
@@ -500,6 +552,7 @@ function bienvenida() {
   if (!quieto) requestAnimationFrame(() => bv.classList.add('ver')); else bv.classList.add('ver');
   bv.addEventListener('click', (e) => {
     const b = e.target.closest('[data-ir]'); if (!b) return;
+    EF.sonar('llega');
     const n = limpio($('#bv-nombre').value.trim());
     if (n) { nombre = n; try { localStorage.setItem('panel:nombre', n); } catch {} pintarPerfil(); }
     try { localStorage.setItem('panel:bienvenida', '1'); } catch {}
