@@ -7,7 +7,8 @@
    - con «reducir movimiento» no hay animaciones; el sonido se apaga con su botón y la elección queda guardada. */
 (() => {
   const raiz = document.documentElement;
-  const quieto = location.search.includes('captura') || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Sin movimiento: en capturas, si el sistema lo pide o si la persona eligió «Menos movimiento» (app.js lo actualiza).
+  let quieto = location.search.includes('captura') || matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- Muelles ----------
      Un muelle es una función del tiempo; se muestrea en una curva CSS linear() y se guarda como variable
@@ -162,7 +163,7 @@
     }
   }
   // Aviso abajo a la derecha (en el teléfono, sobre el menú). Lo lee también el lector de pantalla.
-  function aviso({ titulo, texto, icono = '', grande = false }) {
+  function aviso({ titulo, texto, icono = '', grande = false, accion }) {
     let zona = document.getElementById('avisos');
     if (!zona) {
       zona = document.createElement('div');
@@ -173,10 +174,18 @@
     const el = document.createElement('div');
     el.className = 'aviso' + (grande ? ' grande' : '');
     el.innerHTML = `<span class="av-esc">${icono}</span><div><b>${titulo}</b><span>${texto}</span></div>`;
+    // Un aviso puede traer un botón (por ejemplo «Ver constancia»); entonces se queda más tiempo.
+    if (accion) {
+      const b = document.createElement('button');
+      b.className = 'btn suave av-accion'; b.textContent = accion.texto;
+      b.addEventListener('click', () => { cerrar(); accion.al(); });
+      el.append(b);
+    }
     zona.append(el);
     if (quieto) el.classList.add('ver'); else requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('ver')));
-    setTimeout(() => { el.classList.remove('ver'); el.classList.add('sale'); setTimeout(() => el.remove(), 400); }, grande ? 4800 : 3200);
+    const cerrar = () => { el.classList.remove('ver'); el.classList.add('sale'); setTimeout(() => el.remove(), 400); };
+    setTimeout(cerrar, accion ? 9000 : grande ? 4800 : 3200);
   }
 
-  window.EF = { quieto, M, sonar, vibrar, ponerSonido, conSonido: () => sonido, llegar, moverRaya, brotar, cambiarTema, cruces, aviso };
+  window.EF = { get quieto() { return quieto; }, ponerQuieto: (v) => { quieto = v; }, M, sonar, vibrar, ponerSonido, conSonido: () => sonido, llegar, moverRaya, brotar, cambiarTema, cruces, aviso };
 })();

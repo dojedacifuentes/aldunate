@@ -378,6 +378,153 @@ main { min-width: 0; }
   .abajo-tel a { display: grid; justify-items: center; gap: 2px; font-size: 11px; color: var(--texto-2); text-decoration: none; padding: 4px 0; border-radius: 8px; }
   .abajo-tel a[aria-current="page"] { color: var(--rojo); font-weight: 600; }
 }
+/* ---------- Ventanas que flotan (ajustes, buscador, constancia, ayuda) ---------- */
+.pop { background: var(--panel); border: 1px solid var(--borde); border-radius: 16px; color: var(--texto); box-shadow: 0 24px 60px rgba(0,0,0,.22);
+  -webkit-backdrop-filter: blur(30px) saturate(170%); backdrop-filter: blur(30px) saturate(170%); }
+:root[data-tema="claro"] .pop { background: rgba(255,252,246,.97); }
+:root[data-tema="oscuro"] .pop { background: rgba(20,20,20,.96); }
+.perfil { cursor: pointer; }
+
+/* Letra y contraste */
+.ajustes-pop { position: fixed; z-index: 30; width: 360px; padding: 16px 20px 18px; }
+.ajustes-pop h3 { margin: 0 0 2px; font-size: 16px; }
+.ajustes-pop .nota { margin: 0 0 12px; font-size: 13px; color: var(--texto-2); }
+.tamanos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 4px; }
+.tamanos button { height: 40px; border-radius: 10px; border: 1px solid var(--borde); background: var(--suave); font-weight: 600; white-space: nowrap; }
+.tamanos button[aria-checked="true"] { background: var(--rojo); border-color: var(--rojo); color: var(--rojo-texto); }
+.sw { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; border: 0; border-bottom: 1px solid var(--linea, var(--borde)); background: none; text-align: left; font-size: 14px; }
+.sw small { display: block; color: var(--texto-2); font-size: 12px; }
+.sw i { width: 42px; height: 24px; border-radius: 12px; background: rgba(127,127,127,.35); position: relative; flex: none; transition: background .15s; }
+.sw i::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: left var(--m-agil-t) var(--m-agil); }
+.sw[aria-checked="true"] i { background: var(--rojo); } .sw[aria-checked="true"] i::after { left: 21px; }
+:root[data-letra="grande"] main { zoom: 1.12; }
+:root[data-letra="enorme"] main { zoom: 1.25; }
+:root[data-contraste][data-estilo]:not([data-tema="oscuro"]) { --texto: #120c0a; --texto-2: #3b302a; --borde: rgba(36,27,23,.42); --linea: rgba(36,27,23,.3); --panel: #fffdf9; --nav: #fffdf9; }
+:root[data-contraste][data-estilo][data-tema="oscuro"] { --texto: #fff; --texto-2: #dcdcd8; --borde: rgba(255,255,255,.42); --linea: rgba(255,255,255,.3); --panel: #0b0b0b; --nav: #0b0b0b; }
+:root[data-contraste] :is(.caja, .sesion, .mods button, .btn, .redondo, .perfil, .buscador)::after { display: none; }
+
+/* Buscador */
+.resultados { position: absolute; z-index: 30; left: -1px; top: calc(100% + 8px); width: max(100%, 520px); max-height: min(70vh, 560px); overflow: auto; color: var(--texto); }
+.r-grupo { padding: 10px 8px 4px; }
+.r-grupo h4 { margin: 0 10px 6px; font: 600 11px 'IBM Plex Mono', monospace; letter-spacing: .06em; color: var(--texto-2); text-transform: uppercase; }
+.r-fila { display: flex; gap: 12px; align-items: center; padding: 8px 10px; border-radius: 10px; font-size: 14px; cursor: pointer; }
+.r-fila[aria-selected="true"] { background: var(--rojo-suave); }
+.r-fila small { display: block; color: var(--texto-2); font-size: 12px; line-height: 1.35; }
+.r-fila mark { background: none; color: var(--rojo); font-weight: 700; }
+.r-ic { width: 34px; height: 32px; border-radius: 8px; display: grid; place-items: center; background: var(--suave); color: var(--rojo); flex: none; font: 600 12px 'IBM Plex Mono', monospace; }
+.r-pie { display: flex; gap: 16px; padding: 10px 18px; border-top: 1px solid var(--linea, var(--borde)); font: 500 11px 'IBM Plex Mono', monospace; color: var(--texto-2); }
+.r-pie kbd { border: 1px solid var(--borde); border-radius: 4px; padding: 0 5px; margin-right: 4px; font: inherit; }
+.r-nada { margin: 0; padding: 16px 18px; font-size: 14px; color: var(--texto-2); }
+
+/* Semana de estudio, filtro del avance, novedades */
+.dias-sem { display: flex; gap: 4px; margin-top: 8px; }
+.dias-sem i { width: 21px; height: 21px; border-radius: 6px; display: grid; place-items: center; font: 600 10px 'IBM Plex Mono', monospace; font-style: normal; background: rgba(127,127,127,.14); color: var(--texto-2); }
+.dias-sem i.on { background: var(--rojo); color: var(--rojo-texto); }
+.dias-sem i.hoy { outline: 2px solid var(--rojo); outline-offset: 1px; }
+.dato-semana { align-items: flex-start; }
+.dato-semana .ic { display: none; }
+.lado-video p.muestra { font-size: 11px; }
+.sel-caja { margin-left: auto; }
+.menu-sel { left: auto; right: 0; top: 40px; width: 200px; }
+.barras li[hidden] { display: none; }
+.semana header .flechas button:disabled { opacity: .3; cursor: default; }
+.novedades { list-style: none; margin: 12px 0 0; padding: 0 20px; display: grid; gap: 14px; }
+.novedades li { padding-left: 12px; border-left: 3px solid var(--rojo); }
+.novedades p { margin: 0; font-size: 14px; font-weight: 500; } .novedades .sub { color: var(--texto-2); font-weight: 400; }
+
+/* Constancia */
+.modal { position: fixed; inset: 0; z-index: 35; display: grid; place-items: center; padding: 16px; overflow: auto;
+  background: rgba(10,6,6,.5); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.const-caja { position: relative; width: min(620px, 100%); padding: 34px 40px 28px; text-align: center; }
+.const-caja .cerrar { position: absolute; right: 12px; top: 10px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: none; font-size: 24px; color: var(--texto-2); }
+.const-esc { width: 74px; height: 96px; margin: 0 auto 12px; } .const-esc svg { width: 100%; height: 100%; overflow: visible; }
+.const-eti { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--rojo); }
+.const-caja h2 { font-size: 30px; margin: 6px 0 2px; letter-spacing: -.01em; }
+.const-nombre { display: block; max-width: 320px; margin: 4px auto 10px; font-size: 13px; color: var(--texto-2); }
+.const-nombre input { display: block; width: 100%; margin-top: 4px; height: 40px; border-radius: 10px; border: 1px solid var(--borde); background: var(--suave); padding: 0 12px; text-align: center; }
+.const-curso { font-size: 17px; margin: 0 0 18px; color: var(--texto-2); } .const-curso b { color: var(--texto); }
+.const-datos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 0 18px; }
+.const-datos div { background: var(--suave); border: 1px solid var(--borde); border-radius: 12px; padding: 10px; }
+.const-datos b { display: block; font: 600 18px 'IBM Plex Mono', monospace; } .const-datos span { font-size: 12px; color: var(--texto-2); }
+.const-nota { font-size: 12px; color: var(--texto-2); margin: 0 0 18px; line-height: 1.45; }
+.const-bot { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+/* Videocápsula */
+.volver { color: var(--texto-2); text-decoration: none; font-size: 14px; }
+.reproductor { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 18px; align-items: start; }
+.pantalla { position: relative; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; background: #0e0b0b; color: #fff; cursor: pointer; }
+.pantalla .gr { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 32px 32px; }
+.pantalla .linea { position: absolute; left: 0; right: 0; top: 0; height: 4px; }
+.pantalla .simulado { position: absolute; right: 16px; top: 16px; font-size: 11px; letter-spacing: .08em; padding: 3px 8px; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; color: rgba(255,255,255,.75); }
+.pantalla .k { position: absolute; left: 32px; top: 26px; font: 600 64px/1 'IBM Plex Mono', monospace; letter-spacing: -.04em; }
+.pantalla .tit { position: absolute; left: 34px; top: 100px; font-size: 22px; font-weight: 600; max-width: 60%; }
+.gran-play { position: absolute; left: 50%; top: 50%; width: 76px; height: 76px; margin: -38px 0 0 -38px; border-radius: 50%; border: 0; background: rgba(255,255,255,.95); color: #111;
+  display: grid; place-items: center; transition: opacity .2s, transform var(--m-agil-t) var(--m-agil); }
+.pantalla:hover .gran-play { transform: scale(1.06); }
+.pantalla.rodando .gran-play { opacity: 0; transform: scale(.8); pointer-events: none; }
+.pantalla .sub { position: absolute; left: 50%; bottom: 66px; transform: translateX(-50%); width: max-content; max-width: 86%; text-align: center;
+  background: rgba(0,0,0,.72); padding: 8px 14px; border-radius: 8px; font-size: 18px; line-height: 1.35; }
+.pantalla .ctr { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 18px 14px; display: flex; align-items: center; gap: 14px;
+  background: linear-gradient(transparent, rgba(0,0,0,.7)); font: 500 13px 'IBM Plex Mono', monospace; }
+.pantalla .ctr button { color: #fff; }
+.pantalla .barra { flex: 1; height: 16px; position: relative; cursor: pointer; }
+.pantalla .barra::before { content: ''; position: absolute; left: 0; right: 0; top: 6px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.25); }
+.pantalla .barra b { position: absolute; left: 0; top: 6px; height: 5px; width: 0; background: #e5594e; border-radius: 3px; }
+.pantalla .barra b::after { content: ''; position: absolute; right: -6px; top: -4px; width: 13px; height: 13px; border-radius: 50%; background: #fff; }
+.pantalla .chip { border: 1px solid rgba(255,255,255,.5); border-radius: 5px; padding: 1px 6px; background: none; font: inherit; }
+.pantalla .chip[aria-pressed="false"] { opacity: .5; text-decoration: line-through; }
+.pantalla .play { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; border: 0; background: #fff; color: #111 !important; flex: none; }
+.lado-video { padding: 18px 20px; }
+.lado-video h3 { font-size: 14px; margin: 0 0 8px; } .lado-video p { margin: 0; font-size: 14px; color: var(--texto-2); }
+.capitulos { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 2px; }
+.capitulos button { width: 100%; display: flex; gap: 10px; padding: 7px 8px; border: 0; border-radius: 8px; background: none; text-align: left; font-size: 14px; }
+.capitulos button:hover { background: var(--suave); }
+.capitulos li.ahora button { background: var(--rojo-suave); font-weight: 600; }
+.capitulos span { font: 500 12px 'IBM Plex Mono', monospace; color: var(--texto-2); width: 38px; flex: none; padding-top: 2px; }
+.siguiente { display: flex; gap: 12px; align-items: center; margin-top: 14px; padding: 10px; border: 1px solid var(--borde); border-radius: 12px; font-size: 13px; color: inherit; text-decoration: none; }
+.siguiente:hover { border-color: var(--texto-2); }
+.siguiente .mk { width: 64px; height: 40px; border-radius: 6px; background: #0e0b0b; color: #fff; display: grid; place-items: center; font: 600 15px 'IBM Plex Mono', monospace; flex: none; }
+.siguiente small { display: block; color: var(--texto-2); }
+.btn:disabled { opacity: .75; cursor: default; transform: none; }
+
+/* Recorrido de ayuda */
+.guia { position: fixed; inset: 0; z-index: 32; }
+.guia-hueco { position: absolute; border-radius: 18px; box-shadow: 0 0 0 4px var(--rojo), 0 0 0 9999px rgba(10,6,6,.55); pointer-events: none; transition: all var(--m-normal-t) var(--m-normal); }
+.guia-caja { position: absolute; width: 340px; padding: 18px 20px; }
+.guia-paso { font-size: 11px; font-weight: 600; color: var(--rojo); letter-spacing: .06em; }
+.guia-caja h3 { margin: 6px 0 4px; font-size: 17px; } .guia-caja p { margin: 0 0 14px; color: var(--texto-2); font-size: 14px; }
+.guia-bot { display: flex; align-items: center; gap: 10px; } .guia-bot .btn { height: 36px; }
+.puntos { display: flex; gap: 5px; margin-right: auto; }
+.puntos i { width: 7px; height: 7px; border-radius: 50%; background: rgba(127,127,127,.35); } .puntos i.on { background: var(--rojo); width: 18px; border-radius: 4px; }
+
+/* EVA: preguntas sugeridas cuando no sabe */
+.eva-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.eva-chips button { border: 1px solid var(--borde); border-radius: 999px; padding: 6px 12px; font-size: 13px; background: var(--panel); text-align: left; }
+.eva-chips button:hover { border-color: var(--rojo); color: var(--rojo); }
+.aviso .av-accion { pointer-events: auto; margin-left: auto; height: 34px; padding: 0 12px; font-size: 13px; flex: none; }
+.aviso:has(.av-accion) { max-width: 460px; }
+.aviso:has(.av-accion) b { white-space: nowrap; }
+
+@media (max-width: 860px) {
+  .ajustes-pop { left: 12px; right: 12px; bottom: calc(80px + env(safe-area-inset-bottom)); width: auto; }
+  .reproductor { grid-template-columns: minmax(0, 1fr); }
+  .pantalla .k { font-size: 40px; left: 18px; top: 16px; } .pantalla .tit { font-size: 15px; left: 18px; top: 62px; }
+  .pantalla .simulado { top: 12px; right: 12px; font-size: 9px; }
+  .gran-play { width: 56px; height: 56px; margin: -28px 0 0 -28px; }
+  .pantalla .sub { font-size: 13px; bottom: 48px; } .pantalla .ctr { font-size: 11px; gap: 10px; padding: 8px 12px; } .pantalla .play { width: 26px; height: 26px; }
+  .const-caja { padding: 26px 18px 20px; } .const-caja h2 { font-size: 24px; } .const-esc { width: 56px; height: 72px; }
+  .const-datos b { font-size: 15px; }
+  .guia-caja { left: 12px !important; right: 12px; bottom: calc(84px + env(safe-area-inset-bottom)); top: auto !important; width: auto; }
+  .dias-sem i { width: 18px; height: 18px; font-size: 9px; } .dias-sem { gap: 3px; }
+  .avance header { flex-wrap: wrap; }
+}
+@media print {
+  body > *:not(#constancia) { display: none !important; }
+  #constancia { position: static; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; }
+  .const-caja { box-shadow: none; border-color: #ccc; background: #fff !important; color: #111; }
+  .const-bot, .const-caja .cerrar, .const-nombre { display: none !important; }
+}
+
 /* ---------- Efectos (efectos.js) ---------- */
 /* Al presionar, el control se hunde un poco y vuelve con muelle. */
 :is(.btn, .redondo, .mods button, .filtros button, .video, .sesion > button, .pestanas button, .lista-cursos button):active { transform: scale(.97); transition-duration: .08s; }
@@ -493,6 +640,9 @@ main { min-width: 0; }
   :root[data-estilo="vidrio"][data-tema="oscuro"] { --panel: rgba(18,18,18,.95); --nav: rgba(18,18,18,.92); }
 }
 </style>
+<link rel="stylesheet" href="vitrinas.css">
+<link rel="stylesheet" href="laboratorio.css">
+<link rel="stylesheet" href="eva-ui.css">
 </head>
 <body>
 <div class="app">
@@ -527,6 +677,9 @@ main { min-width: 0; }
 <nav class="abajo-tel" id="menu-tel" aria-label="Menú"></nav>
 <script src="escudo.js"></script>
 <script src="efectos.js"></script>
+<script src="eva-ui.js"></script>
+<script src="recursos.js"></script>
+<script src="laboratorio.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
