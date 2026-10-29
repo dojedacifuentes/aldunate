@@ -155,3 +155,32 @@
   font-size: 17px; line-height: 1.5; color: var(--texto); text-align: left; }
 :root[data-tema="claro"] .bv-letra blockquote { background: #fee9f5; border-color: rgba(194,41,138,.3); }
 .bv-letra .fin-sub { color: var(--magenta) !important; font-weight: 600; }
+
+/* Bienvenidas para comparar (bienvenidas.js): galletas y curso recomendado. */
+.gal, .rec { padding: 18px 6px 6px; text-align: center; }
+.gal-t { margin: 0 0 6px; font-size: 22px; font-weight: 600; line-height: 1.3; }
+.gal-s { margin: 0 auto 22px; max-width: 420px; color: var(--texto-2); font-size: 14px; }
+.gal-bot { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.gal-bot .btn.lleno { height: 54px; padding: 0 44px; font-size: 17px; }
+.gal-conf { border: 0; background: none; padding: 4px; font-size: 11px; color: var(--texto-2); opacity: .6; text-decoration: underline; cursor: pointer; }
+.gal-opc { list-style: none; margin: 8px 0 20px; padding: 0; display: grid; gap: 8px; text-align: left; }
+.gal-opc li { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--borde); background: var(--suave); font-size: 14px; }
+.gal-sw { flex: none; width: 44px; height: 26px; border-radius: 999px; border: 0; padding: 3px; background: rgba(255,255,255,.14); cursor: pointer; transition: background .2s; }
+.gal-sw i { display: block; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.gal-sw[aria-checked="true"] { background: var(--grad); }
+.gal-sw[aria-checked="true"] i { transform: translateX(18px); }
+.gal-sw[disabled] { opacity: .5; cursor: not-allowed; }
+:root[data-tema="claro"] .gal-sw { background: rgba(0,0,0,.14); }
+.gal-lista { list-style: none; margin: 8px auto 6px; padding: 0; display: grid; gap: 6px; max-width: 360px; text-align: left; }
+.gal-lista li { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,141,204,.3); background: rgba(55,23,47,.4); font-size: 14px; }
+.gal-lista li .icono { color: var(--magenta); }
+:root[data-tema="claro"] .gal-lista li { background: #fee9f5; }
+.rec-eti { margin: 0 0 12px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--cian); }
+.rec-card { display: grid; grid-template-columns: 180px 1fr; gap: 16px; align-items: center; text-align: left; padding: 12px; border-radius: 16px; border: 1px solid var(--borde); background: var(--suave); margin: 0 auto 20px; max-width: 540px; }
+.rec-card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 10px; display: block; }
+.rec-card > div { display: grid; gap: 4px; }
+.rec-card .mono { font-size: 11px; color: var(--texto-2); }
+.rec-card b { font-size: 18px; line-height: 1.25; }
+.rec-est { color: #ffca16; letter-spacing: .1em; } .rec-est em { color: var(--texto); font-style: normal; letter-spacing: 0; font-weight: 600; margin-left: 4px; }
+.rec-dato { font-size: 13px; color: var(--magenta); font-weight: 500; }
+@media (max-width: 860px) { .rec-card { grid-template-columns: 1fr; } .gal-t { font-size: 19px; } }

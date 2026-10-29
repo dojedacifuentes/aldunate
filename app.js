@@ -1061,7 +1061,11 @@ function bienvenida() {
     EF.llegar(etapa, ':scope > *');
     setTimeout(() => $('#bv-nombre')?.focus({ preventScroll: true }), quieto ? 0 : 300);
   };
-  experimentoSiNo(etapa, {
+  // Otras primeras interacciones para comparar (bienvenidas.js): ?bv=galletas o ?bv=recomendado.
+  const variante = new URLSearchParams(location.search).get('bv');
+  if (variante === 'galletas') bvGalletas(etapa, entrada);
+  else if (variante === 'recomendado') bvRecomendado(etapa, entrada);
+  else experimentoSiNo(etapa, {
     pregunta: '<b>¿Quieres aprender a usar IA?</b>',
     letra: 'Al responder aceptas las condiciones de EVA.',
     alFin: (v, r) => {
