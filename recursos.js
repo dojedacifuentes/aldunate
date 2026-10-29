@@ -83,11 +83,35 @@ const DESCRIPCIONES = [
   'El modelo europeo, el proyecto chileno, los datos personales y los derechos fundamentales.',
 ];
 
+/* ---------- Mis cursos: EVA ACADEMY destacado ----------
+   Es el único curso completo y en línea (evaacademyia.vercel.app): va arriba, como banner, con su portada vertical hecha
+   en Google Flow (img/tarjetas/eva-academy-*.webp). Abre en otra pestaña. */
+const ACADEMY = 'https://evaacademyia.vercel.app';
+function destacadoAcademy() {
+  const img = (w) => `img/tarjetas/eva-academy-${w}.webp`;
+  return `
+  <section class="destacado" aria-labelledby="dest-t">
+    <div class="dest-fondo" aria-hidden="true"><img src="${img(360)}" alt=""></div>
+    <a class="dest-portada" href="${ACADEMY}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+      <img src="${img(540)}" srcset="${img(360)} 360w, ${img(540)} 540w" sizes="(max-width: 860px) 42vw, 230px" width="540" height="960" alt="" decoding="async"></a>
+    <div class="dest-texto">
+      <span class="dest-eti mono">Curso completo · en línea</span>
+      <h2 id="dest-t">EVA ACADEMY · IA y Derecho</h2>
+      <p>El curso que ya funciona de principio a fin. Cuatro módulos —Dentro de la máquina, La frontera, Construir y Publicar— en lecciones que se recorren como presentaciones, con laboratorios, casos con decisiones, juegos y un repaso del día. Sin crear cuenta.</p>
+      <ul class="dest-chips"><li>4 módulos</li><li>Laboratorios</li><li>Casos con decisiones</li><li>Sala de juegos</li><li>Guías en PDF</li></ul>
+      <div class="dest-acc"><a class="btn lleno" href="${ACADEMY}" target="_blank" rel="noopener">Entrar a EVA ACADEMY<span class="flecha">${I(IC.flecha, 18)}</span></a>
+        <a class="btn dest-sec" href="${ACADEMY}/sala" target="_blank" rel="noopener">Ir a la Sala de juegos ↗</a></div>
+    </div>
+  </section>`;
+}
+
 /* ---------- Mis cursos: vitrina de tarjetas ---------- */
 function vistaCatalogo() {
   return `
   <div class="titulo"><div><h1>Mis cursos</h1><p>Ocho cursos de cuatro módulos. Mira de qué trata cada uno y entra cuando quieras.</p>${evaLinea('Yo los hice los ocho en un segundo. Tú tienes la ventaja de entenderlos.')}</div>
     <div class="acciones"><label class="buscador buscador-cat"><span>${I(IC.buscar, 18)}</span><input id="filtro-cat" placeholder="Filtrar cursos" aria-label="Filtrar cursos"></label></div></div>
+  ${destacadoAcademy()}
+  <h2 class="cat-sub">Los ocho cursos de la Escuela</h2>
   <div class="vitrina" id="vitrina">${CURSOS.map(([t], k) => {
     const pct = Math.round(totalCurso(k) / 16 * 100), listo = modulosListos(k) === 4;
     return `<a class="caja tarjeta" href="#cursos/${k + 1}" data-texto="${sinTildes(t + ' ' + DESCRIPCIONES[k] + ' ' + CURSOS[k][1].join(' '))}">

@@ -184,3 +184,30 @@
 .rec-est { color: #ffca16; letter-spacing: .1em; } .rec-est em { color: var(--texto); font-style: normal; letter-spacing: 0; font-weight: 600; margin-left: 4px; }
 .rec-dato { font-size: 13px; color: var(--magenta); font-weight: 500; }
 @media (max-width: 860px) { .rec-card { grid-template-columns: 1fr; } .gal-t { font-size: 19px; } }
+
+/* ---------- Mis cursos: EVA ACADEMY destacado (recursos.js → destacadoAcademy) ---------- */
+.destacado { position: relative; isolation: isolate; display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 34px; align-items: center;
+  padding: 26px; margin-bottom: 30px; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,.1); background: #111113; color: #edeef0; }
+.dest-fondo { position: absolute; inset: -60px; z-index: -1; filter: blur(60px) saturate(150%) brightness(.4); }
+.dest-fondo img { width: 100%; height: 100%; object-fit: cover; }
+.dest-portada { display: block; aspect-ratio: 9 / 16; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 30px 60px rgba(0,0,0,.45); transition: transform var(--m-agil-t) var(--m-agil); }
+.dest-portada:hover { transform: translateY(-3px) rotate(-.6deg); }
+.dest-portada img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.dest-texto { padding: 30px 30px 26px; border-radius: 20px; border: 1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  -webkit-backdrop-filter: blur(26px) saturate(160%); backdrop-filter: blur(26px) saturate(160%); }
+.dest-eti { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #4ccce6; }
+.destacado h2 { margin: 10px 0 10px; font-size: clamp(26px, 2.6vw, 38px); line-height: 1.1; letter-spacing: -.02em; }
+.destacado p { margin: 0 0 16px; color: #b0b4ba; font-size: 15px; max-width: 620px; }
+.dest-chips { list-style: none; margin: 0 0 22px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.dest-chips li { font: 500 12px 'IBM Plex Mono', monospace; padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.14); color: #edeef0; }
+.dest-acc { display: flex; flex-wrap: wrap; gap: 10px; }
+.dest-acc .btn { height: 46px; padding: 0 20px; font-size: 15px; }
+.dest-sec { border: 1px solid #12677e !important; color: #4ccce6 !important; background: rgba(8,44,54,.55) !important; font-weight: 600; }
+.cat-sub { margin: 0 0 14px; font-size: 18px; }
+@media (max-width: 860px) {
+  .destacado { grid-template-columns: 1fr; padding: 16px; gap: 16px; justify-items: center; }
+  .dest-portada { width: 42%; }
+  .dest-texto { padding: 22px 18px; width: 100%; }
+}
