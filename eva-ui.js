@@ -107,19 +107,25 @@
   const ORDEN = ['inicio', 'cursos', 'videos', 'laboratorio', 'recursos', 'guias', 'docentes', 'eva'];
 
   /* ---------- Botón y panel ---------- */
-  let fab, panel, abierto = false, pestana = 'aqui', acciones = [];
+  let fab, panel, velo, abierto = false, pestana = 'guia', acciones = [], camino = ['raiz'];
   function iniciarEva() {
     document.body.insertAdjacentHTML('beforeend', `
       <button class="eva-fab" id="eva-fab" aria-label="EVA: qué hay en esta sección" aria-expanded="false" aria-controls="eva-panel">
         <span class="eva-halo" aria-hidden="true"></span>${evaIsotipo()}<span class="eva-tip" aria-hidden="true">Pregunta a EVA</span></button>
-      <section class="eva-panel" id="eva-panel" role="dialog" aria-label="EVA, asistente de aprendizaje" hidden></section>`);
-    fab = document.getElementById('eva-fab'); panel = document.getElementById('eva-panel');
+      <div class="eva-velo" id="eva-velo" hidden></div>
+      <section class="eva-panel" id="eva-panel" role="dialog" aria-modal="true" aria-label="EVA, asistente de aprendizaje" hidden></section>`);
+    fab = document.getElementById('eva-fab'); panel = document.getElementById('eva-panel'); velo = document.getElementById('eva-velo');
     fab.addEventListener('click', (e) => { e.stopPropagation(); abierto ? cerrar() : abrir(); });
     panel.addEventListener('click', (e) => {
       e.stopPropagation();
       const b = e.target.closest('button'); if (!b) return;
       if (b.classList.contains('eva-cerrar')) return cerrar();
       if (b.dataset.pest) { pestana = b.dataset.pest; EF.sonar('clic'); return pintar(); }
+      // Árbol de decisión: elegir una opción, volver a un paso, volver a empezar o ir a un destino.
+      if (b.dataset.op) { camino.push(ARBOL_EVA[camino.at(-1)].opciones[+b.dataset.op][1]); EF.sonar(ARBOL_EVA[camino.at(-1)].fin ? 'llega' : 'clic'); return pintarArbol(); }
+      if (b.dataset.paso) { camino = camino.slice(0, +b.dataset.paso + 1); EF.sonar('clic'); return pintarArbol(); }
+      if (b.classList.contains('arb-reini')) { camino = ['raiz']; EF.sonar('clic'); return pintarArbol(); }
+      if (b.dataset.dest) { const d = ARBOL_EVA[camino.at(-1)].ir[+b.dataset.dest][1]; if (d.startsWith('http')) { open(d, '_blank', 'noopener'); return; } cerrar(false); return ir(d); }
       if (b.classList.contains('eva-volver')) return pintar();
       if (b.dataset.a) { const d = acciones[+b.dataset.a][1]; cerrar(false); return typeof d === 'function' ? d() : ir(d); }
       if (b.dataset.q) return responder(+b.dataset.q);
@@ -127,7 +133,8 @@
     });
     document.addEventListener('click', () => { if (abierto) cerrar(false); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && abierto) cerrar(); });
-    addEventListener('hashchange', () => { if (abierto) { pestana = 'aqui'; pintar(); } });
+    addEventListener('hashchange', () => { if (abierto && pestana !== 'guia') { pestana = 'aqui'; pintar(); } });
+    velo.addEventListener('click', () => cerrar());
   }
   function seccion() {
     const h = location.hash.slice(1), base = h.split(/[/?]/)[0] || 'inicio';
@@ -143,11 +150,12 @@
   function cabecera() {
     return `<header class="eva-cab"><span class="eva-mini">${evaIsotipo()}</span><div><b>EVA</b><small>Asistente de aprendizaje · IA y Derecho</small></div>
       <button class="eva-cerrar" aria-label="Cerrar">×</button></header>
-      <div class="eva-pest" role="tablist"><button role="tab" data-pest="aqui" aria-selected="${pestana === 'aqui'}">Esta sección</button><button role="tab" data-pest="todas" aria-selected="${pestana === 'todas'}">Todas las secciones</button></div>`;
+      <div class="eva-pest" role="tablist"><button role="tab" data-pest="guia" aria-selected="${pestana === 'guia'}">Te guío</button><button role="tab" data-pest="aqui" aria-selected="${pestana === 'aqui'}">Esta sección</button><button role="tab" data-pest="todas" aria-selected="${pestana === 'todas'}">Secciones</button></div>`;
   }
   const PIE = '<p class="eva-pie">Respuestas escritas por el equipo: en esta maqueta EVA no está conectada a un modelo de IA.</p>';
   function pintar() {
     const clave = seccion(), s = SECCIONES[clave], menu = { curso: 'cursos', video: 'videos', experimento: 'laboratorio' }[clave] || clave;
+    if (pestana === 'guia') return pintarArbol();
     if (pestana === 'todas') {
       panel.innerHTML = `${cabecera()}<div class="eva-cuerpo"><p class="eva-ctx">Toca una sección y te explico qué hay ahí.</p>
         <div class="eva-mapa">${ORDEN.map((k) => `<button data-s="${k}" ${k === menu ? 'aria-current="true"' : ''}>${I(IC[SECCIONES[k].icono], 20)}<span><b>${SECCIONES[k].nombre}</b><small>${SECCIONES[k].corta}</small></span></button>`).join('')}</div></div>${PIE}`;
@@ -165,6 +173,25 @@
       <p class="eva-sub mono">PREGUNTAS SOBRE ESTA SECCIÓN</p>
       <div class="eva-preg">${s.preguntas.map(([q], i) => `<button data-q="${i}">${q}</button>`).join('')}</div></div>${PIE}`;
     EF.llegar(panel, '.eva-donde, .eva-ctx, .eva-msj, .eva-acc button, .eva-preg button');
+  }
+  /* Te guío: una pregunta a la vez. Arriba, el camino recorrido (se puede volver a cualquier paso); al final, el veredicto,
+     lo que revisas tú y adónde ir. */
+  function pintarArbol() {
+    const id = camino.at(-1), n = ARBOL_EVA[id];
+    const elegidaEn = (i) => ARBOL_EVA[camino[i - 1]].opciones.find(([, s]) => s === camino[i])[0];
+    const migas = camino.length > 1 ? `<nav class="arb-migas" aria-label="Tu camino">${camino.slice(0, -1).map((c, i) => `<button data-paso="${i}">${i === 0 ? 'Inicio' : elegidaEn(i)}</button>`).join('<span>›</span>')}</nav>` : '';
+    const elegida = camino.length > 1 ? elegidaEn(camino.length - 1) : '';
+    const cuerpo = n.fin
+      ? `<div class="arb-fin">${VEREDICTO_EVA[n.fin] ? `<span class="arb-ver ${n.fin}">${VEREDICTO_EVA[n.fin]}</span>` : ''}<h3>${n.titulo}</h3>
+          <p class="eva-msj">${n.eva}</p>
+          ${n.revisa.length ? `<p class="eva-sub mono">LO QUE REVISAS TÚ</p><ul class="arb-revisa">${n.revisa.map((r) => `<li>${r}</li>`).join('')}</ul>` : ''}
+          <div class="eva-acc">${n.ir.map(([t], i) => boton(t, `data-dest="${i}"`)).join('')}</div>
+          <button class="arb-reini">${id === 'fin-sitio' ? 'Decidir algo conmigo ›' : '↺ Empezar otra decisión'}</button></div>`
+      : `<p class="arb-paso mono">PASO ${camino.length}</p><p class="arb-q">${n.eva}</p>
+          <div class="arb-ops">${n.opciones.map(([t], i) => `<button data-op="${i}">${t}<span>›</span></button>`).join('')}</div>`;
+    panel.innerHTML = `${cabecera()}<div class="eva-cuerpo arb">${migas}${elegida ? `<p class="eva-yo">${elegida}</p>` : '<p class="eva-ctx">El sitio queda en pausa. Te hago unas preguntas cortas y te digo qué revisar.</p>'}${cuerpo}</div>${PIE}`;
+    EF.llegar(panel, '.eva-yo, .arb-q, .arb-ops button, .arb-fin > *');
+    (panel.querySelector('.arb-ops button, .eva-acc button') || panel.querySelector('.eva-cerrar')).focus({ preventScroll: true });
   }
   function responder(i) {
     const s = SECCIONES[seccion()], [q, r] = s.preguntas[i];
@@ -185,11 +212,12 @@
     panel.querySelector('.eva-acc button').focus({ preventScroll: true });
   }
   function abrir() {
-    abierto = true; pestana = 'aqui'; pintar(); panel.hidden = false;
+    abierto = true; pestana = 'guia'; camino = ['raiz']; pintar(); panel.hidden = false; velo.hidden = false;
+    document.documentElement.classList.add('eva-pausa');
     fab.setAttribute('aria-expanded', 'true'); fab.classList.add('abierto');
     pose(fab.querySelector('.eva-iso'), 'detach');
     EF.sonar('abre');
-    if (!EF.quieto) panel.animate([{ opacity: 0, transform: 'translateY(10px) scale(.94)' }, { opacity: 1, transform: 'none' }], { duration: EF.M.normal.ms, easing: EF.M.normal.curva });
+    if (!EF.quieto) panel.animate([{ opacity: 0, scale: '.94' }, { opacity: 1, scale: '1' }], { duration: EF.M.normal.ms, easing: EF.M.normal.curva });
     panel.querySelector('.eva-acc button')?.focus({ preventScroll: true });
   }
   function cerrar(devolverFoco = true) {
@@ -197,10 +225,15 @@
     abierto = false;
     fab.setAttribute('aria-expanded', 'false'); fab.classList.remove('abierto');
     pose(fab.querySelector('.eva-iso'), 'isotype');
-    const fin = () => { if (!abierto) panel.hidden = true; };
-    if (EF.quieto) fin(); else panel.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(8px) scale(.96)' }], { duration: 160, easing: 'ease-in' }).onfinish = fin;
+    document.documentElement.classList.remove('eva-pausa');
+    const fin = () => { if (!abierto) { panel.hidden = true; velo.hidden = true; } };
+    if (EF.quieto) fin(); else panel.animate([{ opacity: 1, scale: '1' }, { opacity: 0, scale: '.96' }], { duration: 160, easing: 'ease-in' }).onfinish = fin;
     if (devolverFoco) fab.focus({ preventScroll: true });
   }
+  // La primera vez, EVA explica el sitio (la visita «¿Qué es este sitio?»); después abre en «Te guío».
+  function abrirVisita() { if (abierto) return; abrir(); camino = ['raiz', 'sitio-1']; pintarArbol(); try { localStorage.setItem('panel:eva-visita', '1'); } catch {} }
   window.iniciarEva = iniciarEva;
+  window.evaVisita = abrirVisita;
+  window.evaVisitaVista = () => { try { return localStorage.getItem('panel:eva-visita') === '1'; } catch { return true; } };
   window.evaColor = { GLOW, GROUND };
 })();

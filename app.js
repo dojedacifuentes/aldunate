@@ -353,6 +353,8 @@ const DELEGA_EVA = {
   dep: 'Depende… de que exista. Yo invento fallos con mucha seguridad. Ábrelo antes de citarlo.',
   si: 'Mmm. Yo también estaba muy segura. Ábrelo en la fuente oficial antes de citarlo.',
 };
+// Imagen de cabecera para las tarjetas del Inicio: las mismas de Flow que usan cursos, recursos y guías.
+const cabImg = (clave, alt = '') => `<div class="cab-img"><img src="img/tarjetas/${clave}-480.webp" alt="${alt}" loading="lazy" decoding="async"></div>`;
 function vistaInicio() {
   const listos = CURSOS.reduce((s, _, c) => s + modulosListos(c), 0);
   const nuevo = pasosTotales() === 0;
@@ -371,7 +373,21 @@ function vistaInicio() {
   recordatorioSemana = recordatorio;
   const sem = semanaDeEstudio(), nSem = sem.filter(Boolean).length, hoyI = (new Date().getDay() + 6) % 7;
   // «Vitrina» (28-10-2026): arriba EVA y sus videos sobre vidrio; debajo, dónde sigues, la semana y una pregunta con humor.
+  // Portada «Artículo 55» (elegida el 29-10-2026): curiosidad antes del catálogo. Imagen de Flow: el Código Civil abierto
+  // y una esfera de datos que lee una línea. El texto es el art. 55 del Código Civil de Chile.
   return `
+  <section class="portada55" aria-labelledby="p55-t">
+    <img class="p55-fondo" src="img/tarjetas/portada-55-1600.webp" srcset="img/tarjetas/portada-55-900.webp 900w, img/tarjetas/portada-55-1600.webp 1600w" sizes="100vw" alt="" decoding="async" fetchpriority="high">
+    <div class="p55-texto">
+      <span class="p55-eti mono">Código Civil de Chile · artículo 55 · 1857</span>
+      <blockquote id="p55-t">«Son personas todos los <b>individuos de la especie humana</b>, cualquiera que sea su edad, sexo, estirpe o condición.»</blockquote>
+      <span class="p55-linea" aria-hidden="true"></span>
+      <div class="p55-eva"><b class="mono">EVA</b><p>Yo no pertenezco a ninguna especie. Y aun así, voy a ayudarte a estudiar Derecho.</p></div>
+      <div class="p55-acc"><button class="btn lleno" type="button" data-reel="VRrR5Wlb2hc">${I(IC.play, 16)}¿Qué soy, entonces?</button>
+        <a class="btn p55-sec" href="#cursos/${nuevo ? 1 : sc + 1}">${nuevo ? 'Empezar por el 1.1' : `Seguir en ${sc + 1}.${sm + 1}`} →</a></div>
+    </div>
+    <a class="p55-baja mono" href="#vit-t">Sigue bajando · ocho cursos, cuatro videos y un laboratorio ↓</a>
+  </section>
   <section class="escaparate" aria-labelledby="vit-t">
     <div class="vit-fondo" aria-hidden="true">${REELS.slice(0, 4).map((r) => `<img src="img/videos/${r.portada}-360.webp" alt="" decoding="async">`).join('')}</div>
     <div class="vit-texto">
@@ -384,11 +400,11 @@ function vistaInicio() {
     <div class="vit-reels" id="vit-reels">${reelsVitrina()}</div>
   </section>
   <div class="tablero-v">
-    <section class="caja sigues">${tarjeta}</section>
-    <div class="caja dato dato-semana"><div><span class="eti-v mono">Esta semana</span><div class="n"><span data-n="${nSem}">${nSem}</span><small> de 7 días</small></div>
+    <section class="caja sigues con-cab">${cabImg(`curso-${nuevo ? 1 : sc + 1}`)}${tarjeta}</section>
+    <div class="caja dato dato-semana con-cab">${cabImg('rec-18')}<div><span class="eti-v mono">Esta semana</span><div class="n"><span data-n="${nSem}">${nSem}</span><small> de 7 días</small></div>
       <div class="dias-sem" aria-label="Días de esta semana en que entraste">${['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((d, i) => `<i class="${sem[i] ? 'on' : ''}${i === hoyI ? ' hoy' : ''}">${d}</i>`).join('')}</div>
       <div class="l">${nuevo ? 'Hoy empiezas tu semana.' : 'Sin rachas que se pierden. Faltar no da culpa.'}</div></div></div>
-    <section class="caja delega" aria-labelledby="del-t"><span class="eti-v mono cian">Lo que no se delega</span>
+    <section class="caja delega con-cab" aria-labelledby="del-t">${cabImg('guia-verificar-cita')}<span class="eti-v mono cian">Lo que no se delega</span>
       <h2 id="del-t">¿Basta con citar un fallo que te dio la IA?</h2>
       <div class="veredictos">${DELEGA.map(([v, cl]) => `<button type="button" class="ver ${cl}" data-v="${cl}">${v}</button>`).join('')}</div>
       <p class="del-eva" id="del-eva" aria-live="polite">Elige. Yo ya sé la respuesta, pero me encanta ver qué haces.</p></section>
@@ -397,7 +413,7 @@ function vistaInicio() {
         <ul class="lista-cursos menu-sel" id="menu-sel" hidden>${FILTROS_AVANCE.map(([, t], i) => `<li><button data-f="${i}" aria-current="${i === filtroAvance}">${t}</button></li>`).join('')}</ul></div></header>
       <ol class="barras">${CURSOS.map(([t], k) => `<li data-k="${k}"><a href="#cursos/${k + 1}" style="--c:${COLORES[k]}"><img src="img/tarjetas/curso-${k + 1}-480.webp" alt="" loading="lazy" decoding="async"><span class="cur-n mono">${String(k + 1).padStart(2, '0')}</span><span class="t">${t}</span><span class="pista"><b data-w="${totalCurso(k) / 16 * 100}"></b></span><span class="v mono">${modulosListos(k)}/4</span></a></li>`).join('')}</ol>
     </section>
-    <aside class="caja semana">
+    <aside class="caja semana con-cab">${cabImg('rec-01')}
       <div class="pestanas" role="tablist"><button role="tab" aria-selected="true">Esta semana</button><button role="tab" aria-selected="false">Novedades</button><span class="raya"></span></div>
       <div id="agenda">${agenda()}</div>
       <p class="muestra">FECHAS ILUSTRATIVAS · POR CONFIRMAR CON LA ESCUELA</p>
@@ -471,6 +487,8 @@ function agenda() {
 }
 function alMontarInicio() {
   document.querySelectorAll('[data-n]').forEach((el) => contar(el, +el.dataset.n));
+  $('.portada55 [data-reel]').addEventListener('click', (e) => abrirReel(e.currentTarget.dataset.reel, e.currentTarget));
+  $('.p55-baja').addEventListener('click', (e) => { e.preventDefault(); $('.escaparate').scrollIntoView({ behavior: quieto ? 'auto' : 'smooth', block: 'start' }); });
   $('.escaparate').addEventListener('click', (e) => {
     const b = e.target.closest('[data-reel]'); if (b) abrirReel(b.dataset.reel, b);
   });
@@ -973,7 +991,7 @@ const PANTALLAS = {
   inicio: [vistaInicio, alMontarInicio], cursos: [vistaCatalogo, alMontarCatalogo], curso: [vistaCursos, alMontarCursos],
   videos: [vistaVideos, alMontarVideos], video: [vistaVideo, alMontarVideo], laboratorio: [vistaLab, alMontarLab],
   recursos: [vistaRecursos, alMontarRecursos], guias: [vistaGuias, alMontarGuias],
-  docentes: [vistaDocentes, alMontarDocentes], eva: [vistaEva, alMontarEva],
+  docentes: [vistaDocentesBlanco, () => {}], eva: [vistaEva, alMontarEva],
 };
 // Qué sección del menú queda marcada en cada pantalla interior.
 const MENU_DE = { curso: 'cursos', video: 'videos' };
@@ -1116,6 +1134,8 @@ function bienvenida() {
     bv.classList.remove('ver');
     setTimeout(() => bv.remove(), quieto ? 0 : 300);
     if (b.dataset.ir && location.hash.slice(1) !== b.dataset.ir) location.hash = b.dataset.ir; else ruta();
+    // La primera vez, al cerrar la bienvenida, EVA explica el sitio en el modo pausa.
+    if (simulaNuevo || !window.evaVisitaVista()) setTimeout(() => window.evaVisita(), quieto ? 0 : 700);
   });
 }
 function entradaHTML() {
