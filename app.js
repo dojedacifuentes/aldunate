@@ -11,7 +11,8 @@ let quieto = captura || ajustes.quieto || matchMedia('(prefers-reduced-motion: r
 
 /* ---------- Tema ---------- */
 const raiz = document.documentElement;
-try { const t = localStorage.getItem('panel:tema:v2'); if (t) raiz.dataset.tema = t; } catch {}
+// Cada visita empieza en oscuro (pedido del propietario, 29-10-2026); si alguien cambia a claro, dura sólo esta pestaña.
+try { const t = sessionStorage.getItem('panel:tema'); if (t) raiz.dataset.tema = t; } catch {}
 if (location.search.includes('oscuro')) raiz.dataset.tema = 'oscuro';
 raiz.dataset.estilo = 'vidrio';
 // Paleta del modo claro: «marfil» (marfil y burdeos), la elegida. Para comparar: ?paleta=vino | tinta | noche | blanco.
@@ -189,7 +190,7 @@ $('#tema').addEventListener('click', (e) => {
   EF.sonar('tema');
   EF.cambiarTema(e.currentTarget, () => {
     raiz.dataset.tema = raiz.dataset.tema === 'oscuro' ? 'claro' : 'oscuro';
-    try { localStorage.setItem('panel:tema:v2', raiz.dataset.tema); } catch {}
+    try { sessionStorage.setItem('panel:tema', raiz.dataset.tema); } catch {}
     pintarTema();
   });
 });
@@ -1038,9 +1039,10 @@ function pintarPerfil() {
 pintarPerfil();
 // La clave lleva versión: al cambiar la bienvenida, quien vio la anterior ve la nueva una vez.
 const BIENVENIDA = 'panel:bienvenida:v2';
-let vista0 = false;
-try { vista0 = !simulaNuevo && localStorage.getItem(BIENVENIDA) === '1'; } catch {}
-if (location.search.includes('sinbienvenida') || demo) vista0 = true;
+// Desde el 29-10-2026 la bienvenida sale en cada visita (una de tres, al azar); la marca sólo sirve para no volver a
+// pedir el nombre y quién eres a quien ya pasó por la entrada.
+let vista0 = location.search.includes('sinbienvenida') || demo, yaVino = false;
+try { yaVino = !simulaNuevo && localStorage.getItem(BIENVENIDA) === '1'; } catch {}
 /* La bienvenida tiene tres etapas: 1) la pregunta con trampa (el experimento SÍ/NO de EVA Lab, en breve); 2) la
    revelación; 3) la entrada de siempre (nombre opcional y quién eres). Se puede omitir desde el primer momento y no se
    repite: queda marcada en panel:bienvenida:v2 (v2: quien vio la bienvenida anterior ve la nueva una vez). El experimento se puede repetir en EVA Lab. */
@@ -1057,12 +1059,24 @@ function bienvenida() {
   if (!quieto) requestAnimationFrame(() => bv.classList.add('ver')); else bv.classList.add('ver');
   const entrada = () => {
     $('#bv-omitir').hidden = true;
+    if (yaVino) {
+      etapa.innerHTML = `<div class="bv-rev"><h2>Hola de nuevo${nombre ? `, ${nombre}` : ''}.</h2><p class="bv-txt">Sigues donde quedaste.</p>
+        <button class="btn lleno" data-ir="inicio">Entrar<span class="flecha">${I(IC.flecha, 18)}</span></button></div>`;
+      EF.llegar(etapa, '.bv-rev > *'); $('[data-ir]', etapa).focus({ preventScroll: true }); return;
+    }
     etapa.innerHTML = entradaHTML();
     EF.llegar(etapa, ':scope > *');
     setTimeout(() => $('#bv-nombre')?.focus({ preventScroll: true }), quieto ? 0 : 300);
   };
-  // Otras primeras interacciones para comparar (bienvenidas.js): ?bv=galletas o ?bv=recomendado.
-  const variante = new URLSearchParams(location.search).get('bv');
+  // Una de las tres al azar, sin repetir la de la visita anterior. ?bv=sino | galletas | recomendado fija una.
+  const VARIANTES = ['sino', 'galletas', 'recomendado'];
+  let variante = new URLSearchParams(location.search).get('bv');
+  if (!VARIANTES.includes(variante)) {
+    let ultima = ''; try { ultima = localStorage.getItem('panel:bv-ultima') || ''; } catch {}
+    const opciones = VARIANTES.filter((v) => v !== ultima);
+    variante = opciones[Math.floor(Math.random() * opciones.length)];
+  }
+  try { localStorage.setItem('panel:bv-ultima', variante); } catch {}
   if (variante === 'galletas') bvGalletas(etapa, entrada);
   else if (variante === 'recomendado') bvRecomendado(etapa, entrada);
   else experimentoSiNo(etapa, {
@@ -1096,7 +1110,7 @@ function bienvenida() {
   bv.addEventListener('click', (e) => {
     const b = e.target.closest('[data-ir]'); if (!b) return;
     EF.sonar('llega');
-    const n = limpio($('#bv-nombre').value.trim());
+    const n = limpio($('#bv-nombre')?.value.trim() || '');
     if (n) { nombre = n; try { localStorage.setItem('panel:nombre', n); } catch {} pintarPerfil(); }
     try { localStorage.setItem(BIENVENIDA, '1'); } catch {}
     bv.classList.remove('ver');
