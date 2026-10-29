@@ -319,3 +319,5 @@
   .portada55::before { display: none; }
   .p55-texto { padding: 4px 20px 64px; }
 }
+/* En el teléfono, con EVA abierta, su botón redondo se esconde: tapaba el panel (que tiene su propia X). */
+@media (max-width: 860px) { :root.eva-pausa .eva-fab { opacity: 0; pointer-events: none; } }
