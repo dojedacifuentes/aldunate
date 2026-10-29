@@ -86,7 +86,7 @@ const DESCRIPCIONES = [
 /* ---------- Mis cursos: vitrina de tarjetas ---------- */
 function vistaCatalogo() {
   return `
-  <div class="titulo"><div><h1>Mis cursos</h1><p>Ocho cursos de cuatro módulos. Mira de qué trata cada uno y entra cuando quieras.</p></div>
+  <div class="titulo"><div><h1>Mis cursos</h1><p>Ocho cursos de cuatro módulos. Mira de qué trata cada uno y entra cuando quieras.</p>${evaLinea('Yo los hice los ocho en un segundo. Tú tienes la ventaja de entenderlos.')}</div>
     <div class="acciones"><label class="buscador buscador-cat"><span>${I(IC.buscar, 18)}</span><input id="filtro-cat" placeholder="Filtrar cursos" aria-label="Filtrar cursos"></label></div></div>
   <div class="vitrina" id="vitrina">${CURSOS.map(([t], k) => {
     const pct = Math.round(totalCurso(k) / 16 * 100), listo = modulosListos(k) === 4;
@@ -147,7 +147,7 @@ function vistaRecursos() {
   if (q && CATEGORIAS.some(([k]) => k === q)) catRecurso = q;
   const destacados = RECURSOS.filter((r) => r[4] === 'en línea').slice(0, 3);
   return `
-  <div class="titulo"><div><h1>Recursos</h1><p>Para consultar sin inscribirte en nada. Lo que dice «en línea» está publicado; lo demás es muestra o está pendiente.</p></div>
+  <div class="titulo"><div><h1>Recursos</h1><p>Para consultar sin inscribirte en nada. Lo que dice «en línea» está publicado; lo demás es muestra o está pendiente.</p>${evaLinea('Lo que dice «en línea» existe de verdad: lo revisé. Revísalo tú también.')}</div>
     <div class="acciones"><label class="buscador buscador-cat"><span>${I(IC.buscar, 18)}</span><input id="filtro-rec" placeholder="Buscar recursos" aria-label="Buscar recursos"></label></div></div>
   <div class="filtros" id="cat-rec"><button aria-pressed="${catRecurso === 'todas'}" data-c="todas">Todas</button>${CATEGORIAS.map(([k, t]) => `<button aria-pressed="${catRecurso === k}" data-c="${k}">${t}</button>`).join('')}</div>
   <div class="vitrina" id="vitrina-rec">${RECURSOS.map(tarjetaRecurso).join('')}</div>
@@ -220,7 +220,7 @@ let tipoGuia = 'Todas';
 function vistaGuias() {
   const abierta = location.hash.split('/')[1];
   return `
-  <div class="titulo"><div><h1>Guías, protocolos y tutoriales</h1><p>Listas cortas para hacer las cosas bien cuando hay apuro. Ábrelas, cópialas, úsalas en clase.</p></div></div>
+  <div class="titulo"><div><h1>Guías, protocolos y tutoriales</h1><p>Listas cortas para hacer las cosas bien cuando hay apuro. Ábrelas, cópialas, úsalas en clase.</p>${evaLinea('Listas cortas para cuando hay apuro. Las escribí sin apuro.')}</div></div>
   <div class="filtros" id="tipo-guia">${['Todas', 'Guía', 'Protocolo', 'Tutorial'].map((t) => `<button aria-pressed="${tipoGuia === t}" data-t="${t}">${t === 'Todas' ? 'Todas' : t + (t === 'Protocolo' ? 's' : 's')}</button>`).join('')}</div>
   <div class="vitrina" id="vitrina-guias">${GUIAS.map((g) => `
     <article class="caja tarjeta guia-t${abierta === g.id ? ' abierta' : ''}" id="g-${g.id}" data-tipo="${g.tipo}">

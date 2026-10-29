@@ -1,6 +1,8 @@
 /* Maqueta «Panel»: estructura de dashboard (menú lateral, tarjetas, pestañas de módulos, sesiones desplegables,
    panel de materiales, chat) con la identidad de Derecho PUCV. Sin cuentas: el avance se guarda en el navegador. */
 const $ = (s, r = document) => r.querySelector(s);
+// Una línea de EVA bajo el título de cada sección: breve, con algo de humor.
+const evaLinea = (t) => `<p class="eva-linea"><span class="mono">EVA</span>${t}</p>`;
 const captura = location.search.includes('captura');
 // Ajustes de lectura de cada persona (letra, contraste, menos movimiento), guardados en su navegador.
 const ajustes = { letra: 'normal', contraste: false, quieto: false };
@@ -9,7 +11,7 @@ let quieto = captura || ajustes.quieto || matchMedia('(prefers-reduced-motion: r
 
 /* ---------- Tema ---------- */
 const raiz = document.documentElement;
-try { const t = localStorage.getItem('panel:tema'); if (t) raiz.dataset.tema = t; } catch {}
+try { const t = localStorage.getItem('panel:tema:v2'); if (t) raiz.dataset.tema = t; } catch {}
 if (location.search.includes('oscuro')) raiz.dataset.tema = 'oscuro';
 raiz.dataset.estilo = 'vidrio';
 // Paleta del modo claro: «marfil» (marfil y burdeos), la elegida. Para comparar: ?paleta=vino | tinta | noche | blanco.
@@ -155,7 +157,9 @@ const limpio = (t) => t.replace(/[<>&"]/g, '');
 /* ---------- Menú ---------- */
 const VISTAS = [['inicio', 'Inicio'], ['cursos', 'Mis cursos'], ['videos', 'Videocápsulas'], ['laboratorio', 'Laboratorio EVA'], ['recursos', 'Recursos'],
   ['guias', 'Guías y protocolos'], ['docentes', 'Docentes'], ['eva', 'Pregunta a EVA']];
-$('#menu').innerHTML = VISTAS.map(([id, t]) => `<li><a href="#${id}" data-v="${id}">${I(IC[id])}${t}</a></li>`).join('') + '<li class="menu-ind" aria-hidden="true"></li>';
+// El menú se agrupa en verbos (Aprender, Practicar, Consultar) y EVA queda aparte, en su color.
+const GRUPOS_MENU = { cursos: 'Aprender', laboratorio: 'Practicar', recursos: 'Consultar', eva: '' };
+$('#menu').innerHTML = VISTAS.map(([id, t]) => `${id in GRUPOS_MENU ? `<li class="menu-grupo mono" aria-hidden="true">${GRUPOS_MENU[id]}</li>` : ''}<li><a href="#${id}" data-v="${id}"${id === 'eva' ? ' class="menu-eva"' : ''}>${I(IC[id])}${t}</a></li>`).join('') + '<li class="menu-ind" aria-hidden="true"></li>';
 $('#menu-abajo').innerHTML = `<li><a href="#ajustes" id="sonido-lat" role="button"></a></li><li><a href="#ajustes" id="letra-lat" role="button" aria-haspopup="dialog">${I(IC.letra)}Letra y contraste</a></li>`;
 // En el teléfono caben cinco: los cuatro más usados y «Más», que abre el resto. EVA flota encima, siempre a mano.
 const EN_BARRA = [['inicio', 'Inicio'], ['cursos', 'Cursos'], ['videos', 'Videos'], ['laboratorio', 'Lab']];
@@ -184,7 +188,7 @@ $('#tema').addEventListener('click', (e) => {
   EF.sonar('tema');
   EF.cambiarTema(e.currentTarget, () => {
     raiz.dataset.tema = raiz.dataset.tema === 'oscuro' ? 'claro' : 'oscuro';
-    try { localStorage.setItem('panel:tema', raiz.dataset.tema); } catch {}
+    try { localStorage.setItem('panel:tema:v2', raiz.dataset.tema); } catch {}
     pintarTema();
   });
 });
@@ -340,6 +344,13 @@ function rayaPestanas(caja) {
 const chip = (k) => `<span class="chip-n" style="background:${COLORES[k]}">${k + 1}</span>`;
 
 /* ---------- Inicio ---------- */
+// «Lo que no se delega»: la pregunta de la semana con tres veredictos; EVA contesta según lo que elijas.
+const DELEGA = [['No', 'no'], ['Depende', 'dep'], ['Sí', 'si']];
+const DELEGA_EVA = {
+  no: 'Bien. Antes de citarlo, ábrelo tú en la fuente oficial: el buscador del Poder Judicial.',
+  dep: 'Depende… de que exista. Yo invento fallos con mucha seguridad. Ábrelo antes de citarlo.',
+  si: 'Mmm. Yo también estaba muy segura. Ábrelo en la fuente oficial antes de citarlo.',
+};
 function vistaInicio() {
   const listos = CURSOS.reduce((s, _, c) => s + modulosListos(c), 0);
   const nuevo = pasosTotales() === 0;
@@ -357,24 +368,32 @@ function vistaInicio() {
        <a class="btn lleno" href="#cursos/${sc + 1}">Continuar<span class="flecha">${I(IC.flecha, 18)}</span></a>`;
   recordatorioSemana = recordatorio;
   const sem = semanaDeEstudio(), nSem = sem.filter(Boolean).length, hoyI = (new Date().getDay() + 6) % 7;
+  // «Vitrina» (28-10-2026): arriba EVA y sus videos sobre vidrio; debajo, dónde sigues, la semana y una pregunta con humor.
   return `
-  <div class="titulo">
-    <div><h1>${nombre ? `Hola, ${nombre}` : 'Inicio'}</h1><p>${nuevo ? 'Te damos la bienvenida. ' : ''}Aprende a usar la IA en el Derecho sin perder el criterio. Sin crear cuenta.</p></div>
-    <div class="acciones"><a class="btn suave" href="#videos">${I(IC.videos, 18)}Ver videocápsulas</a><a class="btn suave" href="#eva">${I(IC.eva, 18)}Preguntar a EVA</a></div>
-  </div>
-  <div class="tablero">
-    <div class="caja dato"><div><div class="n" data-n="8">8</div><div class="l">Cursos abiertos</div></div><span class="ic">${I(IC.cursos)}</span></div>
-    <div class="caja dato"><div><div class="n" data-n="32">32</div><div class="l">Videocápsulas de 5 min</div></div><span class="ic">${I(IC.videos)}</span></div>
-    <div class="caja dato"><div><div class="n"><span data-n="${listos}">${listos}</span><small> / 32</small></div><div class="l">Módulos terminados</div></div><span class="ic">${I(IC.ok)}</span></div>
-    <div class="caja dato dato-semana"><div><div class="n"><span data-n="${nSem}">${nSem}</span><small> de 7 días</small></div>
-      <div class="l">${nuevo ? 'Hoy empiezas tu semana' : 'Estudiaste esta semana'}</div>
-      <div class="dias-sem" aria-label="Días de esta semana en que entraste">${['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((d, i) => `<i class="${sem[i] ? 'on' : ''}${i === hoyI ? ' hoy' : ''}">${d}</i>`).join('')}</div></div>
-      <span class="ic">${I(IC.racha)}</span></div>
+  <section class="escaparate" aria-labelledby="vit-t">
+    <div class="vit-fondo" aria-hidden="true">${REELS.slice(0, 4).map((r) => `<img src="img/videos/${r.portada}-360.webp" alt="" decoding="async">`).join('')}</div>
+    <div class="vit-texto">
+      <span class="vit-eti mono">${nombre ? `Hola, ${nombre} · ` : ''}EVA · Escuela de Derecho PUCV</span>
+      <h1 id="vit-t">Yo respondo rápido.<br>Tú decides si tengo razón.</h1>
+      <p>Ocho cursos para usar la IA en el Derecho sin perder el criterio. Sin crear cuenta, sin letra chica.</p>
+      <div class="vit-acc"><a class="btn lleno" href="#cursos/${nuevo ? 1 : sc + 1}">${nuevo ? 'Empezar por el 1.1' : `Seguir en ${sc + 1}.${sm + 1}`}<span class="flecha">${I(IC.flecha, 18)}</span></a>
+        <button class="btn vit-eva" type="button" data-reel="${REELS[0].id}">${I(IC.play, 16)}Ver a EVA</button></div>
+    </div>
+    <div class="vit-reels" id="vit-reels">${reelsVitrina()}</div>
+  </section>
+  <div class="tablero-v">
     <section class="caja sigues">${tarjeta}</section>
+    <div class="caja dato dato-semana"><div><span class="eti-v mono">Esta semana</span><div class="n"><span data-n="${nSem}">${nSem}</span><small> de 7 días</small></div>
+      <div class="dias-sem" aria-label="Días de esta semana en que entraste">${['L', 'M', 'M', 'J', 'V', 'S', 'D'].map((d, i) => `<i class="${sem[i] ? 'on' : ''}${i === hoyI ? ' hoy' : ''}">${d}</i>`).join('')}</div>
+      <div class="l">${nuevo ? 'Hoy empiezas tu semana.' : 'Sin rachas que se pierden. Faltar no da culpa.'}</div></div></div>
+    <section class="caja delega" aria-labelledby="del-t"><span class="eti-v mono cian">Lo que no se delega</span>
+      <h2 id="del-t">¿Basta con citar un fallo que te dio la IA?</h2>
+      <div class="veredictos">${DELEGA.map(([v, cl]) => `<button type="button" class="ver ${cl}" data-v="${cl}">${v}</button>`).join('')}</div>
+      <p class="del-eva" id="del-eva" aria-live="polite">Elige. Yo ya sé la respuesta, pero me encanta ver qué haces.</p></section>
     <section class="caja avance">
-      <header><h2>Tu avance por curso</h2><span class="muestra">${nuevo ? 'AQUÍ APARECERÁ LO QUE VAYAS HACIENDO' : demo ? 'MUESTRA' : 'GUARDADO EN ESTE NAVEGADOR'}</span><div class="desplegable sel-caja"><button class="selector" type="button" id="selector" aria-expanded="false"><span>${FILTROS_AVANCE[filtroAvance][1]}</span> ${I(IC.abajo, 14)}</button>
+      <header><h2>Tus cursos</h2><span class="muestra">${nuevo ? 'AQUÍ APARECERÁ LO QUE VAYAS HACIENDO' : demo ? 'MUESTRA' : 'GUARDADO EN ESTE NAVEGADOR'}</span><div class="desplegable sel-caja"><button class="selector" type="button" id="selector" aria-expanded="false"><span>${FILTROS_AVANCE[filtroAvance][1]}</span> ${I(IC.abajo, 14)}</button>
         <ul class="lista-cursos menu-sel" id="menu-sel" hidden>${FILTROS_AVANCE.map(([, t], i) => `<li><button data-f="${i}" aria-current="${i === filtroAvance}">${t}</button></li>`).join('')}</ul></div></header>
-      <ol class="barras">${CURSOS.map(([t], k) => `<li data-k="${k}">${chip(k)}<span class="t">${t}</span><span class="pista"><b data-w="${totalCurso(k) / 16 * 100}"></b></span><span class="v">${modulosListos(k)}/4</span></li>`).join('')}</ol>
+      <ol class="barras">${CURSOS.map(([t], k) => `<li data-k="${k}"><a href="#cursos/${k + 1}" style="--c:${COLORES[k]}"><img src="img/tarjetas/curso-${k + 1}-480.webp" alt="" loading="lazy" decoding="async"><span class="cur-n mono">${String(k + 1).padStart(2, '0')}</span><span class="t">${t}</span><span class="pista"><b data-w="${totalCurso(k) / 16 * 100}"></b></span><span class="v mono">${modulosListos(k)}/4</span></a></li>`).join('')}</ol>
     </section>
     <aside class="caja semana">
       <div class="pestanas" role="tablist"><button role="tab" aria-selected="true">Esta semana</button><button role="tab" aria-selected="false">Novedades</button><span class="raya"></span></div>
@@ -450,6 +469,15 @@ function agenda() {
 }
 function alMontarInicio() {
   document.querySelectorAll('[data-n]').forEach((el) => contar(el, +el.dataset.n));
+  $('.escaparate').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-reel]'); if (b) abrirReel(b.dataset.reel, b);
+  });
+  $('.delega .veredictos').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    EF.sonar('clic');
+    b.parentElement.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    $('#del-eva').innerHTML = `<b>EVA:</b> ${DELEGA_EVA[b.dataset.v]} <a href="#guias/verificar-cita">Ver el protocolo</a>`;
+  });
   const barras = document.querySelectorAll('.pista b[data-w]');
   requestAnimationFrame(() => setTimeout(() => barras.forEach((b) => (b.style.width = b.dataset.w + '%')), quieto ? 0 : 120));
   filtrarAvance();
@@ -627,7 +655,7 @@ function tarjetasVideos() {
 }
 function vistaVideos() {
   return `
-  <div class="titulo"><div><h1>Videocápsulas</h1><p>32 videos de cinco minutos: uno por módulo. Con subtítulos y su guía en PDF.</p></div></div>
+  <div class="titulo"><div><h1>Videocápsulas</h1><p>32 videos de cinco minutos: uno por módulo. Con subtítulos y su guía en PDF.</p>${evaLinea('Cinco minutos cada una: menos de lo que tardas en elegir qué ver.')}</div></div>
   ${franjaReels()}
   <div class="filtros" id="filtros"><button aria-pressed="${filtro < 0}" data-c="-1">Todas</button>${CURSOS.map((_, k) => `<button aria-pressed="${filtro === k}" data-c="${k}">Curso ${k + 1}</button>`).join('')}</div>
   <div class="rejilla" id="rejilla">${tarjetasVideos()}</div>`;
@@ -659,7 +687,7 @@ function vistaDocentes() {
   const MODS = [['1.1', '¿Qué es una IA?', 92, 'ok'], ['1.2', 'La siguiente palabra', 74, 'ok'], ['1.3', 'Por qué inventa', 51, 'lento'], ['1.4', 'Cómo pedirle bien', 18, 'ok']];
   return `
   <div class="titulo">
-    <div><h1>Docentes</h1><p>Una guía por módulo para usar el curso en tu clase: antes, durante y después.</p></div>
+    <div><h1>Docentes</h1><p>Una guía por módulo para usar el curso en tu clase: antes, durante y después.</p>${evaLinea('Para quien enseña. Yo sólo respondo: enseñar es otra cosa.')}</div>
     <div class="acciones"><button class="btn" id="copiar-enlace">${I(IC.enlace, 18)}Copiar enlace para la sección</button><button class="btn lleno" data-pdf>${I(IC.pdf, 18)}Guía del módulo (PDF)</button></div>
   </div>
   <div class="curso">
