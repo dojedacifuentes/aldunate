@@ -1062,7 +1062,7 @@ function bienvenida() {
     setTimeout(() => $('#bv-nombre')?.focus({ preventScroll: true }), quieto ? 0 : 300);
   };
   experimentoSiNo(etapa, {
-    pregunta: 'Una pregunta antes de empezar: <b>¿quieres aprender a usar inteligencia artificial?</b>',
+    pregunta: '<b>¿Quieres aprender a usar IA?</b>',
     letra: 'Al responder aceptas las condiciones de EVA.',
     alFin: (v, r) => {
       // Quien dice SÍ sin dudar no ve el patrón oscuro: descubre la letra chica que aceptó (consentimiento informado).
