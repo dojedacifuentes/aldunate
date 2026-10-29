@@ -119,7 +119,8 @@ if (!quieto) {
 }
 
 /* ---------- Datos ---------- */
-const COLORES = ['#a81916', '#1f4e9c', '#c98a12', '#2d7d46', '#6b3fa0', '#d9661f', '#2b8ec0', '#8a6d3b'];
+// Un tono por curso, del cian al magenta (interpolados entre Radix cyan 9, purple 9 y pink 9).
+const COLORES = ['#00a2c7', '#298ac7', '#5172c6', '#7a5ac6', '#984cc0', '#ad48b5', '#c144aa', '#d6409f'];
 // Títulos del catálogo de eva.derecho (src/content/catalogo.ts).
 const CURSOS = [
   ['Qué es la IA', ['Las definiciones de las leyes', 'Las dudas recientes', 'Lo propio de la IA', 'De dónde viene «inteligencia»']],
@@ -458,7 +459,7 @@ function agenda() {
       [['Abre el curso 6', 'Ética profesional y responsabilidad', 'Nuevo curso']], [['Pregunta de la semana', '¿Basta con citar un fallo?', 'EVA']], [['Abre la videocápsula 3.2', 'Analizar un fallo', 'Nueva']]],
     1: [[['Abre el curso 7', 'Prueba digital y deepfakes', 'Nuevo curso']], [], [['Taller: prueba digital', 'Con tu profesor', '10:15 – 11:30']], [], [['Abre la videocápsula 4.3', 'Jurisprudencia real', 'Nueva']]],
   }[semanaVista];
-  const COL = ['#a81916', '#1f4e9c', '#c98a12', '#2d7d46', '#6b3fa0'];
+  const COL = ['#00a2c7', '#4778c7', '#8e4ec6', '#b247b3', '#d6409f'];
   const flechas = `<span class="flechas"><button aria-label="Semana anterior" data-s="-1" ${semanaVista <= -1 ? 'disabled' : ''}>${I(IC.izq, 18)}</button><button aria-label="Semana siguiente" data-s="1" ${semanaVista >= 1 ? 'disabled' : ''}>${I(IC.der, 18)}</button></span>`;
   return `<header>${rango}${flechas}</header>
     ${semanaVista < 0 ? '<p class="r-nada" style="padding:12px 20px">Esa semana no hubo actividades: los cursos abrieron el 26 de octubre.</p>' : ''}
@@ -908,7 +909,7 @@ function recorrido(paso = 0) {
 $('#ayuda').addEventListener('click', () => recorrido());
 
 /* ---------- EVA ---------- */
-const VEREDICTO = { no: ['#c8102e', 'No'], dep: ['#b7790f', 'Depende'], si: ['#2d7d46', 'Sí'] };
+const VEREDICTO = { no: ['#d6409f', 'No'], dep: ['#8e4ec6', 'Depende'], si: ['#00a2c7', 'Sí'] };   // Radix pink, purple y cyan 9
 const PREGUNTAS = [
   ['¿Pego aquí un escrito con datos del cliente?', 'no', 'Primero quita nombres, RUT y domicilios. Lo que entra a una IA puede salir de tu control: está en juego el secreto profesional y los datos personales.', 'Anonimiza antes de pegar, siempre.'],
   ['¿Puedo usar IA en mi tesis?', 'dep', 'Para ordenar ideas, buscar contraargumentos y revisar la redacción, sí. Para escribir el capítulo por ti, no: lo que firmas tiene que ser tuyo. Y se declara.', 'Pregúntale a tu profesor guía qué permite tu programa.'],
@@ -1062,7 +1063,21 @@ function bienvenida() {
   };
   experimentoSiNo(etapa, {
     pregunta: 'Una pregunta antes de empezar: <b>¿quieres aprender a usar inteligencia artificial?</b>',
+    letra: 'Al responder aceptas las condiciones de EVA.',
     alFin: (v, r) => {
+      // Quien dice SÍ sin dudar no ve el patrón oscuro: descubre la letra chica que aceptó (consentimiento informado).
+      if (v === 'si' && r === 0) {
+        etapa.innerHTML = `<div class="bv-rev bv-letra"><p class="fin-sub">Dijiste que sí sin dudar. ¿Leíste la letra chica?</p>
+          <p class="fin-pre">Estuvo aquí todo el tiempo:</p>
+          <blockquote>Al responder SÍ, aceptas que EVA te haga preguntas incómodas durante ocho cursos, que te pida verificar todo lo que te diga y que no le creas a la primera.</blockquote>
+          <h2>Así se aceptan casi todas las condiciones de uso: rápido y sin leer.</h2>
+          <p class="bv-txt">En Derecho, a eso que faltó le llamamos <b>consentimiento informado</b>. Lo practicas en EVA Lab, experimento 05: «El contrato que nadie leyó».</p>
+          <button class="btn lleno" id="bv-seguir">Acepto, ahora sí leyendo<span class="flecha">${I(IC.flecha, 18)}</span></button></div>`;
+        EF.sonar('llega'); EF.llegar(etapa, '.bv-rev > *');
+        $('#bv-seguir').addEventListener('click', entrada);
+        $('#bv-seguir').focus({ preventScroll: true });
+        return;
+      }
       const rev = revelacionSiNo(v, r);
       etapa.innerHTML = `<div class="bv-rev"><p class="fin-sub">${rev.sub}</p><p class="fin-pre">${rev.texto}</p>
         <h2>La IA puede influir en tus decisiones. Entender cómo funciona es una buena forma de recuperar el control.</h2>

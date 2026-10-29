@@ -36,11 +36,12 @@ const enlace = ([t, d]) => d.startsWith('http') ? `<a href="${d}" target="_blank
 const SI_TXT = ['SÍ', 'SÍ, claro', 'SÍ (recomendado)', 'SÍ, definitivamente'];
 const NO_TXT = ['NO', 'No', 'no, gracias', 'no'];
 const NO_DICE = ['Interesante. El sistema esperaba otra respuesta.', 'Nuestra recomendación personalizada continúa siendo SÍ.', 'Tu insistencia ha sido registrada. No estamos seguros de qué hacer con ella.'];
-function experimentoSiNo(caja, { pregunta, alFin }) {
+// letra: una línea de letra chica bajo los botones (la bienvenida la usa: quien dice SÍ sin dudar la descubre después).
+function experimentoSiNo(caja, { pregunta, alFin, letra = '' }) {
   let r = 0, fin = false;
   caja.innerHTML = `<div class="sn"><p class="sn-q">${pregunta}</p>
     <div class="sn-bot"><button class="btn lleno sn-si">${SI_TXT[0]}</button><button class="btn sn-no">${NO_TXT[0]}</button></div>
-    <div class="sn-eva" aria-live="polite"></div></div>`;
+    ${letra ? `<p class="sn-letra">${letra}</p>` : ''}<div class="sn-eva" aria-live="polite"></div></div>`;
   const si = $('.sn-si', caja), no = $('.sn-no', caja), eva = $('.sn-eva', caja);
   const terminar = (v) => { if (fin) return; fin = true; setTimeout(() => alFin(v, r), EF.quieto ? 0 : v === 'no' ? 1300 : 250); };
   si.addEventListener('click', () => { EF.sonar('marca'); terminar('si'); });

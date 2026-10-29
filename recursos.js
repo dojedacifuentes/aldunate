@@ -119,7 +119,8 @@ const TIPO_MOTIVO = {
   video: '<rect x="42" y="24" width="76" height="46" rx="6"/><path d="m74 37 14 10-14 10z"/>',
   protocolo: '<rect x="54" y="20" width="52" height="58" rx="5"/><path d="M68 18h24v8H68zM64 40h4M74 40h22M64 52h4M74 52h22M64 64h4M74 64h16"/>',
 };
-const COLOR_CAT = { estudiar: '#1f4e9c', investigar: '#2d7d46', herramientas: '#6b3fa0', etica: '#a81916', docentes: '#c98a12' };
+// Del cian al magenta, como los cursos (Radix cyan 9 → purple 9 → pink 9).
+const COLOR_CAT = { estudiar: '#00a2c7', investigar: '#4778c7', herramientas: '#8e4ec6', etica: '#b247b3', docentes: '#d6409f' };
 // [título, descripción, categoría, tipo, estado, enlace, etiquetas]. estado: 'en línea' (publicado y revisado), 'muestra', 'pendiente'.
 const RECURSOS = [
   ['EVA ACADEMY · IA y Derecho', 'Curso gamificado completo: lecciones, laboratorios, casos y juegos. Sin cuenta.', 'estudiar', 'curso', 'en línea', 'https://evaacademyia.vercel.app', ['curso', 'gratis']],
@@ -224,7 +225,7 @@ function vistaGuias() {
   <div class="filtros" id="tipo-guia">${['Todas', 'Guía', 'Protocolo', 'Tutorial'].map((t) => `<button aria-pressed="${tipoGuia === t}" data-t="${t}">${t === 'Todas' ? 'Todas' : t + (t === 'Protocolo' ? 's' : 's')}</button>`).join('')}</div>
   <div class="vitrina" id="vitrina-guias">${GUIAS.map((g) => `
     <article class="caja tarjeta guia-t${abierta === g.id ? ' abierta' : ''}" id="g-${g.id}" data-tipo="${g.tipo}">
-      ${portada(0, g.tipo === 'Protocolo' ? '#a81916' : g.tipo === 'Guía' ? '#1f4e9c' : '#2d7d46', g.tipo.toUpperCase(), TIPO_MOTIVO[g.tipo === 'Protocolo' ? 'protocolo' : g.tipo === 'Guía' ? 'guia' : 'video'], IMG_GUIA[g.id] || `guia-${g.id}`)}
+      ${portada(0, g.tipo === 'Protocolo' ? '#d6409f' : g.tipo === 'Guía' ? '#8e4ec6' : '#00a2c7', g.tipo.toUpperCase(), TIPO_MOTIVO[g.tipo === 'Protocolo' ? 'protocolo' : g.tipo === 'Guía' ? 'guia' : 'video'], IMG_GUIA[g.id] || `guia-${g.id}`)}
       <div class="t-cuerpo"><span class="t-eti">${g.tipo} · ${g.min} min · ${g.pub}</span><h2>${g.t}</h2><p>${g.d}</p>
         <button class="btn suave g-abrir" aria-expanded="${abierta === g.id}">${abierta === g.id ? 'Cerrar' : 'Ver los pasos'}</button>
         <div class="g-pasos"${abierta === g.id ? '' : ' hidden'}><ol>${g.pasos.map((p) => `<li>${p}</li>`).join('')}</ol>

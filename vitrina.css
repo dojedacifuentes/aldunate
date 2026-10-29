@@ -1,32 +1,41 @@
 /* «Vitrina» (28-10-2026): vidrio oscuro por defecto y el Inicio con EVA y sus videos arriba. Se carga al final:
    deshacer el cambio es quitar este archivo.
-   Paleta: Radix Colors 3.0, escalas oscuras (radix-ui.com/colors), una paleta probada para interfaces oscuras con
-   contraste medido. Neutros: Slate. Acento: degradado con los tonos sólidos (paso 9) de Cyan → Teal → Blue → Violet →
-   Pink, es decir cian → turquesa → azul → violeta → magenta. Textos de acento: el paso 11 (hecho para leerse sobre el
-   fondo). El rojo PUCV queda en el escudo; el color de cada curso, en la raya fina bajo su imagen. */
-:root { --cian: #0b8794; }
+   Paleta (segunda versión, 28-10 noche): la identidad del sitio es la de la IA, cian y magenta vivos, y la Escuela queda
+   en su escudo. Radix Colors 3.0 (radix-ui.com/colors), paleta probada con contraste medido: neutros Slate; acento Cyan
+   (lo de EVA, enlaces, bordes) y Pink (el magenta); Purple sólo como puente del degradado. Paso 9 = color sólido, paso
+   11 = texto legible sobre el fondo, paso 3 = fondo tenue. Sin burdeo, rojo, verde ni azul intermedio fuera del escudo. */
+:root { --cian: #107d98; --magenta: #c2298a; }                                                                   /* claro: cyan 11, pink 11 */
 :root[data-estilo="vidrio"][data-tema="oscuro"] {
-  --fondo: #111113; --panel: rgba(24,25,27,.74); --nav: rgba(33,34,37,.55); --suave: rgba(255,255,255,.04);   /* slate 1, 2, 3 */
+  --fondo: #111113; --panel: rgba(24,25,27,.62); --nav: rgba(33,34,37,.5); --suave: rgba(255,255,255,.04);   /* slate 1, 2, 3 */
   --borde: rgba(255,255,255,.09); --linea: rgba(255,255,255,.07); --texto: #edeef0; --texto-2: #b0b4ba;      /* slate 12, 11 */
-  --lateral: rgba(17,17,19,.9); --lateral-2: #b0b4ba; --lateral-texto: #edeef0; --lateral-activo: rgba(255,255,255,.06);
-  --cian: #4ccce6;                                                                                             /* cyan 11 */
-  --rojo: #70b8ff; --rojo-suave: #0d2847; --rojo-texto: #fff;                                                   /* blue 11 y 3 */
+  --lateral: rgba(17,17,19,.82); --lateral-2: #b0b4ba; --lateral-texto: #edeef0; --lateral-activo: rgba(76,204,230,.08);
+  --cian: #4ccce6; --magenta: #ff8dcc;                                                                         /* cyan 11, pink 11 */
+  --rojo: #4ccce6; --rojo-suave: #082c36; --rojo-texto: #fff;                                                   /* cyan 11 y 3 */
   --sombra: 0 18px 40px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.06);
-  --lab-luz: #0bd8b6; --lab-eva: #0bd8b6;                                                                      /* teal 11 */
+  --brillo: rgba(76,204,230,.55); --brillo-2: rgba(255,141,204,.16);                                            /* filo de luz */
+  --lab-luz: #4ccce6; --lab-eva: #4ccce6;
 }
-:root[data-estilo="vidrio"][data-tema="claro"] { --rojo: #0d74ce; --rojo-suave: #e6f4fe; --rojo-texto: #fff; }   /* blue 11 y 3, claro */
+/* Claro: blanco y gris de Slate, sin burdeo; el menú es vidrio claro. */
+:root[data-estilo="vidrio"][data-tema="claro"] {
+  --fondo: #f0f0f3; --panel: rgba(255,255,255,.74); --nav: rgba(255,255,255,.6); --texto: #1c2024; --texto-2: #60646c;   /* slate 3, 12, 11 */
+  --lateral: rgba(252,252,253,.86); --lateral-texto: #1c2024; --lateral-2: #60646c; --lateral-activo: rgba(16,125,152,.08);
+  --rojo: #107d98; --rojo-suave: #def7f9; --rojo-texto: #fff;                                                   /* cyan 11 y 3 */
+  --brillo: rgba(0,162,199,.45); --brillo-2: rgba(214,64,159,.12);
+}
+:root[data-estilo="vidrio"][data-tema="claro"] .lateral { border-right-color: rgba(0,0,0,.08); }
+:root[data-tema="claro"] .menu a[aria-current="page"] { color: #1c2024; }
 /* Los rótulos de los videos toman el cian de EVA. */
 .reel-eti, .reel-texto a { color: var(--cian); }
 
-/* ---------- Acento: el degradado (pedido del propietario, 28-10-2026) ----------
+/* ---------- Acento: el degradado cian → magenta ----------
    Va sólo en lo que se pulsa o avanza: botón principal, barras, marca del menú, días y el número de «Sigues en».
    Sobre el paso 9 de Radix el texto va en blanco, como recomienda la paleta. */
-:root { --grad: linear-gradient(90deg, #00a2c7 0%, #12a594 24%, #0090ff 50%, #6e56cf 76%, #d6409f 100%); }
+:root { --grad: linear-gradient(90deg, #00a2c7 0%, #8e4ec6 55%, #d6409f 100%); }                               /* cyan, purple, pink 9 */
 .btn.lleno, .escaparate .btn.lleno { background: var(--grad); background-size: 140% 100%; color: #fff; border-color: transparent;
-  box-shadow: 0 8px 24px rgba(0,144,255,.25), inset 0 1px 0 rgba(255,255,255,.22); transition: background-position .5s, transform var(--m-agil-t) var(--m-agil); }
+  box-shadow: 0 8px 24px rgba(214,64,159,.22), inset 0 1px 0 rgba(255,255,255,.22); transition: background-position .5s, transform var(--m-agil-t) var(--m-agil); }
 .btn.lleno:hover { background-position: 100% 0; }
 .pista b, .barra b, .pasos-mod i.ok::after, .pasos-mod i.va::after { background: var(--grad); background-size: 300px 100%; }
-.menu-ind, :root[data-tema="oscuro"] .menu-ind { background: linear-gradient(180deg, #00a2c7, #0090ff 50%, #d6409f); }
+.menu-ind, :root[data-tema="oscuro"] .menu-ind { background: linear-gradient(180deg, #00a2c7, #d6409f); }
 .dias-sem i.on { background: var(--grad); background-size: 220px 100%; color: #fff; border-color: transparent; }
 .dias-sem i.on:nth-child(2) { background-position: -30px 0; } .dias-sem i.on:nth-child(3) { background-position: -60px 0; }
 .dias-sem i.on:nth-child(4) { background-position: -90px 0; } .dias-sem i.on:nth-child(5) { background-position: -120px 0; }
@@ -38,7 +47,6 @@
 .menu .menu-grupo { padding: 12px 12px 2px; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--lateral-2); opacity: .6; }
 .menu .menu-grupo:empty { padding: 6px 0 0; }
 .menu a.menu-eva { color: var(--cian); }
-:root[data-tema="claro"] .menu a.menu-eva { color: #a6ecf3; }
 @media (max-height: 820px) { .menu .menu-grupo { padding-top: 8px; } }
 
 /* ---------- EVA flotante: más chico, para que no tape las tarjetas ---------- */
@@ -79,6 +87,7 @@
 .tablero-v .sigues .num { font-size: 46px; }
 .eti-v { display: block; font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--texto-2); }
 .eti-v.cian { color: var(--cian); }
+.delega .eti-v.cian { color: var(--magenta); }
 .tablero-v .dato-semana { align-self: stretch; padding: 20px 22px; }
 .tablero-v .dato-semana .n { margin-top: 8px; }
 .tablero-v .dato-semana .l { margin-top: 10px; }
@@ -88,10 +97,10 @@
 .ver { font: 500 13px 'IBM Plex Mono', monospace; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--borde); background: none; cursor: pointer;
   transition: background .2s, transform var(--m-agil-t) var(--m-agil); }
 .ver:hover { transform: translateY(-1px); }
-.ver.no { color: #ff9592; border-color: #8c333a; } .ver.no[aria-pressed="true"] { background: #3b1219; }   /* red 11, 7, 3 */
-.ver.dep { color: #ffca16; border-color: #714f19; } .ver.dep[aria-pressed="true"] { background: #302008; }   /* amber 11, 7, 3 */
-.ver.si { color: #71d083; border-color: #366740; } .ver.si[aria-pressed="true"] { background: #1b2a1e; }   /* grass 11, 7, 3 */
-:root[data-tema="claro"] .ver.no { color: #b3261e; } :root[data-tema="claro"] .ver.dep { color: #8a5a00; } :root[data-tema="claro"] .ver.si { color: #1e7a45; }
+.ver.no { color: #ff8dcc; border-color: #833869; } .ver.no[aria-pressed="true"] { background: #37172f; }   /* pink 11, 7, 3 */
+.ver.dep { color: #d19dff; border-color: #664282; } .ver.dep[aria-pressed="true"] { background: #301c3b; }   /* purple 11, 7, 3 */
+.ver.si { color: #4ccce6; border-color: #12677e; } .ver.si[aria-pressed="true"] { background: #082c36; }   /* cyan 11, 7, 3 */
+:root[data-tema="claro"] .ver.no { color: #c2298a; } :root[data-tema="claro"] .ver.dep { color: #8145b5; } :root[data-tema="claro"] .ver.si { color: #107d98; }
 .del-eva { margin: auto 0 0; font-size: 13px; color: var(--texto-2); }
 .del-eva b { color: var(--cian); font-weight: 600; }
 .del-eva a { color: var(--cian); font-weight: 600; text-decoration: none; white-space: nowrap; }
@@ -128,7 +137,21 @@
 }
 
 /* Restos del rojo anterior escritos a mano en index.html: pasan al acento nuevo. */
-:root[data-estilo="vidrio"] .btn.lleno { box-shadow: 0 8px 24px rgba(0,144,255,.25), inset 0 1px 0 rgba(255,255,255,.22); }
-:root[data-estilo="vidrio"][data-tema="oscuro"] .btn.suave { background: #0d2847; color: #70b8ff; }   /* blue 3 y 11 */
-:root[data-estilo="vidrio"][data-tema="oscuro"] .dato .ic { background: #0d2847; }
+:root[data-estilo="vidrio"] .btn.lleno { box-shadow: 0 8px 24px rgba(214,64,159,.22), inset 0 1px 0 rgba(255,255,255,.22); }
+:root[data-estilo="vidrio"][data-tema="oscuro"] .btn.suave { background: #082c36; color: #4ccce6; }   /* cyan 3 y 11 */
+:root[data-estilo="vidrio"][data-tema="oscuro"] .dato .ic { background: #082c36; }
 .pantalla .barra b { background: var(--grad); }
+
+/* Indicadores que eran verdes y ámbar («En línea», «Vista», «A tiempo», «Va lento»): pasan al cian y al magenta. */
+:root[data-estilo="vidrio"][data-tema="oscuro"] { --verde: #4ccce6; --ambar: #ff8dcc; }   /* cyan 11, pink 11 */
+:root[data-estilo="vidrio"][data-tema="claro"] { --verde: #107d98; --ambar: #c2298a; }
+.estado.ok { background: color-mix(in srgb, var(--verde) 14%, transparent); }
+.estado.lento { background: color-mix(in srgb, var(--ambar) 14%, transparent); }
+.mini .visto { color: #06070b; }
+
+/* Bienvenida: la letra chica bajo los botones y su revelación cuando se dice SÍ sin dudar. */
+.sn-letra { margin: 14px 0 0; font-size: 10px; color: var(--texto-2); opacity: .55; letter-spacing: .02em; }
+.bv-letra blockquote { margin: 6px 0 14px; padding: 16px 18px; border-radius: 14px; border: 1px solid rgba(255,141,204,.3); background: rgba(55,23,47,.45);
+  font-size: 17px; line-height: 1.5; color: var(--texto); text-align: left; }
+:root[data-tema="claro"] .bv-letra blockquote { background: #fee9f5; border-color: rgba(194,41,138,.3); }
+.bv-letra .fin-sub { color: var(--magenta) !important; font-weight: 600; }
