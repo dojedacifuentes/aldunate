@@ -12,8 +12,11 @@ const REELS = [
   { id: 'VRrR5Wlb2hc', n: 3, t: '¿Soy alguien o algo?', dur: '1:20', portada: 'video-03', titulada: true,
     d: 'En Chile, persona es todo individuo de la especie humana; una empresa también lo es, y un río en Nueva Zelanda. Un orangután, no. ¿Y una IA? Turing, Chalmers y las leyes que ya se adelantaron.',
     alt: 'Un ojo con un iris de circuitos azules, sobre el título «¿Soy alguien o algo? La ley ya respondió. ¿Y tú?».' },
+  { id: 'XdONlPfSSzg', n: 4, t: 'Tengo tus me gusta', dur: '1:15', portada: 'video-04', titulada: true,
+    d: 'Con 300 «me gusta», un algoritmo te conoce mejor que tu pareja (Cambridge y Stanford, 2015). El dataísmo dice que entonces debería decidir por ti. Pero los datos heredan nuestros prejuicios.',
+    alt: 'EVA mirando de frente, con una lágrima negra, sobre la pregunta «¿Tu pareja te conoce mejor que yo? Yo solo necesité 300 me gusta».' },
 ];
-const REELS_PRONTO = Math.max(1, 4 - REELS.length); // lugares marcados para los videos que vienen
+const REELS_PRONTO = (4 - REELS.length % 4) % 4; // lugares marcados para los videos que vienen: completan la fila de cuatro
 
 function franjaReels() {
   return `
