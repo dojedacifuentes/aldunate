@@ -79,7 +79,13 @@ button.reel:hover img { transform: scale(1.04); }
 .reel-pie b { font-size: 16px; line-height: 1.25; }
 .reel-eti { font-size: 11px; letter-spacing: .1em; color: #6fdbd4; }
 .reel.titulada::after { background: linear-gradient(180deg, transparent 80%, rgba(0,0,0,.85)); }
-.reel.titulada .reel-play { top: 50%; }
+.reel.titulada .reel-play { top: auto; left: auto; right: 12px; bottom: 10px; translate: none; width: 42px; height: 42px; }
+.reel.titulada .reel-pie { right: 62px; }
+@media (max-width: 860px) {
+  .reel.titulada .reel-play { right: 8px; bottom: 8px; width: 34px; height: 34px; }
+  .reel.titulada .reel-pie { left: 10px; right: 46px; bottom: 16px; }
+  .reel.titulada .reel-eti { font-size: 10px; letter-spacing: .02em; white-space: nowrap; }
+}
 .reel.pronto { border-style: dashed; background: var(--suave); color: var(--texto-2); cursor: default; }
 .reel.pronto::after { display: none; }
 .reel.pronto .reel-eti { color: var(--texto-2); }

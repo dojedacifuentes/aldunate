@@ -9,6 +9,9 @@ const REELS = [
   { id: 'uf24eLuF2tI', n: 2, t: 'Humano 2.0: ¿borrarías la muerte?', dur: '2:53', portada: 'video-02', titulada: true,
     d: 'Un chip que devuelve la memoria es curar; el mismo chip para recordarlo todo, ¿es mejorar? Transhumanistas y bioconservadores: Bostrom, Fukuyama, Sandel, Rita Leggett y la línea que ya trazó Chile.',
     alt: 'EVA partida en dos, mitad humana y mitad máquina, con el título «Humano 2.0: ¿curar o mejorar?».' },
+  { id: 'VRrR5Wlb2hc', n: 3, t: '¿Soy alguien o algo?', dur: '1:20', portada: 'video-03', titulada: true,
+    d: 'En Chile, persona es todo individuo de la especie humana; una empresa también lo es, y un río en Nueva Zelanda. Un orangután, no. ¿Y una IA? Turing, Chalmers y las leyes que ya se adelantaron.',
+    alt: 'Un ojo con un iris de circuitos azules, sobre el título «¿Soy alguien o algo? La ley ya respondió. ¿Y tú?».' },
 ];
 const REELS_PRONTO = Math.max(1, 4 - REELS.length); // lugares marcados para los videos que vienen
 
