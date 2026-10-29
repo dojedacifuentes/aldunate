@@ -278,7 +278,7 @@ const INDICE = [
   ...GLOSARIO.map(([t, d, c, m]) => ({ g: 'Glosario', ic: 'Aa', t, s: d, ir: () => irACurso(c, m) })),
   ...CURSOS.flatMap(([ct, mods], c) => mods.map((t, m) => ({ g: 'Videocápsulas', ic: `${c + 1}.${m + 1}`, t, s: `Curso ${c + 1} · ${ct} · 5 min`, ir: () => { location.hash = `video/${c}-${m}`; } }))),
   ...CURSOS.map(([t], c) => ({ g: 'Cursos', ic: String(c + 1), t, s: 'Curso de 4 módulos', ir: () => irACurso(c, 0) })),
-  ...GUIAS.map((x) => ({ g: 'Guías y protocolos', ic: x.tipo[0], t: x.t, s: `${x.tipo} · ${x.d}`, ir: () => { location.hash = `guias/${x.id}`; } })),
+  ...GUIAS.map((x) => ({ g: 'Guías y protocolos', ic: x.tipo[0], t: x.t, s: `${x.tipo} · ${x.d}`, ir: () => { if (x.pagina) location.href = x.pagina; else location.hash = `guias/${x.id}`; } })),
   ...EXPERIMENTOS.map((x) => ({ g: 'EVA Lab', ic: x.id, t: x.t, s: `Experimento · ${x.tema}`, ir: () => { location.hash = `laboratorio/${x.id}`; } })),
 ];
 const ORDEN_GRUPOS = ['Glosario', 'Guías y protocolos', 'Videocápsulas', 'Cursos', 'EVA Lab', 'Pregunta a EVA'];

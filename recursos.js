@@ -211,6 +211,8 @@ function alMontarRecursos() {
 /* ---------- Guías, protocolos y tutoriales ----------
    Textos de muestra escritos para la maqueta. Revisión jurídica pendiente. */
 const GUIAS = [
+  { id: 'panel-de-caso', tipo: 'Tutorial', t: 'Del expediente a la web: el panel de un caso', d: 'Paso a paso con Claude Code, GitHub y Vercel. Capturas reales y fuentes en APA.', min: 90, pub: 'Abogados y alumni', pagina: 'tutorial/index.html',
+    pasos: ['Preparar la carpeta del caso.', 'Escribir las instrucciones del proyecto.', 'Registrar el estado del caso, con fuentes.', 'Generar el panel.', 'Actualizar y volver atrás.', 'Guardar el caso en GitHub.', 'Publicar en Vercel y cerrar el acceso.'], ir: [] },
   { id: 'antes-de-pegar', tipo: 'Protocolo', t: 'Antes de pegar un documento en una IA', d: 'Qué borrar y qué revisar para no exponer a un cliente.', min: 3, pub: 'Estudiantes y abogados',
     pasos: ['Pregúntate si de verdad necesitas pegar el documento completo o basta un fragmento.', 'Borra nombres, RUT, domicilios, correos, teléfonos y números de causa. Cámbialos por «Parte A», «Parte B».', 'Revisa los datos que identifican sin nombre: cargos únicos, fechas exactas, lugares pequeños.', 'Lee las condiciones de la herramienta: si guarda lo que pegas o lo usa para entrenar.', 'Si hay duda, no lo pegues. Pide al cliente o a tu supervisor una autorización.'],
     ir: [['Experimento: el contrato que nadie leyó', '#laboratorio/05'], ['Curso 6 · Secreto profesional', 'curso:5-0']] },
@@ -240,19 +242,19 @@ const GUIAS = [
     ir: [['Curso 4 · Verificar antes de firmar', 'curso:3-0']] },
 ];
 // Guías que tratan lo mismo que un recurso usan su imagen.
-const IMG_GUIA = { 'antes-de-pegar': 'rec-14', 'estudiar-con-ia': 'rec-04', 'ley-chile': 'rec-06' };
+const IMG_GUIA = { 'antes-de-pegar': 'rec-14', 'estudiar-con-ia': 'rec-04', 'ley-chile': 'rec-06', 'panel-de-caso': 'curso-5' };
 let tipoGuia = 'Todas';
 function vistaGuias() {
   const abierta = location.hash.split('/')[1];
   return `
   <div class="titulo"><div><h1>Guías, protocolos y tutoriales</h1><p>Listas cortas para hacer las cosas bien cuando hay apuro. Ábrelas, cópialas, úsalas en clase.</p>${evaLinea('Listas cortas para cuando hay apuro. Las escribí sin apuro.')}</div></div>
-  <div class="filtros" id="tipo-guia">${['Todas', 'Guía', 'Protocolo', 'Tutorial'].map((t) => `<button aria-pressed="${tipoGuia === t}" data-t="${t}">${t === 'Todas' ? 'Todas' : t + (t === 'Protocolo' ? 's' : 's')}</button>`).join('')}</div>
+  <div class="filtros" id="tipo-guia">${['Todas', 'Guía', 'Protocolo', 'Tutorial'].map((t) => `<button aria-pressed="${tipoGuia === t}" data-t="${t}">${t === 'Todas' ? 'Todas' : t + (t === 'Tutorial' ? 'es' : 's')}</button>`).join('')}</div>
   <div class="vitrina" id="vitrina-guias">${GUIAS.map((g) => `
     <article class="caja tarjeta guia-t${abierta === g.id ? ' abierta' : ''}" id="g-${g.id}" data-tipo="${g.tipo}">
       ${portada(0, g.tipo === 'Protocolo' ? '#d6409f' : g.tipo === 'Guía' ? '#8e4ec6' : '#00a2c7', g.tipo.toUpperCase(), TIPO_MOTIVO[g.tipo === 'Protocolo' ? 'protocolo' : g.tipo === 'Guía' ? 'guia' : 'video'], IMG_GUIA[g.id] || `guia-${g.id}`)}
       <div class="t-cuerpo"><span class="t-eti">${g.tipo} · ${g.min} min · ${g.pub}</span><h2>${g.t}</h2><p>${g.d}</p>
-        <button class="btn suave g-abrir" aria-expanded="${abierta === g.id}">${abierta === g.id ? 'Cerrar' : 'Ver los pasos'}</button>
-        <div class="g-pasos"${abierta === g.id ? '' : ' hidden'}><ol>${g.pasos.map((p) => `<li>${p}</li>`).join('')}</ol>
+        ${g.pagina ? `<a class="btn suave" href="${g.pagina}">Leer el tutorial</a>` : `<button class="btn suave g-abrir" aria-expanded="${abierta === g.id}">${abierta === g.id ? 'Cerrar' : 'Ver los pasos'}</button>`}
+        <div class="g-pasos"${abierta === g.id && !g.pagina ? '' : ' hidden'}><ol>${g.pasos.map((p) => `<li>${p}</li>`).join('')}</ol>
           <div class="g-ir">${g.ir.map(([t, d]) => d.startsWith('http') ? `<a href="${d}" target="_blank" rel="noopener">${t}</a>` : `<a href="${d.startsWith('curso:') ? '#cursos' : d}" ${d.startsWith('curso:') ? `data-ir-curso="${d.slice(6)}"` : ''}>${t}</a>`).join('')}
             <button class="g-copiar" data-g="${g.id}">${I(IC.copiar, 16)}Copiar los pasos</button></div></div></div>
     </article>`).join('')}</div>
