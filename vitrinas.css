@@ -61,6 +61,37 @@ a.tarjeta:hover .portada.con-img img { transform: scale(1.04); }
 .tarjeta.sin-enlace { opacity: .78; }
 .buscador-cat { min-width: 260px; background: var(--panel); }
 
+/* EVA en vertical: portadas 9:16; el video se abre en una ventana encima de la página (videos-eva.js) */
+.reels { margin-bottom: 28px; }
+.reels-cab h2 { margin: 0; font-size: 20px; }
+.reels-cab p { margin: 2px 0 12px; color: var(--texto-2); font-size: 14px; }
+.reels-fila { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 220px)); gap: 16px; }
+.reel { position: relative; display: block; aspect-ratio: 9 / 16; padding: 0; border: 1px solid var(--borde); border-radius: 14px; overflow: hidden;
+  background: #0b0b0c; color: #fff; text-align: left; cursor: pointer; transition: transform var(--m-agil-t) var(--m-agil), box-shadow .2s; }
+.reel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform var(--m-normal-t) var(--m-normal); }
+.reel::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 48%, rgba(0,0,0,.9) 68%, #000); pointer-events: none; }
+button.reel:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(0,0,0,.18); }
+button.reel:hover img { transform: scale(1.04); }
+.reel:focus-visible { outline: 3px solid var(--rojo); outline-offset: 3px; }
+.reel-play { position: absolute; left: 50%; top: 46%; translate: -50% -50%; z-index: 1; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.7); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.reel-pie { position: absolute; left: 14px; right: 14px; bottom: 14px; z-index: 1; display: grid; gap: 4px; }
+.reel-pie b { font-size: 16px; line-height: 1.25; }
+.reel-eti { font-size: 11px; letter-spacing: .1em; color: #6fdbd4; }
+.reel.pronto { border-style: dashed; background: var(--suave); color: var(--texto-2); cursor: default; }
+.reel.pronto::after { display: none; }
+.reel.pronto .reel-eti { color: var(--texto-2); }
+.reel-modal { background: rgba(0,0,0,.84); }
+.reel-caja { position: relative; display: grid; grid-template-columns: auto 300px; gap: 28px; align-items: end; }
+.reel-marco { height: min(86vh, 860px); aspect-ratio: 9 / 16; border-radius: 16px; overflow: hidden; background: #000; }
+.reel-marco iframe { display: block; width: 100%; height: 100%; border: 0; }
+.reel-texto { color: #fff; padding-bottom: 12px; }
+.reel-texto h2 { margin: 6px 0 8px; font-size: 24px; line-height: 1.2; }
+.reel-texto p { margin: 0 0 14px; color: #c9c9c9; font-size: 15px; }
+.reel-texto a { color: #6fdbd4; font-weight: 600; text-decoration: none; }
+.reel-caja .cerrar { position: absolute; top: -6px; right: -6px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.4);
+  background: rgba(0,0,0,.6); color: #fff; font-size: 24px; line-height: 1; }
+
 /* Guías, protocolos y tutoriales: la tarjeta se abre en su lugar */
 .guia-t .btn { align-self: flex-start; margin-top: 10px; height: 36px; }
 .guia-t.abierta { grid-column: span 2; }
@@ -81,4 +112,12 @@ a.tarjeta:hover .portada.con-img img { transform: scale(1.04); }
   .buscador-cat { min-width: 0; width: 100%; }
   .titulo .acciones .buscador-cat { flex: 1; }
   .portada { aspect-ratio: 16 / 7; }
+  /* EVA en vertical: dos columnas y un solo «Próximamente»; el video ocupa toda la pantalla */
+  .reels-fila { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .reel.pronto ~ .reel.pronto { display: none; }
+  .reel-modal { padding: 0; }
+  .reel-caja { width: 100%; height: 100dvh; grid-template-columns: 1fr; gap: 0; }
+  .reel-marco { width: 100%; height: 100%; aspect-ratio: auto; border-radius: 0; }
+  .reel-texto { display: none; }
+  .reel-caja .cerrar { top: calc(10px + env(safe-area-inset-top)); right: 10px; z-index: 2; }
 }

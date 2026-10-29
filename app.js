@@ -628,10 +628,12 @@ function tarjetasVideos() {
 function vistaVideos() {
   return `
   <div class="titulo"><div><h1>Videocápsulas</h1><p>32 videos de cinco minutos: uno por módulo. Con subtítulos y su guía en PDF.</p></div></div>
+  ${franjaReels()}
   <div class="filtros" id="filtros"><button aria-pressed="${filtro < 0}" data-c="-1">Todas</button>${CURSOS.map((_, k) => `<button aria-pressed="${filtro === k}" data-c="${k}">Curso ${k + 1}</button>`).join('')}</div>
   <div class="rejilla" id="rejilla">${tarjetasVideos()}</div>`;
 }
 function alMontarVideos() {
+  alMontarReels();
   $('#filtros').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
     if (+b.dataset.c === filtro) return;
