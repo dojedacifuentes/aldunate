@@ -165,6 +165,7 @@ const RECURSOS = [
   ['Catálogo abierto de recursos de EVA', 'Todos los materiales reutilizables de EVA, con su licencia.', 'docentes', 'guia', 'en línea', 'https://eva-recursos.vercel.app', ['catálogo', 'CC BY 4.0']],
   ['Guía: preparar una evaluación con IA', 'Preguntas que una IA no responde bien sola.', 'docentes', 'guia', 'muestra', '#guias/evaluar-con-ia', ['evaluación']],
   ['Guía docente del módulo 1.1', 'Antes, durante y después de la clase.', 'docentes', 'guia', 'muestra', '#docentes', ['clase']],
+  ['Fundamentos de IA · material del alumno', 'Las 4 clases del curso presencial de la Escuela: prompts para copiar, enlaces directos y protocolos.', 'estudiar', 'curso', 'en línea', 'https://taller-diat.vercel.app/fundamentos', ['curso', 'PUCV']],
 ];
 let catRecurso = 'todas';
 function vistaRecursos() {
@@ -183,7 +184,7 @@ function tarjetaRecurso([t, d, cat, tipo, estado, url, etiq], i) {
   const fuera = url.startsWith('http'), tag = url ? 'a' : 'div';
   const attr = url ? `href="${url}"${fuera ? ' target="_blank" rel="noopener"' : ''}` : 'aria-disabled="true"';
   return `<${tag} class="caja tarjeta rec${url ? '' : ' sin-enlace'}" ${attr} data-cat="${cat}" data-texto="${sinTildes([t, d, tipo, ...etiq].join(' '))}">
-    ${portada(0, COLOR_CAT[cat], tipo === 'fuente' ? 'FUENTE' : tipo.toUpperCase(), TIPO_MOTIVO[tipo], `rec-${String(i + 1).padStart(2, '0')}`)}
+    ${portada(0, COLOR_CAT[cat], tipo === 'fuente' ? 'FUENTE' : tipo.toUpperCase(), TIPO_MOTIVO[tipo], IMG_ALT[`rec-${String(i + 1).padStart(2, '0')}`] ? `rec-${String(i + 1).padStart(2, '0')}` : '')}
     <div class="t-cuerpo"><span class="t-eti">${CATEGORIAS.find(([k]) => k === cat)[1]}</span><h2>${t}</h2><p>${d}</p>
       <div class="t-pie"><span class="estado-r ${estado.replace(' ', '-')}">${estado === 'en línea' ? 'En línea ↗' : estado === 'muestra' ? 'Muestra' : 'Pendiente'}</span>${etiq.map((e) => `<span class="etq">${e}</span>`).join('')}</div></div>
   </${tag}>`;
