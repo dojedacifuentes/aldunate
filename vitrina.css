@@ -24,6 +24,31 @@
 }
 :root[data-estilo="vidrio"][data-tema="claro"] .lateral { border-right-color: rgba(0,0,0,.08); }
 :root[data-tema="claro"] .menu a[aria-current="page"] { color: #1c2024; }
+
+/* ---------- Barra lateral: más vidrio y un aliento de la paleta detrás (30-10-2026) ----------
+   El fondo se hace más translúcido para que el desenfoque se note, y detrás respiran dos manchas muy
+   tenues de la paleta: cian arriba, magenta abajo. El elemento activo lleva el mismo degradado, apagado. */
+:root[data-estilo="vidrio"][data-tema="oscuro"] .lateral {
+  background-color: rgba(15,15,18,.5);
+  background-image:
+    radial-gradient(440px 340px at -60px -50px, rgba(0,162,199,.26), transparent 70%),
+    radial-gradient(300px 260px at 50% 112%, rgba(142,78,198,.16), transparent 72%),
+    radial-gradient(440px 380px at 112% 104%, rgba(214,64,159,.2), transparent 70%),
+    var(--grano);
+  border-right-color: rgba(255,255,255,.1);
+}
+:root[data-estilo="vidrio"][data-tema="claro"] .lateral {
+  background-color: rgba(252,252,253,.55);
+  background-image:
+    radial-gradient(440px 340px at -60px -50px, rgba(0,162,199,.14), transparent 70%),
+    radial-gradient(440px 380px at 112% 104%, rgba(214,64,159,.11), transparent 70%),
+    var(--grano);
+}
+:root[data-tema="oscuro"] .menu a[aria-current="page"] { background: linear-gradient(100deg, rgba(0,162,199,.18), rgba(214,64,159,.12)); }
+:root[data-tema="claro"] .menu a[aria-current="page"] { background: linear-gradient(100deg, rgba(0,162,199,.12), rgba(214,64,159,.08)); }
+.menu a[aria-current="page"]::before, :root[data-tema="oscuro"] .menu a[aria-current="page"]::before {
+  background: linear-gradient(180deg, #00a2c7, #d6409f); }
+.nota-lat { border-top-color: rgba(127,127,127,.22); }
 /* Los rótulos de los videos toman el cian de EVA. */
 .reel-eti, .reel-texto a { color: var(--cian); }
 
