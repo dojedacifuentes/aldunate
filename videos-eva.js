@@ -15,6 +15,19 @@ const REELS = [
   { id: 'XdONlPfSSzg', n: 4, t: 'Tengo tus me gusta', dur: '1:15', portada: 'video-04', titulada: true,
     d: 'Con 300 «me gusta», un algoritmo te conoce mejor que tu pareja (Cambridge y Stanford, 2015). El dataísmo dice que entonces debería decidir por ti. Pero los datos heredan nuestros prejuicios.',
     alt: 'EVA mirando de frente, con una lágrima negra, sobre la pregunta «¿Tu pareja te conoce mejor que yo? Yo solo necesité 300 me gusta».' },
+  // 5 a 8: los reels de EVA ACADEMY (29-10-2026). Portadas: sus miniaturas verticales. El 5 se subió en 4:5.
+  { id: '2xe2z00vQBA', n: 5, t: '¿Si pago, mis datos están protegidos? · Parte 1', dur: '1:26', portada: 'video-05', titulada: true,
+    d: 'Pagar no es contratar. Cuatro mitos sobre tus datos en ChatGPT, Claude y Gemini, con lo que dicen sus políticas, textual.',
+    alt: 'EVA de frente, con el título «Pagar no es contratar. ¿Si pago, mis datos están protegidos? 4 mitos, parte 1».' },
+  { id: 'zgjBObDpyAE', n: 6, t: 'Apagaste el entrenamiento · Parte 2', dur: '1:25', portada: 'video-06', titulada: true,
+    d: 'Apagar el entrenamiento vale hacia adelante: lo ya aprendido se queda. Cuatro mitos más, con lo que dicen sus políticas.',
+    alt: 'EVA de frente, con el título «Pagar no es contratar. ¿Si pago, mis datos están protegidos? 4 mitos, parte 2».' },
+  { id: 'ZKBdWKaiRL8', n: 7, t: 'Tacha antes de pegar', dur: '1:12', portada: 'video-07', titulada: true,
+    d: 'Si pegaste el escrito de tu cliente en una IA, ya le entregaste sus datos. Cómo tacharlos antes, gratis y sin internet. Tachar no es anonimizar.',
+    alt: 'EVA de frente, con el título «¿Pegaste el escrito en una IA? Tacha antes de pegar» y datos reemplazados por etiquetas.' },
+  { id: 'kT7IS1YSqK8', n: 8, t: 'Tu chat, al expediente', dur: '1:25', portada: 'video-08', titulada: true,
+    d: 'Lo que le cuentas a una IA puede usarse en tu contra en un juicio: Nueva York 2026, el caso del New York Times contra OpenAI y qué pasa en Chile.',
+    alt: 'EVA de frente, con el título «Tu chat, al expediente. Lo que le cuentas a una IA puede usarse en tu contra».' },
 ];
 const REELS_PRONTO = (4 - REELS.length % 4) % 4; // lugares marcados para los videos que vienen: completan la fila de cuatro
 

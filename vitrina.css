@@ -345,3 +345,50 @@
 }
 /* En el teléfono, con EVA abierta, su botón redondo se esconde: tapaba el panel (que tiene su propia X). */
 @media (max-width: 860px) { :root.eva-pausa .eva-fab { opacity: 0; pointer-events: none; } }
+
+/* ---------- Ficha del curso (ficha-curso.js) ---------- */
+.ficha-velo { position: fixed; inset: 0; z-index: 36; display: grid; place-items: center; padding: 24px; overflow: auto;
+  background: rgba(8,9,12,.6); -webkit-backdrop-filter: blur(16px) saturate(120%); backdrop-filter: blur(16px) saturate(120%); animation: velo .3s ease both; }
+:root[data-tema="claro"] .ficha-velo { background: rgba(240,240,243,.55); }
+.ficha-velo.saliendo { animation: velo .22s ease reverse both; }
+.ficha { position: relative; width: min(720px, 100%); border-radius: 24px; overflow: hidden; color: var(--texto);
+  background: rgba(24,25,27,.82); border: 1px solid rgba(255,255,255,.1);
+  -webkit-backdrop-filter: blur(28px) saturate(160%); backdrop-filter: blur(28px) saturate(160%);
+  box-shadow: 0 40px 100px rgba(0,0,0,.55), 0 0 0 1px color-mix(in srgb, var(--c) 25%, transparent); }
+:root[data-tema="claro"] .ficha { background: rgba(255,255,255,.9); border-color: rgba(0,0,0,.08); }
+.ficha-img { position: relative; aspect-ratio: 16 / 8; overflow: hidden; background: #0b0b0c; }
+.ficha-img img { width: 100%; height: 100%; object-fit: cover; display: block; animation: ficha-zoom 1.2s cubic-bezier(.2,.9,.25,1) both; }
+@keyframes ficha-zoom { from { transform: scale(1.08); } }
+.ficha-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 35%, rgba(24,25,27,.6) 70%, rgba(24,25,27,.98)); }
+:root[data-tema="claro"] .ficha-img::after { background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,.55)); }
+.ficha-sobre { position: absolute; left: 30px; right: 30px; bottom: 18px; z-index: 1; color: #fff; }
+.ficha-eti { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: color-mix(in srgb, var(--c) 55%, #fff); }
+.ficha-sobre h2 { margin: 6px 0 0; font-size: clamp(26px, 3vw, 38px); line-height: 1.1; letter-spacing: -.02em; text-shadow: 0 2px 18px rgba(0,0,0,.5); }
+.ficha-cerrar { position: absolute; top: 14px; right: 14px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; font-size: 24px; line-height: 1;
+  color: #fff; background: rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.3); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); cursor: pointer; }
+.ficha-cuerpo { padding: 18px 30px 28px; }
+.ficha-desc { margin: 0 0 18px; font-size: 16px; line-height: 1.55; color: var(--texto-2); max-width: 600px; }
+.ficha-acc { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-bottom: 22px; }
+.ficha-acc .btn { height: 48px; padding: 0 24px; font-size: 15px; }
+.ficha-estado { font-size: 12px; color: var(--texto-2); }
+.ficha-sub { margin: 0 0 8px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--texto-2); }
+.ficha-mods { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.ficha-mods button { width: 100%; display: grid; grid-template-columns: 38px minmax(0, 1fr) 80px 34px; align-items: center; gap: 12px; padding: 12px 14px;
+  border-radius: 12px; border: 1px solid var(--borde); background: var(--suave); color: var(--texto); text-align: left; cursor: pointer;
+  transition: border-color .2s, transform var(--m-agil-t) var(--m-agil); }
+.ficha-mods button:hover, .ficha-mods button:focus-visible { border-color: var(--c); transform: translateX(3px); }
+.fm-n { font-size: 13px; color: color-mix(in srgb, var(--c) 70%, #fff); }
+:root[data-tema="claro"] .fm-n { color: var(--c); }
+.fm-t { font-size: 15px; font-weight: 500; }
+.fm-av { height: 5px; border-radius: 3px; background: rgba(255,255,255,.1); overflow: hidden; }
+:root[data-tema="claro"] .fm-av { background: rgba(0,0,0,.08); }
+.fm-av b { display: block; height: 100%; background: var(--grad); background-size: 200px 100%; }
+.fm-ok { font-size: 12px; color: var(--texto-2); text-align: right; }
+@media (max-width: 860px) {
+  .ficha-velo { padding: 0; place-items: end center; }
+  .ficha { border-radius: 22px 22px 0 0; max-height: 92vh; overflow: auto; }
+  .ficha-sobre { left: 20px; right: 20px; }
+  .ficha-cuerpo { padding: 14px 20px 26px; }
+  .ficha-mods button { grid-template-columns: 34px minmax(0, 1fr) 30px; }
+  .fm-av { display: none; }
+}
