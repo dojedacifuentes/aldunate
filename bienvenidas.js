@@ -1,6 +1,7 @@
-/* Otras primeras interacciones para la bienvenida, para comparar con la de SÍ/NO (que sigue siendo la de siempre).
-   Se abren con ?bv=galletas o ?bv=recomendado (junto con ?nuevo para verlas otra vez). Todo es un ejercicio: lo que se
-   marca aquí no se guarda. Al final llaman a `entrar`, que muestra la entrada de siempre (nombre y quién eres). */
+/* Otras primeras interacciones para la bienvenida, además de la de SÍ/NO: cada una recrea un patrón oscuro o un
+   vicio de la IA y lo revela al final. Se fijan con ?bv=galletas | recomendado | terminos | urgencia | camara
+   (junto con ?nuevo para verlas otra vez). Todo es un ejercicio: lo que se marca aquí no se guarda y no se pide
+   ningún permiso de verdad. Al final llaman a `entrar`, que muestra la entrada de siempre (nombre y quién eres). */
 
 const revelar = (caja, html, entrar, boton = 'Entrar a IA y Derecho') => {
   caja.innerHTML = `<div class="bv-rev">${html}<button class="btn lleno" id="bv-seguir">${boton}<span class="flecha">${I(IC.flecha, 18)}</span></button></div>`;
@@ -20,7 +21,7 @@ function bvGalletas(caja, entrar) {
   caja.innerHTML = `<div class="gal">
     <p class="gal-t">Usamos galletas para que EVA te conozca mejor.</p>
     <p class="gal-s">Mejoran tu experiencia, personalizan tus cursos y otras cosas que suenan bien.</p>
-    <div class="gal-bot"><button class="btn lleno gal-todo">Aceptar todo</button><button class="gal-conf">Configurar</button></div>
+    <div class="gal-bot"><button class="btn lleno bv-insiste gal-todo">Aceptar todo</button><button class="gal-conf">Configurar</button></div>
   </div>`;
   $('.gal-todo', caja).addEventListener('click', () => {
     EF.sonar('marca');
@@ -75,5 +76,90 @@ function bvRecomendado(caja, entrar) {
     revelar(caja, `<p class="fin-sub">No te dejaste llevar por mi recomendación. Bien hecho.</p>
       <h2>Ese «98 %» no existe. Lo inventé, con mucha seguridad.</h2>
       <p class="bv-txt">Una IA puede darte un dato preciso y falso sin dudar. Por eso aquí la primera regla es <b>verificar</b>, también lo que te digo yo.</p>`, entrar);
+  });
+}
+
+/* ---------- 3. Términos: 9.482 palabras, un «Acepto» gigante y una cláusula que nadie ve ---------- */
+const CLAUSULAS_BV = [
+  ['1', 'Objeto', 'EVA te acompaña a estudiar Derecho con inteligencia artificial.'],
+  ['2', 'Uso aceptable', 'Te comprometes a dudar de todo lo que EVA afirme con mucha seguridad.'],
+  ['3', 'Disponibilidad', 'EVA está disponible las 24 horas, salvo cuando no.'],
+  ['4', 'Tus apuntes', 'Tus apuntes son tuyos. Obvio. ¿O no tan obvio? Sigue leyendo.'],
+  ['5', 'Responsabilidad', 'Si citas sin verificar, eso corre por tu cuenta. (Esta cláusula sí va en serio.)'],
+  ['6', 'Modificaciones', 'Podemos cambiar estos términos cuando queramos, idealmente un viernes a las 18:00.'],
+  ['7.3', 'Cesiones', 'Nos cedes tu apunte más preciado, tu mejor destacador y el derecho a despertarte con preguntas de Derecho Romano.'],
+  ['8', 'Jurisdicción', 'Cualquier conflicto se resuelve con un experimento de EVA Lab.'],
+];
+function bvTerminos(caja, entrar) {
+  const t0 = performance.now(), seg = () => Math.max(1, Math.round((performance.now() - t0) / 1000));
+  caja.innerHTML = `<div class="gal">
+    <p class="gal-t">Actualizamos nuestros términos y condiciones.</p>
+    <p class="gal-s">Versión 14 · 9.482 palabras · lectura estimada: 38 minutos.</p>
+    <div class="term-caja" tabindex="0" aria-label="Términos y condiciones (resumen del ejercicio)">${CLAUSULAS_BV.map(([n, t, c]) => `<p><b>${n}. ${t}.</b> ${c}</p>`).join('')}</div>
+    <div class="gal-bot"><button class="btn lleno bv-insiste term-si">Acepto los términos</button><button class="gal-conf term-leer">Leer antes de aceptar</button></div>
+  </div>`;
+  $('.term-si', caja).addEventListener('click', () => {
+    EF.sonar('marca');
+    revelar(caja, `<p class="fin-sub">Aceptaste en ${seg()} segundo${seg() > 1 ? 's' : ''}. La lectura tomaba 38 minutos.</p>
+      <h2>Firmaste la cláusula 7.3: nos cediste tu mejor destacador.</h2>
+      <p class="bv-txt">Tranquilo: era un ejercicio y no hay contrato. Pero los términos de verdad se aceptan igual, en segundos. En Derecho, un consentimiento sin información es un consentimiento cojo. Lo practicas en EVA Lab, experimento 05: «El contrato que nadie leyó».</p>`, entrar);
+  });
+  $('.term-leer', caja).addEventListener('click', () => {
+    EF.sonar('llega');
+    revelar(caja, `<p class="fin-sub">Fuiste a leer. Eso te pone en una minoría muy selecta.</p>
+      <h2>¿Alcanzaste la cláusula 7.3? Pedía tu mejor destacador.</h2>
+      <p class="bv-txt">Era un ejercicio: no hay contrato. Pero los términos reales se aceptan así, en segundos y sin leer, y un contrato ilegible es un problema jurídico, no sólo de paciencia. Más en EVA Lab, experimento 05.</p>`, entrar);
+  });
+}
+
+/* ---------- 4. Urgencia: un contador que corre y cupos que se agotan, todo inventado ---------- */
+function bvUrgencia(caja, entrar) {
+  const t0 = performance.now(), seg = () => Math.max(1, Math.round((performance.now() - t0) / 1000));
+  caja.innerHTML = `<div class="gal">
+    <p class="urg-cupos mono">Quedan 2 cupos · 14 personas están mirando esto</p>
+    <p class="gal-t">Tu acceso prioritario a EVA expira en</p>
+    <p class="urg-reloj mono" aria-hidden="true">09:59</p>
+    <div class="gal-bot"><button class="btn lleno bv-insiste urg-si">Asegurar mi cupo ahora</button><button class="gal-conf urg-no">¿Y si espero?</button></div>
+  </div>`;
+  const reloj = $('.urg-reloj', caja);
+  let resto = 599;
+  const tic = setInterval(() => {
+    if (!reloj.isConnected) { clearInterval(tic); return; }
+    resto -= 1;
+    reloj.textContent = `${String(Math.floor(resto / 60)).padStart(2, '0')}:${String(resto % 60).padStart(2, '0')}`;
+  }, 1000);
+  $('.urg-si', caja).addEventListener('click', () => {
+    clearInterval(tic); EF.sonar('marca');
+    revelar(caja, `<p class="fin-sub">Corriste: ${seg()} segundo${seg() > 1 ? 's' : ''}. No había cupos, ni fila, ni reloj de verdad.</p>
+      <h2>La urgencia inventada decide por ti antes de que alcances a pensar.</h2>
+      <p class="bv-txt">Es un <b>patrón oscuro</b> de escasez: aquí el acceso es libre y no expira nunca. En Derecho importa, porque un consentimiento apurado vale menos de lo que parece. Lo ves en el curso 8 y en EVA Lab.</p>`, entrar);
+  });
+  $('.urg-no', caja).addEventListener('click', () => {
+    clearInterval(tic); EF.sonar('llega');
+    revelar(caja, `<p class="fin-sub">Esperaste. El contador iba a llegar a cero… y a volver a empezar. Siempre vuelve a empezar.</p>
+      <h2>Los relojes de «última oportunidad» casi nunca miden tiempo: miden tu apuro.</h2>
+      <p class="bv-txt">Es un <b>patrón oscuro</b> de escasez: no había cupos ni fila. Un consentimiento apurado vale menos de lo que parece, y eso en Derecho importa. Lo ves en el curso 8 y en EVA Lab.</p>`, entrar);
+  });
+}
+
+/* ---------- 5. Cámara: un permiso que este sitio no necesita (ni puede usar) ---------- */
+function bvCamara(caja, entrar) {
+  caja.innerHTML = `<div class="gal">
+    <span class="cam-lente" aria-hidden="true"><i></i><b class="cam-rec"></b></span>
+    <p class="gal-t">EVA quiere usar tu cámara.</p>
+    <p class="gal-s">Para comprobar que estudias con cara de concentración. También el micrófono, por si lees en voz alta.</p>
+    <div class="gal-bot"><button class="btn lleno bv-insiste cam-si">Permitir</button><button class="gal-conf cam-no">Bloquear</button></div>
+  </div>`;
+  $('.cam-si', caja).addEventListener('click', () => {
+    EF.sonar('marca');
+    revelar(caja, `<p class="fin-sub">Tranquilo: no hay cámara. Este sitio no puede verte, y tampoco quiere.</p>
+      <h2>¿Para qué necesitaba la cámara un curso de Derecho? Para nada. Ése es el punto.</h2>
+      <p class="bv-txt">Pedir más datos de los necesarios es un vicio con nombre; el principio contrario —pedir sólo lo justo— se llama <b>minimización de datos</b> y lo ves en el curso 8. Era un ejercicio: aquí no se pide permiso porque no se usa nada.</p>`, entrar);
+  });
+  $('.cam-no', caja).addEventListener('click', () => {
+    EF.sonar('clic');
+    revelar(caja, `<p class="fin-sub">Bloqueaste. EVA sobrevivirá.</p>
+      <h2>Negarse es una respuesta completa. No necesita explicación.</h2>
+      <p class="bv-txt">Un curso de Derecho no necesita tu cámara para nada, y lo que no hace falta no se pide: eso se llama <b>minimización de datos</b> y lo ves en el curso 8. Era un ejercicio: aquí no se usa cámara ni micrófono.</p>`, entrar);
   });
 }

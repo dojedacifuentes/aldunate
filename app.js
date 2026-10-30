@@ -360,7 +360,6 @@ function vistaInicio() {
   const nuevo = pasosTotales() === 0;
   const [sc, sm] = dondeSigue();
   const h = hechas(sc, sm);
-  const recordatorio = nuevo ? ['Para empezar', 'Curso 1 · Qué es la IA', '5 minutos'] : ['Recordatorio', `Termina el módulo ${sc + 1}.${sm + 1}`, `Te faltan ${4 - h} pasos`];
   const tarjeta = nuevo
     ? `<span class="eti">Empieza aquí</span><span class="num">1.1</span><h2>${CURSOS[0][1][0]}</h2>
        <p>Curso 1 · Qué es la IA. Antes de usarla, mira qué dicen las leyes que es. Una videocápsula de cinco minutos y un ejercicio corto.</p>
@@ -370,7 +369,6 @@ function vistaInicio() {
        <p>Curso ${sc + 1} · ${CURSOS[sc][0]}. Llevas ${h} de 4 pasos de este módulo.</p>
        <div class="pasos-mod" aria-label="Avance del curso ${sc + 1}">${[0, 1, 2, 3].map((m) => `<i class="${hechas(sc, m) === 4 ? 'ok' : hechas(sc, m) ? 'va' : ''}"></i>`).join('')}</div>
        <a class="btn lleno" href="#cursos/${sc + 1}">Continuar<span class="flecha">${I(IC.flecha, 18)}</span></a>`;
-  recordatorioSemana = recordatorio;
   const sem = semanaDeEstudio(), nSem = sem.filter(Boolean).length, hoyI = (new Date().getDay() + 6) % 7;
   // «Vitrina» (28-10-2026): arriba EVA y sus videos sobre vidrio; debajo, dónde sigues, la semana y una pregunta con humor.
   // Portada «Artículo 55» (elegida el 29-10-2026): curiosidad antes del catálogo. Imagen de Flow: el Código Civil abierto
@@ -413,11 +411,6 @@ function vistaInicio() {
         <ul class="lista-cursos menu-sel" id="menu-sel" hidden>${FILTROS_AVANCE.map(([, t], i) => `<li><button data-f="${i}" aria-current="${i === filtroAvance}">${t}</button></li>`).join('')}</ul></div></header>
       <ol class="barras">${CURSOS.map(([t], k) => `<li data-k="${k}"><a href="#cursos/${k + 1}" style="--c:${COLORES[k]}"><img src="img/tarjetas/curso-${k + 1}-480.webp" alt="" loading="lazy" decoding="async"><span class="cur-n mono">${String(k + 1).padStart(2, '0')}</span><span class="t">${t}</span><span class="pista"><b data-w="${totalCurso(k) / 16 * 100}"></b></span><span class="v mono">${modulosListos(k)}/4</span></a></li>`).join('')}</ol>
     </section>
-    <aside class="caja semana con-cab">${cabImg('rec-01')}
-      <div class="pestanas" role="tablist"><button role="tab" aria-selected="true">Esta semana</button><button role="tab" aria-selected="false">Novedades</button><span class="raya"></span></div>
-      <div id="agenda">${agenda()}</div>
-      <p class="muestra">FECHAS ILUSTRATIVAS · POR CONFIRMAR CON LA ESCUELA</p>
-    </aside>
   </div>`;
 }
 /* La semana de estudio: los días en que la persona entró, de lunes a domingo, sin castigo por faltar. */
@@ -450,41 +443,8 @@ function filtrarAvance() {
   $('.barras + .r-nada')?.remove();
   if (!visibles) $('.barras').insertAdjacentHTML('afterend', `<p class="r-nada">Ningún curso ${FILTROS_AVANCE[filtroAvance][1].toLowerCase()} todavía.</p>`);
 }
-/* Calendario: la semana del 26 de octubre (la de la maqueta) y una antes y una después. Fechas ilustrativas. */
-let semanaVista = 0, pestanaSemana = 'semana', recordatorioSemana;
-const LUNES_BASE = new Date(2026, 9, 26);
-// Novedades: noticias y actualizaciones de IA que el equipo irá subiendo. Por ahora, dos actualizaciones reales del sitio
-// y casillas de muestra que muestran dónde irá cada noticia (con su fuente y su fecha). No hay noticias inventadas.
-const NOVEDADES = [
-  ['Actualización del sitio', 'Abrió EVA Lab: seis experimentos breves', 'Sitio', '#laboratorio'],
-  ['Actualización del sitio', 'Nueva sección: guías, protocolos y tutoriales', 'Sitio', '#guias'],
-  ['Noticia de IA · muestra', 'Aquí irá una noticia breve sobre IA y Derecho, con su fuente', 'Muestra', ''],
-  ['Regulación · muestra', 'Aquí irá un cambio normativo, con enlace a la norma oficial', 'Muestra', ''],
-];
-function agenda() {
-  if (pestanaSemana === 'novedades') {
-    return `<ul class="novedades">${NOVEDADES.map(([a, b, p, h]) => `<li class="${h ? '' : 'nov-muestra'}">${h ? `<a href="${h}">` : ''}<p class="nov-eti mono">${a}</p><p>${b}</p><span class="pild${h ? '' : ' gris'}">${p}</span>${h ? '</a>' : ''}</li>`).join('')}</ul>
-      <p class="r-nada" style="padding:10px 20px 0;font-size:12px">Las noticias de IA se publicarán aquí. Por ahora es una muestra.</p>`;
-  }
-  const lunes = new Date(LUNES_BASE); lunes.setDate(lunes.getDate() + semanaVista * 7);
-  const viernes = new Date(lunes); viernes.setDate(lunes.getDate() + 4);
-  const mes = (d) => d.toLocaleDateString('es-CL', { month: 'long' });
-  const rango = lunes.getMonth() === viernes.getMonth() ? `${lunes.getDate()} – ${viernes.getDate()} de ${mes(viernes)}` : `${lunes.getDate()} de ${mes(lunes)} – ${viernes.getDate()} de ${mes(viernes)}`;
-  const ITEMS = {
-    '-1': [[], [], [], [], []],
-    0: [[['Abre la videocápsula 2.4', 'Cómo pedirle bien', 'Nueva']], [['Curso 4 · Fuentes chilenas', 'Taller con tu profesor', '10:15 – 11:30'], recordatorioSemana],
-      [['Abre el curso 6', 'Ética profesional y responsabilidad', 'Nuevo curso']], [['Pregunta de la semana', '¿Basta con citar un fallo?', 'EVA']], [['Abre la videocápsula 3.2', 'Analizar un fallo', 'Nueva']]],
-    1: [[['Abre el curso 7', 'Prueba digital y deepfakes', 'Nuevo curso']], [], [['Taller: prueba digital', 'Con tu profesor', '10:15 – 11:30']], [], [['Abre la videocápsula 4.3', 'Jurisprudencia real', 'Nueva']]],
-  }[semanaVista];
-  const COL = ['#00a2c7', '#4778c7', '#8e4ec6', '#b247b3', '#d6409f'];
-  const flechas = `<span class="flechas"><button aria-label="Semana anterior" data-s="-1" ${semanaVista <= -1 ? 'disabled' : ''}>${I(IC.izq, 18)}</button><button aria-label="Semana siguiente" data-s="1" ${semanaVista >= 1 ? 'disabled' : ''}>${I(IC.der, 18)}</button></span>`;
-  return `<header>${rango}${flechas}</header>
-    ${semanaVista < 0 ? '<p class="r-nada" style="padding:12px 20px">Esa semana no hubo actividades: los cursos abrieron el 26 de octubre.</p>' : ''}
-    <ol class="dias">${['Lun', 'Mar', 'Mié', 'Jue', 'Vie'].map((d, i) => {
-      const f = new Date(lunes); f.setDate(lunes.getDate() + i);
-      return ITEMS[i].length ? `<li><span class="d">${d}<b>${f.getDate()}</b></span><ul style="--c:${COL[i]}">${ITEMS[i].map(([a, b, p], j) => `<li><p>${a}</p><p style="color:var(--texto-2);font-weight:400">${b}</p><span class="pild${j ? ' gris' : ''}">${p}</span></li>`).join('')}</ul></li>` : '';
-    }).join('')}</ol>`;
-}
+/* El panel «Esta semana / Novedades» se quitó el 30-10-2026 a pedido del propietario: era una agenda con fechas
+   ilustrativas y no aportaba. La tarjeta chica de los días de visita («Esta semana · n de 7 días») sí se queda. */
 function alMontarInicio() {
   document.querySelectorAll('[data-n]').forEach((el) => contar(el, +el.dataset.n));
   $('.portada55 [data-reel]').addEventListener('click', (e) => abrirReel(e.currentTarget.dataset.reel, e.currentTarget));
@@ -501,22 +461,6 @@ function alMontarInicio() {
   const barras = document.querySelectorAll('.pista b[data-w]');
   requestAnimationFrame(() => setTimeout(() => barras.forEach((b) => (b.style.width = b.dataset.w + '%')), quieto ? 0 : 120));
   filtrarAvance();
-  const p = $('.semana .pestanas'), ag = $('#agenda');
-  p.querySelectorAll('button').forEach((b, i) => b.setAttribute('aria-selected', String((i === 1) === (pestanaSemana === 'novedades'))));
-  rayaPestanas(p);
-  p.addEventListener('click', (e) => {
-    const b = e.target.closest('button'); if (!b || b.getAttribute('aria-selected') === 'true') return;
-    EF.sonar('clic');
-    p.querySelectorAll('button').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
-    pestanaSemana = b === p.lastElementChild.previousElementSibling ? 'novedades' : 'semana';
-    rayaPestanas(p);
-    ag.innerHTML = agenda(); EF.llegar(ag, '.dias > li, .novedades > li, header');
-  });
-  ag.addEventListener('click', (e) => {
-    const b = e.target.closest('[data-s]'); if (!b || b.disabled) return;
-    semanaVista += +b.dataset.s; EF.sonar('clic');
-    ag.innerHTML = agenda(); EF.llegar(ag, '.dias > li, .r-nada');
-  });
   const sel = $('#selector'), menu = $('#menu-sel');
   sel.addEventListener('click', (e) => { e.stopPropagation(); menu.hidden = !menu.hidden; sel.setAttribute('aria-expanded', String(!menu.hidden)); });
   menu.addEventListener('click', (e) => {
@@ -1057,7 +1001,7 @@ function pintarPerfil() {
 pintarPerfil();
 // La clave lleva versión: al cambiar la bienvenida, quien vio la anterior ve la nueva una vez.
 const BIENVENIDA = 'panel:bienvenida:v2';
-// Desde el 29-10-2026 la bienvenida sale en cada visita (una de tres, al azar); la marca sólo sirve para no volver a
+// Desde el 29-10-2026 la bienvenida sale en cada visita (una de seis, al azar); la marca sólo sirve para no volver a
 // pedir el nombre y quién eres a quien ya pasó por la entrada.
 let vista0 = location.search.includes('sinbienvenida') || demo, yaVino = false;
 try { yaVino = !simulaNuevo && localStorage.getItem(BIENVENIDA) === '1'; } catch {}
@@ -1075,6 +1019,16 @@ function bienvenida() {
   </div>`);
   const bv = $('#bienvenida'), etapa = $('#bv-etapa');
   if (!quieto) requestAnimationFrame(() => bv.classList.add('ver')); else bv.classList.add('ver');
+  // Profundidad: la tarjeta se ladea apenas hacia el puntero (sólo con ratón y sin «reducir movimiento»).
+  if (!quieto && matchMedia('(pointer: fine)').matches) {
+    const caja = $('.bv-caja', bv);
+    bv.addEventListener('pointermove', (e) => {
+      const r = caja.getBoundingClientRect();
+      caja.style.setProperty('--ry', (((e.clientX - r.left) / r.width - 0.5) * 5).toFixed(2) + 'deg');
+      caja.style.setProperty('--rx', (((e.clientY - r.top) / r.height - 0.5) * -4).toFixed(2) + 'deg');
+    });
+    bv.addEventListener('pointerleave', () => { caja.style.setProperty('--rx', '0deg'); caja.style.setProperty('--ry', '0deg'); });
+  }
   const entrada = () => {
     $('#bv-omitir').hidden = true;
     if (yaVino) {
@@ -1086,8 +1040,9 @@ function bienvenida() {
     EF.llegar(etapa, ':scope > *');
     setTimeout(() => $('#bv-nombre')?.focus({ preventScroll: true }), quieto ? 0 : 300);
   };
-  // Una de las tres al azar, sin repetir la de la visita anterior. ?bv=sino | galletas | recomendado fija una.
-  const VARIANTES = ['sino', 'galletas', 'recomendado'];
+  // Una de las seis al azar, sin repetir la de la visita anterior.
+  // ?bv=sino | galletas | recomendado | terminos | urgencia | camara fija una.
+  const VARIANTES = ['sino', 'galletas', 'recomendado', 'terminos', 'urgencia', 'camara'];
   let variante = new URLSearchParams(location.search).get('bv');
   if (!VARIANTES.includes(variante)) {
     let ultima = ''; try { ultima = localStorage.getItem('panel:bv-ultima') || ''; } catch {}
@@ -1097,6 +1052,9 @@ function bienvenida() {
   try { localStorage.setItem('panel:bv-ultima', variante); } catch {}
   if (variante === 'galletas') bvGalletas(etapa, entrada);
   else if (variante === 'recomendado') bvRecomendado(etapa, entrada);
+  else if (variante === 'terminos') bvTerminos(etapa, entrada);
+  else if (variante === 'urgencia') bvUrgencia(etapa, entrada);
+  else if (variante === 'camara') bvCamara(etapa, entrada);
   else experimentoSiNo(etapa, {
     pregunta: '<b>¿Quieres aprender a usar IA?</b>',
     letra: 'Al responder aceptas las condiciones de EVA.',
@@ -1131,7 +1089,7 @@ function bienvenida() {
     const n = limpio($('#bv-nombre')?.value.trim() || '');
     if (n) { nombre = n; try { localStorage.setItem('panel:nombre', n); } catch {} pintarPerfil(); }
     try { localStorage.setItem(BIENVENIDA, '1'); } catch {}
-    bv.classList.remove('ver');
+    bv.classList.remove('ver'); bv.classList.add('sale');   // se va sin desenfoque: así Chrome no pinta el óvalo
     setTimeout(() => bv.remove(), quieto ? 0 : 300);
     if (b.dataset.ir && location.hash.slice(1) !== b.dataset.ir) location.hash = b.dataset.ir; else ruta();
     // La primera vez, al cerrar la bienvenida, EVA explica el sitio en el modo pausa.
