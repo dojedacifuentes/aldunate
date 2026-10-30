@@ -328,6 +328,35 @@
 .p55-sec { border: 1px solid #12677e !important; color: #4ccce6 !important; background: rgba(8,44,54,.55) !important; font-weight: 600; text-decoration: none; }
 .p55-baja { position: absolute; left: 64px; bottom: 26px; font-size: 12px; color: #8b8d98; letter-spacing: .08em; text-decoration: none; }
 .p55-baja:hover { color: #4ccce6; }
+
+/* Dos portadas que se alternan (30-10-2026): el artículo 55 y el curso nuevo de automatización.
+   Cada cara trae su propio velo oscuro (::before) porque al deslizarse crea su propia pila de capas. */
+.portada55::before { display: none; }
+.portada55 .cara { position: absolute; inset: 0; display: flex; align-items: center; opacity: 0; transform: translateX(48px);
+  transition: opacity .55s ease, transform .75s var(--m-pesado, cubic-bezier(.2,.8,.2,1)); pointer-events: none; }
+.portada55 .cara.activa { opacity: 1; transform: none; pointer-events: auto; }
+.portada55 .cara::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(90deg, rgba(11,11,12,.92) 0%, rgba(11,11,12,.7) 40%, transparent 70%); }
+.portada55 .cara .p55-texto, .portada55 .cara .p55-baja { z-index: 1; }
+.pa-t { margin: 0; font: 300 clamp(26px, 3vw, 44px)/1.16 'IBM Plex Sans', sans-serif; letter-spacing: -.02em; }
+.pa-t b { font-weight: 600; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.pa-vidrio { position: relative; overflow: hidden; padding: 16px 20px; border-radius: 16px; max-width: 600px;
+  border: 1px solid rgba(255,141,204,.22); background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+  -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); }
+.pa-vidrio p { margin: 0; font-size: 18px; line-height: 1.45; }
+/* El destello: una banda de luz barre el vidrio cada vez que esta cara entra. */
+.pa-vidrio::after { content: ''; position: absolute; top: -40%; bottom: -40%; left: -90px; width: 64px;
+  transform: skewX(-18deg); background: linear-gradient(90deg, transparent, rgba(255,255,255,.2), transparent); }
+.cara-auto.activa .pa-vidrio::after { animation: pa-flash 1.1s ease .5s both; }
+@keyframes pa-flash { to { left: calc(100% + 90px); } }
+.pa-pronto { display: inline-flex; align-items: center; height: 48px; padding: 0 16px; border-radius: 999px;
+  font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #ff8dcc; border: 1px solid rgba(255,141,204,.4); }
+.p55-puntos { position: absolute; left: 50%; transform: translateX(-50%); bottom: 22px; display: flex; gap: 8px; z-index: 2; }
+.p55-puntos button { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(255,255,255,.55); background: none;
+  cursor: pointer; padding: 0; transition: transform .2s; }
+.p55-puntos button:hover { transform: scale(1.25); }
+.p55-puntos button[aria-current="true"] { background: var(--grad); border-color: transparent; }
+@media (prefers-reduced-motion: reduce) { .portada55 .cara { transition: none; } .cara-auto.activa .pa-vidrio::after { animation: none; } }
 @media (max-width: 860px) {
   .portada55 { min-height: calc(100vh - 150px); align-items: flex-end; border-radius: 22px; }
   .p55-fondo { object-position: 78% 0; height: 36%; }
@@ -342,6 +371,29 @@
     -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent); mask-image: linear-gradient(180deg, #000 70%, transparent); }
   .portada55::before { display: none; }
   .p55-texto { padding: 4px 20px 64px; }
+  /* En el teléfono las caras no se superponen: la inactiva se oculta y los puntos van sobre la imagen. */
+  .portada55 .cara { position: static; display: none; opacity: 1; transform: none; pointer-events: auto; }
+  .portada55 .cara.activa { display: block; }
+  .portada55 .cara::before { display: none; }
+  .p55-puntos { top: 14px; right: 14px; bottom: auto; left: auto; transform: none; }
+  .pa-vidrio p { font-size: 16px; }
+}
+
+/* «Mis cursos»: tarjeta ancha del curso nuevo de automatización (en preparación). */
+.destacado-auto { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(260px, .85fr); padding: 0; overflow: hidden;
+  margin: 0 0 18px; align-items: stretch; }
+.da-cuerpo { padding: 26px 30px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+.da-eti { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--magenta); }
+.destacado-auto h2 { margin: 0; font-size: 26px; line-height: 1.2; letter-spacing: -.01em; }
+.destacado-auto h2 b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.da-cuerpo > p { margin: 0; color: var(--texto-2); max-width: 62ch; }
+.da-img { width: 100%; height: 100%; object-fit: cover; object-position: 62% 45%; min-height: 230px; }
+.da-acc { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 4px; }
+@media (max-width: 860px) {
+  .destacado-auto { grid-template-columns: 1fr; }
+  .da-img { order: -1; min-height: 0; aspect-ratio: 16 / 9; }
+  .da-cuerpo { padding: 18px; }
+  .destacado-auto h2 { font-size: 21px; }
 }
 /* En el teléfono, con EVA abierta, su botón redondo se esconde: tapaba el panel (que tiene su propia X). */
 @media (max-width: 860px) { :root.eva-pausa .eva-fab { opacity: 0; pointer-events: none; } }

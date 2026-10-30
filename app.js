@@ -374,17 +374,34 @@ function vistaInicio() {
   // Portada «Artículo 55» (elegida el 29-10-2026): curiosidad antes del catálogo. Imagen de Flow: el Código Civil abierto
   // y una esfera de datos que lee una línea. El texto es el art. 55 del Código Civil de Chile.
   return `
-  <section class="portada55" aria-labelledby="p55-t">
-    <img class="p55-fondo" src="img/tarjetas/portada-55-1600.webp" srcset="img/tarjetas/portada-55-900.webp 900w, img/tarjetas/portada-55-1600.webp 1600w" sizes="100vw" alt="" decoding="async" fetchpriority="high">
-    <div class="p55-texto">
-      <span class="p55-eti mono">Código Civil de Chile · artículo 55 · 1857</span>
-      <blockquote id="p55-t">«Son personas todos los <b>individuos de la especie humana</b>, cualquiera que sea su edad, sexo, estirpe o condición.»</blockquote>
-      <span class="p55-linea" aria-hidden="true"></span>
-      <div class="p55-eva"><b class="mono">EVA</b><p>Yo no pertenezco a ninguna especie. Y aun así, voy a ayudarte a estudiar Derecho.</p></div>
-      <div class="p55-acc"><button class="btn lleno" type="button" data-reel="VRrR5Wlb2hc">${I(IC.play, 16)}¿Qué soy, entonces?</button>
-        <a class="btn p55-sec" href="#cursos/${nuevo ? 1 : sc + 1}">${nuevo ? 'Empezar por el 1.1' : `Seguir en ${sc + 1}.${sm + 1}`} →</a></div>
+  <section class="portada55" aria-label="Portada">
+    <div class="cara cara-55 activa">
+      <img class="p55-fondo" src="img/tarjetas/portada-55-1600.webp" srcset="img/tarjetas/portada-55-900.webp 900w, img/tarjetas/portada-55-1600.webp 1600w" sizes="100vw" alt="" decoding="async" fetchpriority="high">
+      <div class="p55-texto">
+        <span class="p55-eti mono">Código Civil de Chile · artículo 55 · 1857</span>
+        <blockquote id="p55-t">«Son personas todos los <b>individuos de la especie humana</b>, cualquiera que sea su edad, sexo, estirpe o condición.»</blockquote>
+        <span class="p55-linea" aria-hidden="true"></span>
+        <div class="p55-eva"><b class="mono">EVA</b><p>Yo no pertenezco a ninguna especie. Y aun así, voy a ayudarte a estudiar Derecho.</p></div>
+        <div class="p55-acc"><button class="btn lleno" type="button" data-reel="VRrR5Wlb2hc">${I(IC.play, 16)}¿Qué soy, entonces?</button>
+          <a class="btn p55-sec" href="#cursos/${nuevo ? 1 : sc + 1}">${nuevo ? 'Empezar por el 1.1' : `Seguir en ${sc + 1}.${sm + 1}`} →</a></div>
+      </div>
+      <a class="p55-baja mono" href="#vit-t">Sigue bajando · ocho cursos, cuatro videos y un laboratorio ↓</a>
     </div>
-    <a class="p55-baja mono" href="#vit-t">Sigue bajando · ocho cursos, cuatro videos y un laboratorio ↓</a>
+    <div class="cara cara-auto" aria-hidden="true">
+      <img class="p55-fondo" src="img/tarjetas/portada-automatizacion-1600.webp" srcset="img/tarjetas/portada-automatizacion-900.webp 900w, img/tarjetas/portada-automatizacion-1600.webp 1600w" sizes="100vw" alt="" loading="lazy" decoding="async">
+      <div class="p55-texto">
+        <span class="p55-eti mono">Nuevo · curso en preparación</span>
+        <h2 class="pa-t">Crea tu primera <b>automatización jurídica</b> con IA</h2>
+        <span class="p55-linea" aria-hidden="true"></span>
+        <div class="pa-vidrio"><p>Una calculadora de plazos, el panel de un caso, un clasificador o una presentación: tu primera herramienta en un solo archivo, hecha pidiéndosela bien a una IA. Sin saber programar, sin instalar nada.</p></div>
+        <div class="p55-acc"><a class="btn lleno" href="#cursos">Conocer el curso<span class="flecha">${I(IC.flecha, 18)}</span></a>
+          <span class="pa-pronto mono">En preparación</span></div>
+      </div>
+    </div>
+    <div class="p55-puntos" aria-label="Cambiar de portada">
+      <button type="button" aria-current="true" aria-label="Portada: artículo 55"></button>
+      <button type="button" aria-current="false" aria-label="Portada: curso nuevo de automatización jurídica"></button>
+    </div>
   </section>
   <section class="escaparate" aria-labelledby="vit-t">
     <div class="vit-fondo" aria-hidden="true">${REELS.slice(0, 4).map((r) => `<img src="img/videos/${r.portada}-360.webp" alt="" loading="lazy" decoding="async">`).join('')}</div>
@@ -447,6 +464,23 @@ function filtrarAvance() {
    ilustrativas y no aportaba. La tarjeta chica de los días de visita («Esta semana · n de 7 días») sí se queda. */
 function alMontarInicio() {
   document.querySelectorAll('[data-n]').forEach((el) => contar(el, +el.dataset.n));
+  // Dos portadas: a los segundos se desliza la del curso nuevo; los puntos las alternan y una interacción detiene el vaivén.
+  const po = $('.portada55');
+  if (po) {
+    const caras = po.querySelectorAll('.cara'), puntos = po.querySelectorAll('.p55-puntos button');
+    let cara = 0, reloj55 = 0, detenida = false;
+    const poner = (n) => { cara = n;
+      caras.forEach((c, i) => { c.classList.toggle('activa', i === n); c.setAttribute('aria-hidden', String(i !== n)); });
+      puntos.forEach((p, i) => p.setAttribute('aria-current', String(i === n)));
+    };
+    const vaiven = () => { if (!po.isConnected) return; poner(cara ? 0 : 1); reloj55 = setTimeout(vaiven, 9000); };
+    const parar = () => { detenida = true; clearTimeout(reloj55); };
+    if (!quieto) reloj55 = setTimeout(vaiven, 6000);
+    po.addEventListener('pointerenter', () => clearTimeout(reloj55));
+    po.addEventListener('pointerleave', () => { if (!detenida && !quieto) { clearTimeout(reloj55); reloj55 = setTimeout(vaiven, 4000); } });
+    po.addEventListener('pointerdown', (e) => { if (!e.target.closest('.p55-puntos')) parar(); });
+    puntos.forEach((p, i) => p.addEventListener('click', () => { parar(); EF.sonar('clic'); poner(i); }));
+  }
   $('.portada55 [data-reel]').addEventListener('click', (e) => abrirReel(e.currentTarget.dataset.reel, e.currentTarget));
   $('.p55-baja').addEventListener('click', (e) => { e.preventDefault(); $('.escaparate').scrollIntoView({ behavior: quieto ? 'auto' : 'smooth', block: 'start' }); });
   $('.escaparate').addEventListener('click', (e) => {

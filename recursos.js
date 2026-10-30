@@ -111,6 +111,19 @@ function vistaCatalogo() {
   <div class="titulo"><div><h1>Mis cursos</h1><p>Ocho cursos de cuatro módulos. Mira de qué trata cada uno y entra cuando quieras.</p>${evaLinea('Yo los hice los ocho en un segundo. Tú tienes la ventaja de entenderlos.')}</div>
     <div class="acciones"><label class="buscador buscador-cat"><span>${I(IC.buscar, 18)}</span><input id="filtro-cat" placeholder="Filtrar cursos" aria-label="Filtrar cursos"></label></div></div>
   ${destacadoAcademy()}
+  <section class="caja destacado-auto" id="curso-automatizacion" aria-labelledby="auto-t">
+    <div class="da-cuerpo">
+      <span class="da-eti mono">Nuevo · En preparación</span>
+      <h2 id="auto-t">Crea tu primera <b>automatización jurídica</b> con IA</h2>
+      <p>Una calculadora de plazos, el panel de un caso, un clasificador de documentos o una presentación: tu primera
+      herramienta en un solo archivo, hecha pidiéndosela bien a una IA. Primero el encargo explicado por partes, después
+      la ejecución y cómo se ve el resultado. Sin saber programar, sin instalar nada.</p>
+      <ul class="dest-chips"><li>Encargo guiado</li><li>Un solo archivo</li><li>Capturas reales</li><li>Sin cuenta</li></ul>
+      <div class="da-acc"><span class="pild">Disponible pronto</span>
+        <a class="btn dest-sec" href="#cursos" data-ir-curso="4-0">Mientras tanto: curso 5 · Crea tus herramientas</a></div>
+    </div>
+    <img class="da-img" src="img/tarjetas/automatizacion-800.webp" alt="" loading="lazy" decoding="async">
+  </section>
   <h2 class="cat-sub">Los ocho cursos de la Escuela</h2>
   <div class="vitrina" id="vitrina">${CURSOS.map(([t], k) => {
     const pct = Math.round(totalCurso(k) / 16 * 100), listo = modulosListos(k) === 4;
