@@ -398,6 +398,8 @@ function vistaInicio() {
           <span class="pa-pronto mono">En preparación</span></div>
       </div>
     </div>
+    <button type="button" class="p55-flecha izq" aria-label="Portada anterior">${I(IC.izq, 22)}</button>
+    <button type="button" class="p55-flecha der" aria-label="Portada siguiente">${I(IC.der, 22)}</button>
     <div class="p55-puntos" aria-label="Cambiar de portada">
       <button type="button" aria-current="true" aria-label="Portada: artículo 55"></button>
       <button type="button" aria-current="false" aria-label="Portada: curso nuevo de automatización jurídica"></button>
@@ -473,13 +475,20 @@ function alMontarInicio() {
       caras.forEach((c, i) => { c.classList.toggle('activa', i === n); c.setAttribute('aria-hidden', String(i !== n)); });
       puntos.forEach((p, i) => p.setAttribute('aria-current', String(i === n)));
     };
-    const vaiven = () => { if (!po.isConnected) return; poner(cara ? 0 : 1); reloj55 = setTimeout(vaiven, 9000); };
+    const vaiven = () => { if (!po.isConnected) return; poner(cara ? 0 : 1); reloj55 = setTimeout(vaiven, 7000); };
     const parar = () => { detenida = true; clearTimeout(reloj55); };
-    if (!quieto) reloj55 = setTimeout(vaiven, 6000);
+    if (!quieto) reloj55 = setTimeout(vaiven, 3500);
     po.addEventListener('pointerenter', () => clearTimeout(reloj55));
-    po.addEventListener('pointerleave', () => { if (!detenida && !quieto) { clearTimeout(reloj55); reloj55 = setTimeout(vaiven, 4000); } });
-    po.addEventListener('pointerdown', (e) => { if (!e.target.closest('.p55-puntos')) parar(); });
+    po.addEventListener('pointerleave', () => { if (!detenida && !quieto) { clearTimeout(reloj55); reloj55 = setTimeout(vaiven, 3000); } });
+    po.addEventListener('pointerdown', (e) => { if (!e.target.closest('.p55-puntos, .p55-flecha')) parar(); });
     puntos.forEach((p, i) => p.addEventListener('click', () => { parar(); EF.sonar('clic'); poner(i); }));
+    po.querySelectorAll('.p55-flecha').forEach((f) => f.addEventListener('click', () => { parar(); EF.sonar('clic'); poner(cara ? 0 : 1); }));
+    // Las flechas del teclado también cambian de portada (salvo escribiendo en un campo).
+    document.addEventListener('keydown', function flechas(e) {
+      if (!po.isConnected) { document.removeEventListener('keydown', flechas); return; }
+      if (e.target.closest('input, textarea') || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
+      parar(); EF.sonar('clic'); poner(cara ? 0 : 1);
+    });
   }
   $('.portada55 [data-reel]').addEventListener('click', (e) => abrirReel(e.currentTarget.dataset.reel, e.currentTarget));
   $('.p55-baja').addEventListener('click', (e) => { e.preventDefault(); $('.escaparate').scrollIntoView({ behavior: quieto ? 'auto' : 'smooth', block: 'start' }); });
