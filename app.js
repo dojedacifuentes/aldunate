@@ -387,7 +387,7 @@ function vistaInicio() {
     <a class="p55-baja mono" href="#vit-t">Sigue bajando · ocho cursos, cuatro videos y un laboratorio ↓</a>
   </section>
   <section class="escaparate" aria-labelledby="vit-t">
-    <div class="vit-fondo" aria-hidden="true">${REELS.slice(0, 4).map((r) => `<img src="img/videos/${r.portada}-360.webp" alt="" decoding="async">`).join('')}</div>
+    <div class="vit-fondo" aria-hidden="true">${REELS.slice(0, 4).map((r) => `<img src="img/videos/${r.portada}-360.webp" alt="" loading="lazy" decoding="async">`).join('')}</div>
     <div class="vit-texto">
       <span class="vit-eti mono">${nombre ? `Hola, ${nombre} · ` : ''}EVA · Escuela de Derecho PUCV</span>
       <h1 id="vit-t">Yo respondo rápido.<br>Tú decides si tengo razón.</h1>

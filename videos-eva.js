@@ -50,7 +50,7 @@ function franjaReels() {
 function reelsVitrina() {
   return REELS.slice(0, 4).map((r) => `
     <button class="reel vit-reel" type="button" data-reel="${r.id}" aria-haspopup="dialog" aria-label="Video ${r.n}: ${r.t}, ${r.dur}">
-      <img src="img/videos/${r.portada}-540.webp" srcset="img/videos/${r.portada}-360.webp 360w, img/videos/${r.portada}-540.webp 540w" sizes="(max-width: 860px) 40vw, 150px" width="540" height="960" alt="" decoding="async">
+      <img src="img/videos/${r.portada}-540.webp" srcset="img/videos/${r.portada}-360.webp 360w, img/videos/${r.portada}-540.webp 540w" sizes="(max-width: 860px) 40vw, 150px" width="540" height="960" alt="" loading="lazy" decoding="async">
       <span class="reel-play">${I(IC.play, 14)}</span>
     </button>`).join('');
 }

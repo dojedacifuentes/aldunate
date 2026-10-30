@@ -4,7 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Derecho PUCV · Panel</title>
+<meta name="description" content="IA y Derecho · Escuela de Derecho PUCV, con EVA. Ocho cursos, videocápsulas y un laboratorio para usar la inteligencia artificial sin perder el criterio. Sin crear cuenta.">
+<meta name="theme-color" content="#0b0b0c">
+<!-- Cómo se ve el enlace al compartirlo (WhatsApp, correo, redes). -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Derecho PUCV · IA y Derecho">
+<meta property="og:title" content="IA y Derecho · Escuela de Derecho PUCV, con EVA">
+<meta property="og:description" content="Ocho cursos, videocápsulas y un laboratorio para usar la IA sin perder el criterio. Sin crear cuenta, sin letra chica.">
+<meta property="og:url" content="https://aldunate.vercel.app/">
+<meta property="og:image" content="https://aldunate.vercel.app/img/tarjetas/portada-55-1600.webp">
+<meta property="og:image:alt" content="El Código Civil abierto y una esfera de datos que lee una línea">
+<meta property="og:locale" content="es_CL">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* Maqueta «Panel»: la estructura del dashboard de Figma (menú lateral, buscador, tarjetas, pestañas de módulos,
@@ -684,16 +697,17 @@ main { min-width: 0; }
   </main>
 </div>
 <nav class="abajo-tel" id="menu-tel" aria-label="Menú"></nav>
-<script src="escudo.js"></script>
-<script src="efectos.js"></script>
-<script src="arbol-eva.js"></script>
-<script src="eva-ui.js"></script>
-<script src="recursos.js"></script>
-<script src="laboratorio.js"></script>
-<script src="videos-eva.js"></script>
-<script src="bienvenidas.js"></script>
-<script src="docentes-blanco.js"></script>
-<script src="ficha-curso.js"></script>
-<script src="app.js"></script>
+<!-- defer: el navegador descarga los scripts mientras lee la página y los ejecuta en este orden al final. -->
+<script src="escudo.js" defer></script>
+<script src="efectos.js" defer></script>
+<script src="arbol-eva.js" defer></script>
+<script src="eva-ui.js" defer></script>
+<script src="recursos.js" defer></script>
+<script src="laboratorio.js" defer></script>
+<script src="videos-eva.js" defer></script>
+<script src="bienvenidas.js" defer></script>
+<script src="docentes-blanco.js" defer></script>
+<script src="ficha-curso.js" defer></script>
+<script src="app.js" defer></script>
 </body>
 </html>
