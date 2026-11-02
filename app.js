@@ -57,6 +57,7 @@ const IC = {
   pausa: '<path d="M8 5v14M16 5v14"/>',
   laboratorio: '<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/><path d="M7.5 14h9"/>',
   recursos: '<path d="M4 4h6v16H4zM10 4h5v16h-5z"/><path d="m15.5 5 4.5 1.2-3.6 13.6-4.4-1.2"/>',
+  juegos: '<rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 10.5v4M5.5 12.5h4"/><path d="M15.5 11h.01M17.5 14h.01"/>',
   guias: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 2h6v4H9zM8.5 11h.01M11 11h5M8.5 15h.01M11 15h5"/>',
   mas: '<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',
   enlace: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
@@ -157,7 +158,7 @@ try { if (!simulaNuevo) nombre = localStorage.getItem('panel:nombre') || ''; } c
 const limpio = (t) => t.replace(/[<>&"]/g, '');
 
 /* ---------- Menú ---------- */
-const VISTAS = [['inicio', 'Inicio'], ['cursos', 'Mis cursos'], ['videos', 'Videocápsulas'], ['laboratorio', 'Laboratorio EVA'], ['recursos', 'Recursos'],
+const VISTAS = [['inicio', 'Inicio'], ['cursos', 'Mis cursos'], ['videos', 'Videocápsulas'], ['laboratorio', 'Laboratorio EVA'], ['juegos', 'Juegos'], ['recursos', 'Recursos'],
   ['guias', 'Guías y protocolos'], ['docentes', 'Docentes'], ['eva', 'Pregunta a EVA']];
 // El menú se agrupa en verbos (Aprender, Practicar, Consultar) y EVA queda aparte, en su color.
 const GRUPOS_MENU = { cursos: 'Aprender', laboratorio: 'Practicar', recursos: 'Consultar', eva: '' };
@@ -280,8 +281,9 @@ const INDICE = [
   ...CURSOS.map(([t], c) => ({ g: 'Cursos', ic: String(c + 1), t, s: 'Curso de 4 módulos', ir: () => irACurso(c, 0) })),
   ...GUIAS.map((x) => ({ g: 'Guías y protocolos', ic: x.tipo[0], t: x.t, s: `${x.tipo} · ${x.d}`, ir: () => { if (x.pagina) location.href = x.pagina; else location.hash = `guias/${x.id}`; } })),
   ...EXPERIMENTOS.map((x) => ({ g: 'EVA Lab', ic: x.id, t: x.t, s: `Experimento · ${x.tema}`, ir: () => { location.hash = `laboratorio/${x.id}`; } })),
+  ...JUEGOS.map((x) => ({ g: 'Juegos', ic: '▶', t: x.t, s: `${x.area} · ${x.temas.join(', ')}`, ir: () => { location.hash = 'juegos'; } })),
 ];
-const ORDEN_GRUPOS = ['Glosario', 'Guías y protocolos', 'Videocápsulas', 'Cursos', 'EVA Lab', 'Pregunta a EVA'];
+const ORDEN_GRUPOS = ['Glosario', 'Guías y protocolos', 'Videocápsulas', 'Cursos', 'EVA Lab', 'Juegos', 'Pregunta a EVA'];
 const cajaBusca = $('.cabecera .buscador'), campo = $('#buscar');
 let hallados = [], elegido = 0;
 const marcar = (texto, q) => {
@@ -977,7 +979,7 @@ const CLAVES_EVA = [[/cliente|\brut\b|datos personales|domicilio|confidencial/, 
 const PANTALLAS = {
   inicio: [vistaInicio, alMontarInicio], cursos: [vistaCatalogo, alMontarCatalogo], curso: [vistaCursos, alMontarCursos],
   videos: [vistaVideos, alMontarVideos], video: [vistaVideo, alMontarVideo], laboratorio: [vistaLab, alMontarLab],
-  recursos: [vistaRecursos, alMontarRecursos], guias: [vistaGuias, alMontarGuias],
+  juegos: [vistaJuegos, () => {}], recursos: [vistaRecursos, alMontarRecursos], guias: [vistaGuias, alMontarGuias],
   docentes: [vistaDocentesBlanco, () => {}], eva: [vistaEva, alMontarEva],
 };
 // Qué sección del menú queda marcada en cada pantalla interior.

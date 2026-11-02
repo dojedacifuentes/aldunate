@@ -1,4 +1,4 @@
-/* Vitrinas (Mis cursos, Recursos, Guías), menú de ocho secciones y menú «Más» del teléfono. */
+/* Vitrinas (Mis cursos, Recursos, Guías), menú de nueve secciones y menú «Más» del teléfono. */
 
 /* Menú lateral: una sola marca que se desliza hasta la sección activa (antes, cada enlace tenía la suya). */
 .lateral { overflow-y: auto; }
@@ -59,6 +59,13 @@ a.tarjeta:hover .portada.con-img img { transform: scale(1.04); }
 .estado-r.pendiente { background: rgba(127,127,127,.14); color: var(--texto-2); }
 .etq { font-size: 11px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--borde); }
 .tarjeta.sin-enlace { opacity: .78; }
+/* Juegos para estudiar: lo que repasa cada juego, con un punto en su color, y «Jugar» en vez del estado. */
+.juego-temas { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 13px; color: var(--texto-2); }
+.juego-temas li::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-right: 6px; border-radius: 1px; background: var(--c); vertical-align: 2px; }
+.jugar { display: inline-flex; align-items: center; gap: 4px; font: 600 12px 'IBM Plex Mono', monospace; padding: 3px 10px; border-radius: 999px;
+  color: color-mix(in srgb, var(--c) 72%, var(--texto)); background: color-mix(in srgb, var(--c) 14%, transparent); }
+a.juego:hover .jugar .icono { transform: translateX(3px); }
+.jugar .icono { transition: transform var(--m-agil-t) var(--m-agil); }
 .buscador-cat { min-width: 260px; background: var(--panel); }
 
 /* EVA en vertical: portadas 9:16; el video se abre en una ventana encima de la página (videos-eva.js) */

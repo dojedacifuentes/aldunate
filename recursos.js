@@ -1,4 +1,4 @@
-/* Vitrinas de la maqueta «Panel»: Mis cursos (tarjetas), Recursos y Guías, protocolos y tutoriales.
+/* Vitrinas de la maqueta «Panel»: Mis cursos (tarjetas), Recursos, Juegos para estudiar y Guías, protocolos y tutoriales.
    Todo es contenido de MUESTRA, para ver cómo quedaría el sitio. Sólo se enlaza afuera lo que ya está publicado
    (revisado el 28-10-2026: los sitios de EVA y tres fuentes oficiales); lo demás dice «muestra» o «pendiente». */
 
@@ -63,6 +63,9 @@ const IMG_ALT = {
   'guia-evaluar-con-ia': 'Una prueba con la maqueta de un expediente y un micrófono; el haz de la IA lo rodea sin atravesarlo.',
   'guia-prueba-con-ia': 'Un aparato de vidrio proyecta cinco tarjetas de preguntas, junto a un cuaderno y un lápiz.',
   'guia-comparar-fuente': 'Tres paneles de vidrio como columnas de una tabla, unidos por hilos de luz verde; uno queda cortado.',
+  'juego-procesal': 'Pantalla de inicio de FORO [in]VISIBLE: el título sobre el plano nocturno de una ciudad y el botón Comenzar.',
+  'juego-familia': 'Pantalla de inicio de Expediente 1725: el título en letras de píxeles sobre una calle de barrio dibujada en pixel art.',
+  'juego-publico': 'Pantalla de inicio de POTESTAS: el título en letras de píxeles frente a una plaza con un edificio de columnas.',
 };
 function imgPortada(clave) {
   const b = `img/tarjetas/${clave}`;
@@ -220,6 +223,33 @@ function alMontarRecursos() {
   });
   $('#filtro-rec').addEventListener('input', filtrar);
   filtrar();
+}
+
+/* ---------- Juegos para estudiar ----------
+   Los tres juegos de EVA ARCADE para el examen de grado, ya publicados (revisados el 02-11-2026). Abren en otra pestaña.
+   Las imágenes son capturas de sus pantallas de inicio (img/tarjetas/juego-*). Su contenido jurídico sigue en revisión. */
+const JUEGOS = [
+  { id: 'procesal', t: 'FORO [in]VISIBLE', area: 'Derecho Procesal Civil', num: 'PROCESAL', color: '#00a2c7', url: 'https://evagameproce.vercel.app/',
+    d: 'Un RPG narrativo de procedimiento civil chileno, con el CPC, el COT y la Constitución a mano. Aquí la forma es sustancia.',
+    temas: ['Jurisdicción', 'Competencia', 'Juicio ordinario', 'Recursos', 'Juicio ejecutivo'], etiq: ['Partida en 1 min', 'Codex'] },
+  { id: 'familia', t: 'Expediente 1725', area: 'Derecho de Familia', num: 'FAMILIA', color: '#8e4ec6', url: 'https://eva-arcade-family01.vercel.app/',
+    d: 'Una vida en pareja, del primer café al tribunal, en un prólogo y seis capítulos. Vive primero; entiende después.',
+    temas: ['Matrimonio', 'Regímenes de bienes', 'Filiación', 'Alimentos', 'Divorcio y compensación'], etiq: ['7 capítulos', 'Pixel art'] },
+  { id: 'publico', t: 'POTESTAS', area: 'Derecho Administrativo y Público', num: 'PÚBLICO', color: '#d6409f', url: 'https://eva-arcade-admin.vercel.app/',
+    d: 'Eres la abogada o el abogado nuevo de la Municipalidad de Potestas. El poder del Estado tiene límites: encuéntralos.',
+    temas: ['Acto administrativo', 'Procedimiento', 'Contraloría', 'Nulidad de derecho público', 'Responsabilidad del Estado'], etiq: ['12 jornadas', 'Turno de urgencia'] },
+];
+function vistaJuegos() {
+  return `
+  <div class="titulo"><div><h1>Juegos para estudiar</h1><p>Tres juegos para repasar Derecho Procesal, de Familia y Público pensando en el examen de grado. Se juegan en el navegador, sin crear cuenta.</p>${evaLinea('El examen de grado no es un juego. Prepararlo, sí.')}</div></div>
+  <div class="vitrina vitrina-juegos">${JUEGOS.map((j) => `
+    <a class="caja tarjeta juego" id="j-${j.id}" href="${j.url}" target="_blank" rel="noopener" style="--c:${j.color}">
+      ${portada(0, j.color, j.num, TIPO_MOTIVO.juego, `juego-${j.id}`)}
+      <div class="t-cuerpo"><span class="t-eti">${j.area} · Juego</span><h2>${j.t}</h2><p>${j.d}</p>
+        <ul class="juego-temas" aria-label="Qué repasa">${j.temas.map((t) => `<li>${t}</li>`).join('')}</ul>
+        <div class="t-pie"><span class="jugar">Jugar${I(IC.flecha, 16)}</span>${j.etiq.map((e) => `<span class="etq">${e}</span>`).join('')}</div></div>
+    </a>`).join('')}</div>
+  <p class="muestra" style="margin-top:16px">JUEGOS EN LÍNEA, REVISADOS EL 02-11-2026 · SU CONTENIDO JURÍDICO ESTÁ EN REVISIÓN</p>`;
 }
 
 /* ---------- Guías, protocolos y tutoriales ----------

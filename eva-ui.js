@@ -86,6 +86,11 @@
       explica: () => 'Haz lo que te parezca natural: el experimento reacciona a lo que elijas. Si prefieres ir directo a la explicación, usa «Ir a la conclusión».',
       acciones: () => { const id = location.hash.split('/')[1]; const [t, d] = CONCLUSIONES[id].ir[0]; return [['Ir a la conclusión', clic('.exp-omitir')], [t, d], ['Volver al laboratorio', '#laboratorio']]; },
       preguntas: [['¿Esto es un caso real?', 'No. Los casos, documentos y citas de los experimentos son ficticios y lo dicen en pantalla. Nada de lo que marques tiene efecto.']] },
+    juegos: { nombre: 'Juegos para estudiar', icono: 'juegos', corta: 'Tres juegos para el examen de grado: Procesal, Familia y Público.',
+      explica: () => 'Tres juegos para repasar con la cabeza fresca: FORO [in]VISIBLE (Derecho Procesal Civil), Expediente 1725 (Derecho de Familia) y POTESTAS (Derecho Administrativo y Público). Cada tarjeta abre el juego en otra pestaña.',
+      acciones: () => JUEGOS.map((j) => [`Jugar ${j.t} (${j.num.toLowerCase()})`, () => open(j.url, '_blank', 'noopener')]),
+      preguntas: [['¿Necesito una cuenta?', 'No. Se juegan en el navegador, sin inscribirte en nada.'],
+        ['¿Reemplazan al estudio?', 'No. Sirven para repasar y para descubrir lo que todavía no sabes. La fuente sigue siendo la ley: su contenido jurídico está en revisión.']] },
     recursos: { nombre: 'Recursos', icono: 'recursos', corta: 'Materiales para consultar sin inscribirte.',
       explica: () => 'Materiales para consultar sin inscribirte. «En línea» significa publicado y revisado; «Muestra», un ejemplo de cómo se verá; «Pendiente», que todavía no existe.',
       acciones: () => [['Fuentes oficiales de investigación', clic('#cat-rec [data-c="investigar"]')], ['Para docentes', clic('#cat-rec [data-c="docentes"]')], ['Buscar un recurso', enfocar('#filtro-rec')]],
@@ -104,7 +109,7 @@
       acciones: () => [['Preguntar: ¿basta con citar un fallo?', clic('#conv-lista [data-k="2"]')], ['Protocolo: verificar una cita', '#guias/verificar-cita'], ['Experimento: audiencia contra la IA', '#laboratorio/06']],
       preguntas: [['¿Eres una IA de verdad?', 'En la plataforma, sí. En esta maqueta mis respuestas las escribió el equipo de antemano, y por eso lo aviso abajo.']] },
   };
-  const ORDEN = ['inicio', 'cursos', 'videos', 'laboratorio', 'recursos', 'guias', 'docentes', 'eva'];
+  const ORDEN = ['inicio', 'cursos', 'videos', 'laboratorio', 'juegos', 'recursos', 'guias', 'docentes', 'eva'];
 
   /* ---------- Botón y panel ---------- */
   let fab, panel, velo, abierto = false, pestana = 'guia', acciones = [], camino = ['raiz'];

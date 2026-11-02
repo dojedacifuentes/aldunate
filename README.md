@@ -4,8 +4,9 @@ Maqueta de la plataforma de IA y Derecho para la Escuela de Derecho PUCV, con EV
 (menú lateral, buscador, tarjetas, pestañas de módulos, sesiones desplegables y panel de materiales). La estructura se
 inspira en el archivo de la comunidad de Figma «Dashboard Instituto UIN»; el código y el diseño visual son propios.
 
-- Ocho secciones por `#hash`: Inicio, Mis cursos (tarjetas; cada curso en `#cursos/1`…`#cursos/8`), Videocápsulas
-  (`#video/curso-módulo`), Laboratorio EVA (`#laboratorio`, `#laboratorio/01`…`06`), Recursos, Guías y protocolos
+- Nueve secciones por `#hash`: Inicio, Mis cursos (tarjetas; cada curso en `#cursos/1`…`#cursos/8`), Videocápsulas
+  (`#video/curso-módulo`), Laboratorio EVA (`#laboratorio`, `#laboratorio/01`…`06`),
+  Juegos (`#juegos`: FORO [in]VISIBLE, Expediente 1725 y POTESTAS, los juegos de EVA ARCADE para el examen de grado), Recursos, Guías y protocolos
   (`#guias/<id>`), Docentes y Pregunta a EVA. En el teléfono: cuatro en la barra y el resto en «Más».
 - **EVA flotante** en todas las pantallas: el isotipo real de EVA (geometría de `eva.proyecto01/src/lib/brand.ts`:
   ocho piezas rígidas; al abrir, el cuadrado se desacopla). Abre un panel con sugerencias según la sección. Son
