@@ -58,6 +58,7 @@ const IMG_ALT = {
   'lab-05': 'Un larguísimo rollo de condiciones de uso que cae de la mesa, con una sola línea encendida en el medio.',
   'lab-06': 'Una sala de audiencias en miniatura con un chip en el banquillo, bajo un foco.',
   'guia-verificar-cita': 'Una lupa de inspección escanea con un láser rojo una cita y la une a uno de los tomos oficiales.',
+  'guia-claude-notebook': 'Captura real de Gemini Notebook: una cita abierta muestra el pasaje del artículo 30 de la ley de datos personales.',
   'guia-declarar-ia': 'Un trabajo encuadernado con una etiqueta de vidrio roja prendida en su última página.',
   'guia-patrones-oscuros': 'Un panel con dos interruptores: uno grande ya encendido y otro chico escondido tras un vidrio.',
   'guia-evaluar-con-ia': 'Una prueba con la maqueta de un expediente y un micrófono; el haz de la IA lo rodea sin atravesarlo.',
@@ -257,6 +258,8 @@ function vistaJuegos() {
 const GUIAS = [
   { id: 'panel-de-caso', tipo: 'Tutorial', t: 'Del expediente a la web: el panel de un caso', d: 'Paso a paso con Claude Code, GitHub y Vercel. Capturas reales y fuentes en APA.', min: 90, pub: 'Abogados y alumni', pagina: 'tutorial/index.html',
     pasos: ['Preparar la carpeta del caso.', 'Escribir las instrucciones del proyecto.', 'Registrar el estado del caso, con fuentes.', 'Generar el panel.', 'Actualizar y volver atrás.', 'Guardar el caso en GitHub.', 'Publicar en Vercel y cerrar el acceso.'], ir: [] },
+  { id: 'claude-notebook', tipo: 'Tutorial', t: 'Responder con fuentes: Gemini Notebook y Claude', d: 'Que la IA trabaje con la ley que tienes en la mano. Conceptos en simple, capturas reales y fuentes en APA.', min: 70, pub: 'Estudiantes y abogados', pagina: 'tutorial-claude-notebook/index.html',
+    pasos: ['Crear el cuaderno.', 'Conseguir las fuentes oficiales.', 'Cargarlas y comprobar que se leyeron.', 'Fijar tus reglas.', 'Preguntar y abrir cada cita.', 'Hacer la pregunta trampa.', 'Buscar más fuentes, con filtro.', 'Estudiar con Studio.', 'Guardar y exportar.', 'Redactar con Claude.'], ir: [] },
   { id: 'antes-de-pegar', tipo: 'Protocolo', t: 'Antes de pegar un documento en una IA', d: 'Qué borrar y qué revisar para no exponer a un cliente.', min: 3, pub: 'Estudiantes y abogados',
     pasos: ['Pregúntate si de verdad necesitas pegar el documento completo o basta un fragmento.', 'Borra nombres, RUT, domicilios, correos, teléfonos y números de causa. Cámbialos por «Parte A», «Parte B».', 'Revisa los datos que identifican sin nombre: cargos únicos, fechas exactas, lugares pequeños.', 'Lee las condiciones de la herramienta: si guarda lo que pegas o lo usa para entrenar.', 'Si hay duda, no lo pegues. Pide al cliente o a tu supervisor una autorización.'],
     ir: [['Experimento: el contrato que nadie leyó', '#laboratorio/05'], ['Curso 6 · Secreto profesional', 'curso:5-0']] },

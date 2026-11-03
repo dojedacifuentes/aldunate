@@ -1,0 +1,98 @@
+/* Tutorial N.º 2 (Claude + Gemini Notebook). Se apoya en ../tutorial/tutorial.css (formato de revista, tema claro y
+   oscuro, figuras APA) y agrega las piezas visuales de esta guía: idea en una frase, cifras, conceptos en simple,
+   diagramas, cabeceras de paso, rutas y tarjetas para estudiantes y abogados. Mismas dos familias de letra. */
+
+/* La idea en una frase: tres piezas con flechas */
+.en-frase { margin: 30px 0 6px; padding: 18px 18px 16px; border: 1px solid var(--linea); border-radius: 10px; background: var(--hoja); }
+.en-frase > p { font: 600 12px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--tinta-2); margin: 0 0 14px; }
+.tres { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: stretch; }
+.tres .pieza { padding: 12px; border-radius: 8px; background: var(--caja); font: 14px/1.45 var(--sans); }
+.tres .pieza b { display: block; font-size: 15.5px; margin-bottom: 3px; color: var(--tinta); }
+.tres .pieza svg { width: 26px; height: 26px; color: var(--acento); margin-bottom: 6px; }
+.tres .flecha { align-self: center; color: var(--tinta-3); font: 600 20px/1 var(--sans); }
+@media (max-width: 640px) {
+  .tres { grid-template-columns: 1fr; }
+  .tres .flecha { transform: rotate(90deg); justify-self: center; }
+}
+
+/* Cifras grandes */
+.cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 22px 0 10px; }
+.cifra { padding: 14px; border-radius: 8px; background: var(--caja); border-top: 3px solid var(--acento); font: 13.5px/1.45 var(--sans); color: var(--tinta-2); }
+.cifra strong { display: block; font: 600 30px/1.05 var(--serif); color: var(--tinta); margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+.cifra.alerta-c { border-top-color: var(--aviso); }
+
+/* Conceptos en simple */
+.conceptos { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 18px 0 26px; }
+.concepto { padding: 14px 16px; border: 1px solid var(--linea); border-radius: 10px; background: var(--hoja); font: 14.5px/1.5 var(--sans); }
+.concepto h4 { display: flex; align-items: center; gap: 9px; margin: 0 0 6px; font: 600 16px/1.3 var(--sans); color: var(--tinta); }
+.concepto h4 svg { flex: none; width: 24px; height: 24px; color: var(--acento); }
+.concepto p { margin: 0 0 6px; hyphens: manual; }
+.concepto .como { margin: 8px 0 0; padding-top: 8px; border-top: 1px dashed var(--linea); color: var(--tinta-2); }
+.concepto .como b { color: var(--tinta); font-weight: 600; }
+
+/* «En simple»: recuadro corto en medio del texto */
+.simple { margin: 20px 0; padding: 12px 16px; border-radius: 8px; border: 1px dashed var(--acento); font: 15px/1.55 var(--sans); }
+.simple b:first-child { color: var(--acento); }
+
+/* Diagramas dibujados (SVG en línea, con los colores del tema) */
+.diagrama svg { display: block; width: 100%; height: auto; }
+.diagrama .caja-d { fill: var(--hoja); stroke: var(--linea); stroke-width: 1.5; }
+.diagrama .caja-a { fill: var(--acento-suave); stroke: var(--acento); stroke-width: 1.5; }
+.diagrama .caja-w { fill: var(--aviso-suave); stroke: var(--aviso); stroke-width: 1.5; }
+.diagrama .tx { fill: var(--tinta); font: 600 15px var(--sans); }
+.diagrama .tx2 { fill: var(--tinta-2); font: 13px var(--sans); }
+.diagrama .txa { fill: var(--acento); font: 700 13px var(--sans); letter-spacing: .04em; }
+.diagrama .lin { stroke: var(--tinta-3); stroke-width: 2; fill: none; }
+.diagrama .lin-a { stroke: var(--acento); stroke-width: 2.4; fill: none; }
+.diagrama .pto { stroke: var(--acento); stroke-width: 2; fill: none; stroke-dasharray: 5 5; }
+.diagrama .marca { fill: var(--acento); }
+.diagrama .marca-tx { fill: #fff; font: 700 13px var(--sans); }
+.diagrama .resalta { fill: var(--acento); opacity: .22; }
+
+/* Cabecera de cada paso */
+.paso-cab { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-items: center; margin: 54px 0 16px; padding-top: 16px; border-top: 1px solid var(--linea); }
+.paso-cab .num { grid-row: span 2; display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; background: var(--acento); color: var(--papel); font: 700 22px/1 var(--sans); }
+.paso-cab .n { font: 600 12px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--acento); }
+.paso-cab h2 { margin: 0; font: 600 25px/1.25 var(--serif); text-wrap: balance; }
+.objetivo { font: 15px/1.5 var(--sans); color: var(--tinta-2); margin: 0 0 18px; }
+.objetivo b { color: var(--tinta); }
+
+/* Rutas (sin código, por Drive, avanzada) */
+.rutas { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 18px 0 24px; }
+.ruta { padding: 14px; border-radius: 10px; border: 1px solid var(--linea); background: var(--hoja); font: 14px/1.5 var(--sans); }
+.ruta .nivel { display: inline-block; font: 700 11px/1 var(--sans); letter-spacing: .07em; text-transform: uppercase; padding: 5px 7px; border-radius: 4px; background: var(--acento-suave); color: var(--acento); margin-bottom: 8px; }
+.ruta.riesgo .nivel { background: var(--aviso-suave); color: var(--aviso); }
+.ruta b { display: block; font-size: 15.5px; margin-bottom: 4px; }
+.ruta ul { margin: 6px 0 0 !important; padding-left: 18px !important; }
+
+/* Para estudiantes / para abogados */
+.publicos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0 26px; }
+.publico { padding: 16px; border-radius: 10px; background: var(--caja); font: 14.5px/1.55 var(--sans); }
+.publico h4 { margin: 0 0 8px; font: 600 16px/1.3 var(--sans); display: flex; gap: 8px; align-items: center; }
+.publico h4 svg { width: 22px; height: 22px; color: var(--acento); }
+.publico ul { margin: 0 !important; padding-left: 18px !important; }
+@media (max-width: 640px) { .publicos { grid-template-columns: 1fr; } }
+.etiqueta { display: inline-block; font: 700 11px/1 var(--sans); letter-spacing: .06em; text-transform: uppercase; padding: 4px 6px; border-radius: 4px; vertical-align: 2px; margin-right: 6px; background: var(--acento-suave); color: var(--acento); }
+.etiqueta.abogados { background: var(--aviso-suave); color: var(--aviso); }
+
+/* Línea de tiempo corta */
+.linea { list-style: none; margin: 18px 0 24px !important; padding: 0 0 0 20px !important; border-left: 2px solid var(--linea); font: 14.5px/1.5 var(--sans); }
+.linea li { position: relative; margin-bottom: 12px; }
+.linea li::before { content: ''; position: absolute; left: -27px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--acento); border: 2px solid var(--papel); }
+.linea time { display: block; font-weight: 600; color: var(--acento); font-size: 13px; letter-spacing: .03em; }
+
+/* Lo que pasó de verdad (tropiezos reales) */
+.real { margin: 22px 0; padding: 14px 16px; border-radius: 8px; background: var(--caja); border-left: 3px solid var(--tinta-2); font: 15px/1.55 var(--sans); }
+.real b:first-child { display: block; font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--tinta-2); margin-bottom: 4px; }
+
+/* Las capturas de esta guía tienen mucho detalle: una por fila, a todo el ancho (en tutorial.css van de a dos). */
+.articulo .par { grid-template-columns: 1fr; gap: 0; }
+
+/* Botón de descarga */
+.descarga { display: inline-flex; align-items: center; gap: 8px; margin: 4px 0 18px; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--acento); color: var(--acento); font: 600 14px/1 var(--sans); text-decoration: none; }
+.descarga:hover { background: var(--acento-suave); }
+
+@media print {
+  .paso-cab .num { border: 2px solid #000; background: none; color: #000; }
+  .conceptos, .rutas, .publicos, .cifras { break-inside: avoid; }
+}

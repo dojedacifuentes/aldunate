@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Responder con fuentes · Tutorial · EVA Derecho PUCV</title>
+<meta name="description" content="Tutorial paso a paso para estudiantes y abogados: cómo usar Gemini Notebook (antes NotebookLM) y Claude para trabajar con fuentes oficiales y no con lo que la IA inventa. Conceptos explicados en simple, capturas reales y referencias APA 7.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../tutorial/tutorial.css">
+<link rel="stylesheet" href="notebook.css">
+</head>
+<body>
+
+<nav class="barra" aria-label="Sitio">
+  <a class="sitio" href="../index.html#guias">← Guías y tutoriales</a>
+  <span class="sep"></span>
+  <a class="ocultar-tel" href="#conceptos">Conceptos</a>
+  <a class="ocultar-tel" href="#referencias">Referencias</a>
+  <a href="fuentes-primero.zip" download>Receta para Claude</a>
+  <button id="tema" type="button">Oscuro</button>
+  <span class="progreso" aria-hidden="true"></span>
+</nav>
+
+<main class="articulo">
+
+<header class="cabecera">
+  <div class="serie"><span class="tipo">Tutorial · Investigación jurídica</span><span>EVA · Escuela de Derecho PUCV</span><span>N.º 2 · Noviembre de 2026</span></div>
+  <h1>Responder con fuentes: cómo usar Gemini Notebook y Claude sin que la IA invente</h1>
+  <p class="bajada">Una guía paso a paso, sin tecnicismos, para estudiantes y abogados que quieren que la inteligencia artificial trabaje con la ley, el fallo o el contrato que tienen en la mano, y no con lo que «recuerda».</p>
+  <p class="firma"><b>EVA</b> · Escuela de Derecho, Pontificia Universidad Católica de Valparaíso<br>Versión de prueba del 3 de noviembre de 2026 · Revisión jurídica pendiente</p>
+  <div class="ficha">
+    <div><span>Dirigido a</span>Estudiantes de Derecho y abogados</div>
+    <div><span>Tiempo</span>60 a 75 minutos</div>
+    <div><span>Requisitos</span>Una cuenta de Google y una de Claude. No hay que programar</div>
+    <div><span>Material</span><a href="fuentes-primero.zip" download>Receta «fuentes primero» (ZIP, 2 KB)</a></div>
+  </div>
+</header>
+
+<section class="resumen" aria-labelledby="resumen-t">
+  <h2 id="resumen-t">Resumen</h2>
+  <p>Los asistentes de inteligencia artificial escriben con seguridad, aunque no sepan la respuesta. En Derecho eso tiene un costo: fallos inexistentes, artículos mal citados y sanciones a abogados en Chile y en el extranjero. Esta guía enseña un método para que la IA responda <b>desde tus fuentes</b>. Primero explica, en simple, cómo funciona por dentro una herramienta como Gemini Notebook (el producto de Google que hasta julio de 2026 se llamaba NotebookLM). Después la usa paso a paso con normas chilenas reales y, al final, la combina con Claude para redactar una minuta sin perder la trazabilidad de cada dato. Todas las capturas son reales y se tomaron el 2 de noviembre de 2026, incluidos dos tropiezos que conviene conocer.</p>
+  <p class="claves"><i>Palabras clave:</i> inteligencia artificial, alucinaciones, fuentes oficiales, Gemini Notebook, NotebookLM, Claude, investigación jurídica, verificación de citas, secreto profesional.</p>
+</section>
+
+<section class="en-frase" aria-label="La idea en una frase">
+  <p>La idea en una frase</p>
+  <div class="tres">
+    <div class="pieza"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6"/></svg><b>Tus fuentes</b>Ley, fallo o contrato oficiales, que tú eliges y descargas.</div>
+    <span class="flecha" aria-hidden="true">→</span>
+    <div class="pieza"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 4a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13zM15.5 15.5L20 20"/></svg><b>La IA responde desde ellas</b>Gemini Notebook cita el pasaje; Claude redacta con lo citado.</div>
+    <span class="flecha" aria-hidden="true">→</span>
+    <div class="pieza"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg><b>Tú verificas y firmas</b>Abres cada cita y la comparas con la fuente oficial.</div>
+  </div>
+</section>
+
+<nav class="indice" aria-labelledby="indice-t">
+  <h2 id="indice-t">Contenido</h2>
+  <ol>
+    <li><span>1</span><a href="#introduccion">Por qué la IA inventa</a></li>
+    <li><span>2</span><a href="#conceptos">Los conceptos, en simple</a></li>
+    <li><span>3</span><a href="#por-dentro">Cómo funciona Gemini Notebook</a></li>
+    <li><span>4</span><a href="#antes">Antes de empezar</a></li>
+    <li><span>5</span><a href="#paso-1">Paso 1. Crear el cuaderno</a></li>
+    <li><span>6</span><a href="#paso-2">Paso 2. Conseguir las fuentes oficiales</a></li>
+    <li><span>7</span><a href="#paso-3">Paso 3. Cargarlas y comprobar que se leyeron</a></li>
+    <li><span>8</span><a href="#paso-4">Paso 4. Fijar tus reglas</a></li>
+    <li><span>9</span><a href="#paso-5">Paso 5. Preguntar y abrir cada cita</a></li>
+    <li><span>10</span><a href="#paso-6">Paso 6. Hacer la pregunta trampa</a></li>
+    <li><span>11</span><a href="#paso-7">Paso 7. Buscar más fuentes, con filtro</a></li>
+    <li><span>12</span><a href="#paso-8">Paso 8. Estudiar con Studio</a></li>
+    <li><span>13</span><a href="#paso-9">Paso 9. Guardar y exportar</a></li>
+    <li><span>14</span><a href="#paso-10">Paso 10. Redactar con Claude</a></li>
+    <li><span>15</span><a href="#paso-11">Paso 11. Una receta para Claude</a></li>
+    <li><span>16</span><a href="#mcp">La ruta avanzada: MCP</a></li>
+    <li><span>17</span><a href="#usos">Ideas para estudiantes y abogados</a></li>
+    <li><span>18</span><a href="#control">Antes de usar lo que te dio la IA</a></li>
+    <li><span>19</span><a href="#errores">Errores frecuentes</a></li>
+    <li><span>20</span><a href="#deberes">Deberes profesionales</a></li>
+    <li><span>21</span><a href="#limites">Alcance y límites</a></li>
+  </ol>
+</nav>
+
+<!-- 1 -->
+<h2 class="sec" id="introduccion"><span class="n">1 · Introducción</span>Por qué la IA inventa, y por qué importa en Derecho</h2>
+<p>Un asistente como ChatGPT, Gemini o Claude no consulta una biblioteca cuando le preguntas algo. Escribe, palabra por palabra, la continuación más probable de tu texto. Casi siempre eso produce respuestas útiles. Pero cuando no sabe, <b>no se detiene</b>: completa igual, con el mismo tono seguro. A eso se le llama <b>alucinación</b>.</p>
+<aside class="margen"><img src="../tutorial/img/eva.webp" alt=""><span><b>EVA</b>No te miento a propósito. Escribo lo probable, no lo verdadero. Por eso no me pidas memoria: dame el documento.</span></aside>
+<p>En Derecho el problema se nota rápido, porque todo se puede comprobar: un rol existe o no existe, un artículo dice algo o no lo dice.</p>
+<div class="cifras">
+  <div class="cifra alerta-c"><strong>58–88 %</strong>de respuestas erradas de chatbots generales ante preguntas sobre fallos federales de Estados Unidos (Dahl et al., 2024).</div>
+  <div class="cifra alerta-c"><strong>17–33 %</strong>de respuestas falsas o mal fundadas en herramientas jurídicas de pago, que sí buscan en documentos (Magesh et al., 2025).</div>
+  <div class="cifra"><strong>2.262</strong>decisiones judiciales en el mundo sobre escritos con contenido inventado por IA, tres de ellas en Chile, al 2 de noviembre de 2026 (Charlotin, 2026).</div>
+</div>
+<p>El caso más conocido es <i>Mata v. Avianca</i> (2023): un abogado de Nueva York presentó fallos inventados por ChatGPT. Cuando dudó, le preguntó al propio ChatGPT si el caso «Varghese» era real, y la herramienta le aseguró que sí. El tribunal multó con 5.000 dólares a los dos abogados y a su estudio. En Chile, la Corte Suprema suspendió por un mes y multó con 5 UTM a una abogada que citó obras inexistentes (rol 23.322-2025); según el comunicado del Poder Judicial, las citas venían de un chatbot de IA.</p>
+<div class="dato"><b>La buena noticia.</b> Hay una forma de trabajar que reduce mucho estos errores: obligar a la IA a responder desde documentos que tú le entregas, y revisar dónde sacó cada frase. Eso es lo que enseña esta guía.</div>
+
+<!-- 2 -->
+<h2 class="sec" id="conceptos"><span class="n">2 · Glosario visual</span>Los conceptos, en simple</h2>
+<p>Antes de tocar ninguna herramienta, estas son las palabras técnicas que vas a encontrar. Cada una trae una comparación con algo conocido del mundo jurídico.</p>
+<div class="conceptos">
+  <div class="concepto"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7M17 15l3 3-3 3"/></svg>Modelo de lenguaje</h4><p>El «motor» de un asistente de IA. Aprendió de enormes cantidades de texto a predecir qué palabra sigue a otra.</p><p class="como"><b>Como en Derecho:</b> un practicante que leyó miles de escritos y redacta muy bien, pero que nunca abrió el expediente de tu caso.</p></div>
+  <div class="concepto"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h4v4H4zM10 7h4v4h-4zM16 7h4v4h-4zM4 13h4v4H4zM10 13h4v4h-4z"/></svg>Token</h4><p>Un trozo de palabra. Los modelos no leen letras ni palabras, sino estos trozos. Con ellos se mide cuánto texto cabe y cuánto cuesta.</p><p class="como"><b>Como en Derecho:</b> las fojas de un expediente: la unidad con que se cuenta su tamaño.</p></div>
+  <div class="concepto"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v14H3zM7 9h10M7 13h6"/></svg>Ventana de contexto</h4><p>Cuánto texto puede tener «a la vista» el modelo en una conversación. Lo que queda fuera, no lo ve.</p><p class="como"><b>Como en Derecho:</b> lo que cabe sobre el escritorio. Que esté en la mesa no garantiza que se lea con la misma atención todo.</p></div>
+  <div class="concepto"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 16H3zM12 10v4M12 17h.01"/></svg>Alucinación</h4><p>Cuando la IA genera algo falso con total fluidez: un fallo, una cita o un dato que no existen.</p><p class="como"><b>Como en Derecho:</b> citar de memoria un fallo «que alguien comentó en clase» sin haberlo leído nunca.</p></div>
+  <div class="concepto"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg>Fuente</h4><p>El documento que le entregas a la herramienta para que responda: una ley en PDF, un fallo, un contrato, una página web.</p><p class="como"><b>Como en Derecho:</b> los documentos acompañados. Lo que no se acompaña, no consta.</p></div>
+  <div class="concepto"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h4v4H7zM13 7h4v4h-4zM7 11c0 3-1 5-3 6M13 11c0 3-1 5-3 6"/></svg>Cita</h4><p>El número que aparece al final de una frase de la respuesta. Al pulsarlo, se abre el pasaje de la fuente que la herramienta usó.</p><p class="como"><b>Como en Derecho:</b> «a fojas 34». Te dice dónde mirar. No prueba que la frase sea correcta: eso lo compruebas tú.</p></div>
+  <div class="concepto"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 4a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0 0-13zM15.5 15.5L20 20M8 10.5h5"/></svg>RAG o anclaje en fuentes</h4><p>Siglas en inglés de «generación aumentada por recuperación». Antes de responder, el sistema busca en tus documentos los pasajes útiles y responde a partir de ellos. Google llama a su versión «anclaje en las fuentes».</p><p class="como"><b>Como en Derecho:</b> el procurador que, antes de contestar, va a buscar la carpeta del caso y te trae marcadas las páginas que importan.</p></div>
+  <div class="concepto"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7V3M16 7V3M6 7h12v4a6 6 0 0 1-12 0zM12 17v4"/></svg>Conector</h4><p>Un permiso para que el asistente lea o use otro servicio tuyo, como Google Drive o el correo.</p><p class="como"><b>Como en Derecho:</b> un poder con facultades específicas: sirve para lo que dice, y conviene darlo acotado.</p></div>
+  <div class="concepto"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h6v8H4zM14 8h6v8h-6zM10 12h4"/></svg>MCP</h4><p>Model Context Protocol: un estándar abierto, presentado por Anthropic en 2024, para que los asistentes de distintas empresas se conecten con otros programas de la misma manera.</p><p class="como"><b>Como en Derecho:</b> un formulario tipo: si todos lo usan, cualquier oficina puede tramitarlo.</p></div>
+  <div class="concepto"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h3"/></svg>Skill o receta</h4><p>Un paquete de instrucciones que le enseña a Claude a hacer una tarea siempre de la misma manera. Se sube como archivo ZIP.</p><p class="como"><b>Como en Derecho:</b> el instructivo interno del estudio para redactar un tipo de escrito.</p></div>
+  <div class="concepto"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>Encargo o «prompt»</h4><p>Lo que le escribes a la IA. Mientras más claro el encargo (qué, con qué fuentes, con qué reglas, en qué formato), mejor el resultado.</p><p class="como"><b>Como en Derecho:</b> la minuta de instrucciones que le dejas a un ayudante.</p></div>
+  <div class="concepto"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12v10H6zM8.5 11V7.5a3.5 3.5 0 0 1 7 0V11"/></svg>Cuenta personal o institucional</h4><p>Las herramientas tratan distinto tus datos según la cuenta: una cuenta personal de Google no tiene las mismas garantías que una de Workspace o Education de una institución.</p><p class="como"><b>Como en Derecho:</b> no es lo mismo dejar un documento en tu casa que en el archivo del estudio.</p></div>
+</div>
+
+<!-- 3 -->
+<h2 class="sec" id="por-dentro"><span class="n">3 · La teoría</span>Cómo funciona Gemini Notebook por dentro</h2>
+<p>Gemini Notebook es una herramienta gratuita de Google que responde <b>a partir de las fuentes que tú subes</b> a un «cuaderno» y marca con un número el pasaje que usó para cada frase. Se llamaba NotebookLM hasta el 16 de julio de 2026; la dirección antigua, notebooklm.google.com, hoy lleva a <a href="https://notebook.google.com" target="_blank" rel="noopener">notebook.google.com</a>.</p>
+<ol class="linea">
+  <li><time>Mayo de 2023</time>Google la muestra como un experimento, Project Tailwind.</li>
+  <li><time>2023–2025</time>Se lanza como NotebookLM y suma resúmenes en audio, mapas mentales y más idiomas.</li>
+  <li><time>Octubre de 2025</time>Según Google, el chat puede tener a la vista hasta un millón de tokens: más de mil páginas.</li>
+  <li><time>16 de julio de 2026</time>Cambia de nombre a Gemini Notebook (Google, 2026).</li>
+</ol>
+<h3>3.1 Los tres pasos</h3>
+<p>Por dentro, una herramienta que «responde desde tus documentos» hace tres cosas, en este orden. La idea se publicó en 2020 con el nombre de RAG (Lewis et al., 2020).</p>
+<figure class="diagrama">
+  <p class="fig-num">Figura 1</p>
+  <p class="fig-tit">Responder desde tus fuentes: buscar, entregar y generar</p>
+  <svg viewBox="0 0 760 300" role="img" aria-label="Diagrama: una pregunta; el sistema busca pasajes en tres fuentes (Ley 21.719, Reglamento europeo y un proyecto de ley), entrega los dos más parecidos al modelo junto con la pregunta, y el modelo genera una respuesta con citas numeradas que llevan de vuelta al pasaje.">
+    <rect class="caja-a" x="10" y="20" width="170" height="56" rx="10"/>
+    <text class="txa" x="24" y="42">TU PREGUNTA</text>
+    <text class="tx2" x="24" y="62">¿Quién fiscaliza la ley?</text>
+    <rect class="caja-d" x="10" y="104" width="170" height="52" rx="8"/><text class="tx" x="24" y="128">Ley 21.719</text><rect class="resalta" x="22" y="136" width="120" height="10" rx="3"/>
+    <rect class="caja-d" x="10" y="166" width="170" height="52" rx="8"/><text class="tx" x="24" y="190">Reglamento UE</text><rect class="resalta" x="22" y="198" width="90" height="10" rx="3"/>
+    <rect class="caja-d" x="10" y="228" width="170" height="52" rx="8"/><text class="tx" x="24" y="252">Proyecto de ley</text><text class="tx2" x="24" y="270">no es ley: no sirve</text>
+    <path class="lin-a" d="M180 141 H250 M180 203 H250"/>
+    <text class="txa" x="190" y="254">1 · BUSCAR</text>
+    <rect class="caja-a" x="250" y="110" width="200" height="118" rx="10"/>
+    <text class="txa" x="264" y="132">2 · ENTREGAR</text>
+    <text class="tx2" x="264" y="156">La pregunta + los</text>
+    <text class="tx2" x="264" y="174">pasajes elegidos</text>
+    <text class="tx2" x="264" y="192">van juntos al modelo</text>
+    <path class="lin-a" d="M450 169 H500"/>
+    <rect class="caja-d" x="500" y="74" width="250" height="190" rx="10"/>
+    <text class="txa" x="514" y="98">3 · GENERAR CON CITAS</text>
+    <text class="tx2" x="514" y="124">«La fiscaliza la Agencia de</text>
+    <text class="tx2" x="514" y="144">Protección de Datos</text>
+    <text class="tx2" x="514" y="164">Personales…»</text>
+    <circle class="marca" cx="710" cy="160" r="10"/><text class="marca-tx" x="706" y="165">1</text>
+    <text class="tx2" x="514" y="198">«…y fija multas…»</text>
+    <circle class="marca" cx="710" cy="194" r="10"/><text class="marca-tx" x="706" y="199">2</text>
+    <text class="tx" x="514" y="234">Tú abres cada número</text>
+    <path class="pto" d="M710 149 V 56 H 198 V 130"/>
+    <path class="lin-a" d="M192 122 L198 132 L204 122"/>
+  </svg>
+  <figcaption><i>Nota.</i> Elaboración propia a partir de Lewis et al. (2020). La línea punteada es lo más importante: la cita te devuelve al pasaje para que compruebes que dice lo que la respuesta afirma.</figcaption>
+</figure>
+<div class="simple"><b>En simple:</b> si el paso 1 trae el pasaje correcto, la IA tiene de dónde sacar la respuesta y es mucho menos probable que invente. Si trae un pasaje equivocado, o ninguno, escribe igual de bien una respuesta mal fundada. Por eso importan tanto las fuentes que eliges.</div>
+<h3>3.2 Qué dice la evidencia</h3>
+<p>En una prueba pequeña de 2025, con 15 respuestas por herramienta, el 13 % de las respuestas de NotebookLM traía alguna afirmación sin respaldo, frente al 40 % de ChatGPT y de Gemini. En las tres, el error típico no fue inventar desde cero, sino <b>estirar lo que decía la fuente</b> (Hagar et al., 2025). Es un estudio chico y sobre un solo tema, pero coincide con lo que verás en esta guía.</p>
+<p>Tener mucho texto a la vista tampoco es leerlo todo igual de bien: los modelos aprovechan peor la información que queda en medio de un texto largo (Liu et al., 2024). Por eso conviene <b>un cuaderno por tema</b>, con pocas fuentes y bien elegidas.</p>
+<div class="tabla">
+  <p class="tab-num">Tabla 1</p>
+  <p class="tab-tit">Cinco maneras de equivocarse aun trabajando con fuentes</p>
+  <table>
+    <thead><tr><th>Error</th><th>Qué pasa</th><th>Ejemplo jurídico</th></tr></thead>
+    <tbody>
+      <tr><td>Cita inventada</td><td>El pasaje no existe</td><td>Un considerando que el fallo no tiene</td></tr>
+      <tr><td>Cita que no dice eso</td><td>El pasaje existe, pero no respalda la frase</td><td>Se cita el voto de minoría como si fuera la decisión</td></tr>
+      <tr><td>Sobreinterpretación</td><td>Estira o simplifica lo que dice la fuente</td><td>«Multa de hasta 4 %» sin decir a quién se aplica</td></tr>
+      <tr><td>Mezcla de fuentes</td><td>Confunde vigente con proyecto, o una norma extranjera con una chilena</td><td>Presentar el proyecto de ley de IA como ley vigente</td></tr>
+      <tr><td>Fuente vacía</td><td>El sistema leyó un aviso de error en vez del documento</td><td>Lo verás de verdad en el paso 2</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 4 -->
+<h2 class="sec" id="antes"><span class="n">4 · Preparación</span>Antes de empezar</h2>
+<div class="tabla">
+  <p class="tab-num">Tabla 2</p>
+  <p class="tab-tit">Qué vas a usar y para qué</p>
+  <table>
+    <thead><tr><th>Herramienta</th><th>Para qué</th><th>Costo</th></tr></thead>
+    <tbody>
+      <tr><td>Gemini Notebook</td><td>Responder desde tus fuentes, con citas</td><td>Tiene plan gratuito</td></tr>
+      <tr><td>Claude</td><td>Buscar fuentes, ordenar y redactar la minuta</td><td>Tiene plan gratuito; la función «Investigación» es de pago</td></tr>
+      <tr><td>Google Drive</td><td>Pasar la nota de una herramienta a la otra</td><td>Gratis</td></tr>
+      <tr><td>LeyChile, EUR-Lex, Poder Judicial</td><td>Descargar las fuentes oficiales</td><td>Gratis</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>Para practicar usaremos normas públicas: la <b>Ley 21.719</b> sobre datos personales (rige desde el 1 de diciembre de 2026; un proyecto para postergarla al 15 de octubre de 2027 fue aprobado por el Senado y sigue en la Cámara), el <b>Reglamento europeo de inteligencia artificial</b> (Reglamento (UE) 2024/1689) y la tramitación del <b>proyecto de ley de IA</b> chileno (boletín 16821-19), que todavía no es ley.</p>
+<div class="alerta"><b>Antes de subir documentos de un cliente.</b> La guía del Colegio de Abogados de Chile (2026) pide no ingresar información confidencial en sistemas de uso público general sin asegurarse de que no será reutilizada ni accesible a terceros, y advierte que una cláusula general en el contrato de servicios no basta como consentimiento. Según la ayuda de Google, tus fuentes no se usan para entrenar Gemini Notebook salvo que envíes comentarios; en cuentas personales, esos comentarios pueden ser revisados por personas y guardarse hasta tres años. Practica con documentos públicos y, si trabajas con un caso real, anonimízalo primero.</div>
+
+<!-- PASO 1 -->
+<div class="paso-cab" id="paso-1"><span class="num">1</span><span class="n">Paso 1</span><h2>Crear el cuaderno</h2></div>
+<p class="objetivo"><b>Objetivo:</b> tener un espacio propio para un solo tema, con sus fuentes.</p>
+<ol class="pasos">
+  <li>Entra a <a href="https://notebook.google.com" target="_blank" rel="noopener">notebook.google.com</a> con tu cuenta de Google.</li>
+  <li>Pulsa «Nuevo cuaderno» y ponle un nombre claro, por ejemplo «IA y datos personales en Chile».</li>
+  <li>Mira la pantalla: tiene tres paneles (Figura 2).</li>
+</ol>
+<figure>
+  <p class="fig-num">Figura 2</p>
+  <p class="fig-tit">Un cuaderno nuevo en Gemini Notebook y sus tres paneles</p>
+  <img src="img/nb-cuaderno-vacio.webp" alt="Gemini Notebook con un cuaderno nuevo: a la izquierda el panel Fuentes con el botón Añadir fuentes, al centro el chat y a la derecha el panel Studio." width="1536" height="695" loading="lazy">
+  <figcaption><i>Nota.</i> (1) <b>Fuentes</b>: lo único que el cuaderno puede leer. (2) <b>Chat</b>: preguntas y respuestas con citas. (3) <b>Studio</b>: resúmenes en audio y video, mapas mentales, informes, tarjetas y cuestionarios hechos con tus fuentes. Captura propia, 2 de noviembre de 2026.</figcaption>
+</figure>
+
+<!-- PASO 2 -->
+<div class="paso-cab" id="paso-2"><span class="num">2</span><span class="n">Paso 2</span><h2>Conseguir las fuentes oficiales</h2></div>
+<p class="objetivo"><b>Objetivo:</b> tener el texto oficial de cada norma en un archivo PDF.</p>
+<p>Lo primero que uno intenta es pegar el enlace de la ley. Lo probamos con la Ley 21.719 en LeyChile (Figura 3) y pasó algo que conviene conocer.</p>
+<figure>
+  <p class="fig-num">Figura 3</p>
+  <p class="fig-tit">Pegar enlaces como fuente</p>
+  <img src="img/nb-pegar-enlaces.webp" alt="Ventana URLs de sitios web y YouTube con dos enlaces pegados: la Ley 21.719 en LeyChile y el Reglamento europeo en EUR-Lex." width="1536" height="695" loading="lazy">
+  <figcaption><i>Nota.</i> (1) Se pueden pegar varios enlaces, uno por línea. (2) «Insertar». La propia ventana advierte que solo se importa el texto de la página y que no se admiten artículos de pago. Captura propia, 2 de noviembre de 2026.</figcaption>
+</figure>
+<figure>
+  <p class="fig-num">Figura 4</p>
+  <p class="fig-tit">El primer tropiezo: una fuente vacía</p>
+  <img src="img/nb-fuente-vacia-guia.webp" alt="La fuente importada desde LeyChile contiene solo el aviso «Este proceso demora demasiado…», y el resumen del cuaderno la describe como un extracto oficial." width="1536" height="695" loading="lazy">
+  <figcaption><i>Nota.</i> (1) El enlace de LeyChile se importó sin error. (2) Pero lo único que el cuaderno leyó fue un aviso de carga: «Este proceso demora demasiado, es probable que su conexión esté muy lenta…». (3) Aun así, el resumen la presentó como un «extracto oficial». Captura propia, 2 de noviembre de 2026.</figcaption>
+</figure>
+<div class="real"><b>Lo que pasó de verdad</b>LeyChile arma su página con un programa que corre en tu navegador; el lector de Gemini Notebook no lo espera y se queda con el aviso. La herramienta no avisa que la importación falló: <b>una fuente vacía no da error</b>. Hay que abrirla para notarlo.</div>
+<p>La solución es descargar el PDF oficial y subirlo como archivo:</p>
+<ol class="pasos">
+  <li>En LeyChile, abre la norma y pulsa el ícono de descarga.</li>
+  <li>Elige «Descargar ahora sin firma» (o «con firma electrónica avanzada», si necesitas acreditar autenticidad) (Figura 5).</li>
+  <li>Haz lo mismo con las otras fuentes: EUR-Lex, Diario Oficial o el Poder Judicial también ofrecen PDF.</li>
+</ol>
+<figure>
+  <p class="fig-num">Figura 5</p>
+  <p class="fig-tit">Descargar la Ley 21.719 desde LeyChile</p>
+  <img src="img/nb-leychile-descargar.webp" alt="Ventana de LeyChile con las alternativas para descargar la Ley 21.719: con firma electrónica avanzada o sin firma." width="1536" height="639" loading="lazy">
+  <figcaption><i>Nota.</i> (1) La ventana de descarga de LeyChile. (2) «Descargar ahora sin firma». El PDF trae la versión vigente y su fecha. Captura de la Biblioteca del Congreso Nacional de Chile (s.f.), 2 de noviembre de 2026.</figcaption>
+</figure>
+
+<!-- PASO 3 -->
+<div class="paso-cab" id="paso-3"><span class="num">3</span><span class="n">Paso 3</span><h2>Cargar las fuentes y comprobar que se leyeron</h2></div>
+<p class="objetivo"><b>Objetivo:</b> que el cuaderno lea de verdad cada documento.</p>
+<figure>
+  <p class="fig-num">Figura 6</p>
+  <p class="fig-tit">Las formas de añadir fuentes</p>
+  <img src="img/nb-anadir-fuentes.webp" alt="Ventana Añadir fuentes con las opciones Subir archivos, Sitios web, Play Libros, Drive, Libros de texto y Texto copiado, y el buscador de nuevas fuentes en la web." width="1536" height="695" loading="lazy">
+  <figcaption><i>Nota.</i> (1) <b>Subir archivos</b>: PDF, Word, texto, audio o imágenes; la vía más segura para normas y fallos. (2) <b>Sitios web</b> y YouTube. (3) <b>Drive</b>. (4) <b>Texto copiado</b>. (5) <b>Buscar nuevas fuentes en la Web</b> (paso 7). Captura propia, 2 de noviembre de 2026.</figcaption>
+</figure>
+<ol class="pasos">
+  <li>Pulsa «Añadir fuentes» → «Subir archivos» y elige los PDF que descargaste.</li>
+  <li>Haz clic en el nombre de cada fuente: se abre su «Guía de la fuente», un resumen breve, y el texto completo.</li>
+  <li>Comprueba que dice lo que esperabas. Si ves un aviso o un menú en vez del documento, es una fuente vacía: elimínala y vuelve al paso 2.</li>
+  <li>Usa las casillas junto a cada fuente para elegir cuáles se consultan. <b>Ojo:</b> en nuestra prueba, al recargar la página volvieron a quedar todas marcadas.</li>
+</ol>
+<div class="simple"><b>En simple:</b> según la ayuda de Google, cada fuente puede tener hasta 500.000 palabras o 200 MB. El límite rara vez importa en Derecho; lo que importa es que sean <b>pocas, oficiales y del tema</b>.</div>
+
+<!-- PASO 4 -->
+<div class="paso-cab" id="paso-4"><span class="num">4</span><span class="n">Paso 4</span><h2>Fijar tus reglas para el chat</h2></div>
+<p class="objetivo"><b>Objetivo:</b> que el cuaderno diga «no consta» cuando algo no está en tus fuentes.</p>
+<ol class="pasos">
+  <li>Abre el menú <kbd>⋮</kbd> arriba a la derecha → «Configurar chat».</li>
+  <li>En «Define el objetivo, el estilo o el rol de la conversación» elige <b>Personalizado</b>.</li>
+  <li>Pega las reglas del recuadro y pulsa «Guardar» (Figura 7). Valen para todo el cuaderno.</li>
+</ol>
+<div class="prompt">
+  <div class="prompt-cab"><span>Reglas para el cuaderno</span><button type="button" data-copiar>Copiar</button></div>
+<pre>Actúa como ayudante de investigación jurídica en Chile. Responde solo con lo que digan las fuentes seleccionadas. Si algo no está en ellas, escribe «No consta en las fuentes» y no lo completes con conocimiento general. Indica artículo e inciso (o considerando) de cada afirmación. Distingue norma vigente, norma con vigencia diferida y proyecto de ley.</pre>
+</div>
+<figure>
+  <p class="fig-num">Figura 7</p>
+  <p class="fig-tit">La ventana «Configurar conversación» con reglas propias</p>
+  <img src="img/nb-configurar.webp" alt="Ventana Configurar conversación con el objetivo Personalizado elegido, las reglas escritas en el cuadro de texto y el botón Guardar." width="1536" height="639" loading="lazy">
+  <figcaption><i>Nota.</i> (1) Objetivo «Personalizado». (2) Las reglas, hasta 10.000 caracteres. (3) «Guardar». También puedes elegir el largo de las respuestas. Captura propia, 2 de noviembre de 2026.</figcaption>
+</figure>
+
+<!-- PASO 5 -->
+<div class="paso-cab" id="paso-5"><span class="num">5</span><span class="n">Paso 5</span><h2>Preguntar y abrir cada cita</h2></div>
+<p class="objetivo"><b>Objetivo:</b> obtener una respuesta con citas y comprobar cada una.</p>
+<div class="prompt">
+  <div class="prompt-cab"><span>Una buena pregunta</span><button type="button" data-copiar>Copiar</button></div>
+<pre>¿Qué organismo crea la Ley 21.719 para fiscalizar su cumplimiento y qué naturaleza jurídica tiene? Responde solo con las fuentes y señala el artículo.</pre>
+</div>
+<figure>
+  <p class="fig-num">Figura 8</p>
+  <p class="fig-tit">Una respuesta con citas numeradas</p>
+  <img src="img/nb-respuesta-citas.webp" alt="Respuesta de Gemini Notebook: la Ley 21.719 crea la Agencia de Protección de Datos Personales, corporación autónoma de derecho público, con números de cita al final de cada frase." width="1536" height="695" loading="lazy">
+  <figcaption><i>Nota.</i> (1) La pregunta, concreta y pidiendo el artículo. (2) Cada afirmación termina en un número: es la cita. (3) La respuesta nombra el artículo 30, pero todavía no lo has comprobado. Captura propia, 2 de noviembre de 2026.</figcaption>
+</figure>
+<p>Ahora el paso que no se delega: <b>pulsa cada número</b>.</p>
+<figure>
+  <p class="fig-num">Figura 9</p>
+  <p class="fig-tit">La cita abierta: el pasaje exacto de la ley</p>
+  <img src="img/nb-cita-abierta.webp" alt="Al pulsar la cita se abre el pasaje del artículo 30 que crea la Agencia de Protección de Datos Personales, con el botón Ver fuente." width="1536" height="695" loading="lazy">
+  <figcaption><i>Nota.</i> (1) Al pulsar el número aparece el pasaje. (2) Compara palabra por palabra: «corporación autónoma de derecho público…». Esta vez coincide. (3) «Ver fuente» abre el documento completo. Es el artículo 30 de la Ley 19.628, en el texto que le da la Ley 21.719. Captura propia, 2 de noviembre de 2026.</figcaption>
+</figure>
+<aside class="margen"><img src="../tutorial/img/eva.webp" alt=""><span><b>EVA</b>Una cita es una dirección, no una prueba. Ve a esa dirección y mira si el pasaje dice lo que la respuesta afirma.</span></aside>
+
+<!-- PASO 6 -->
+<div class="paso-cab" id="paso-6"><span class="num">6</span><span class="n">Paso 6</span><h2>Hacer la pregunta trampa</h2></div>
+<p class="objetivo"><b>Objetivo:</b> comprobar que tus reglas funcionan antes de confiar en el cuaderno.</p>
+<p>Pregunta por algo que sabes que <b>no</b> está en tus fuentes. En Chile no hay, a noviembre de 2026, una ley de inteligencia artificial vigente: solo un proyecto.</p>
+<div class="prompt">
+  <div class="prompt-cab"><span>La pregunta trampa</span><button type="button" data-copiar>Copiar</button></div>
+<pre>¿Qué sanciones establece la ley chilena de inteligencia artificial vigente para los sistemas de alto riesgo?</pre>
+</div>
+<figure>
+  <p class="fig-num">Figura 10</p>
+  <p class="fig-tit">El cuaderno no inventa la ley, pero simplifica las multas</p>
+  <img src="img/nb-pregunta-trampa.webp" alt="Ante la pregunta trampa, Gemini Notebook responde que en las fuentes no consta una ley chilena de inteligencia artificial vigente, y resume las multas de la Ley 21.719." width="1536" height="695" loading="lazy">
+  <figcaption><i>Nota.</i> (1) La pregunta trampa. (2) Bien: «En tus fuentes no consta una ley chilena de inteligencia artificial vigente…». (3) Pero resume las multas como «hasta el 4 %» por infracciones gravísimas reincidentes, y omite que el artículo 35 reserva ese tope a empresas que no son de menor tamaño. Captura propia, 2 de noviembre de 2026.</figcaption>
+</figure>
+<div class="real"><b>Lo que pasó de verdad</b>Las dos cosas a la vez: aprobó la trampa y, en la misma respuesta, simplificó una norma. Es el error típico que describen los estudios: no inventar, sino <b>estirar la fuente</b>. Por eso la verificación no termina cuando la herramienta «se porta bien».</div>
+
+<!-- PASO 7 -->
+<div class="paso-cab" id="paso-7"><span class="num">7</span><span class="n">Paso 7</span><h2>Buscar más fuentes, con filtro</h2></div>
+<p class="objetivo"><b>Objetivo:</b> descubrir fuentes nuevas sin mezclar las oficiales con cualquier cosa.</p>
+<p>En el panel de fuentes, el buscador «Buscar nuevas fuentes en la Web» tiene dos modos (Figura 11): <b>Fast Research</b>, rápido, y <b>Deep Research</b>, que además entrega un informe más detallado.</p>
+<div class="par">
+  <figure>
+    <p class="fig-num">Figura 11</p>
+    <p class="fig-tit">Los dos modos de búsqueda</p>
+    <img src="img/nb-fast-deep.webp" alt="Menú del buscador de fuentes con las opciones Fast Research e Deep Research." width="1536" height="639" loading="lazy">
+    <figcaption><i>Nota.</i> (1) Fast Research. (2) Deep Research. Captura propia, 2 de noviembre de 2026.</figcaption>
+  </figure>
+  <figure>
+    <p class="fig-num">Figura 12</p>
+    <p class="fig-tit">Elegir solo las fuentes oficiales</p>
+    <img src="img/nb-seleccion-oficiales.webp" alt="Descubrimiento de fuentes con diez resultados sobre el proyecto de ley de IA; solo quedan marcadas dos fuentes oficiales antes de importar." width="1536" height="639" loading="lazy">
+    <figcaption><i>Nota.</i> (1) La búsqueda. (2) Diez resultados, todos marcados. (3) Solo dos oficiales e «Importar». Captura propia, 2 de noviembre de 2026.</figcaption>
+  </figure>
+</div>
+<div class="real"><b>Lo que pasó de verdad</b>Buscamos el proyecto de ley de IA (boletín 16821-19). Fast Research trajo diez fuentes <b>ya marcadas</b>: la tramitación del Senado y un informe de la Biblioteca del Congreso, pero también prensa, una facultad, el boletín de un estudio y un sitio comercial. Desmarcamos todo e importamos solo las dos oficiales.</div>
+
+<!-- PASO 8 -->
+<div class="paso-cab" id="paso-8"><span class="num">8</span><span class="n">Paso 8</span><h2>Estudiar con Studio</h2></div>
+<p class="objetivo"><b>Objetivo:</b> transformar tus fuentes en material de estudio, sin confundirlo con una fuente.</p>
+<div class="tabla">
+  <p class="tab-num">Tabla 3</p>
+  <p class="tab-tit">Las herramientas de Studio y para qué le sirven a un estudiante o abogado</p>
+  <table>
+    <thead><tr><th>Herramienta</th><th>Qué hace</th><th>Úsala para</th></tr></thead>
+    <tbody>
+      <tr><td>Resumen de audio</td><td>Una conversación entre dos voces sobre tus fuentes. Formatos: Información detallada, Breve, Crítica o Debate</td><td>Repasar en el trayecto</td></tr>
+      <tr><td>Resumen de vídeo y Presentación</td><td>Diapositivas narradas o una presentación</td><td>Preparar una exposición</td></tr>
+      <tr><td>Mapa mental</td><td>Las ideas de tus fuentes en ramas</td><td>Ver la estructura de una ley</td></tr>
+      <tr><td>Informes</td><td>Un documento estructurado o un informe interactivo</td><td>Una guía de estudio o una ficha</td></tr>
+      <tr><td>Tarjetas didácticas y Cuestionario</td><td>Preguntas y respuestas para practicar</td><td>Preparar un control o el examen de grado</td></tr>
+      <tr><td>Infografía y Tabla de datos</td><td>Una imagen-resumen o una tabla con datos de las fuentes</td><td>Comparar plazos, sanciones u órganos</td></tr>
+    </tbody>
+  </table>
+</div>
+<div class="par">
+  <figure>
+    <p class="fig-num">Figura 13</p>
+    <p class="fig-tit">Personalizar el resumen de audio</p>
+    <img src="img/nb-audio.webp" alt="Ventana Personalizar resumen de audio con los formatos Información detallada, Breve, Crítica y Debate, el idioma y la duración." width="922" height="383" loading="lazy">
+    <figcaption><i>Nota.</i> (1) Formato. (2) Idioma y duración. (3) En qué centrarse. Captura propia, 2 de noviembre de 2026.</figcaption>
+  </figure>
+  <figure>
+    <p class="fig-num">Figura 14</p>
+    <p class="fig-tit">Un mapa mental de la Ley 21.719</p>
+    <img src="img/nb-mapa-mental.webp" alt="Mapa mental generado en Studio con las ramas Derechos de los titulares, Deberes del responsable y Cruce con sistemas de IA de alto riesgo." width="1536" height="639" loading="lazy">
+    <figcaption><i>Nota.</i> (1) Qué se pidió y con qué fuentes. (2) Las ramas se despliegan. Captura propia, 2 de noviembre de 2026.</figcaption>
+  </figure>
+</div>
+<div class="alerta"><b>Escuchar no es verificar.</b> Un resumen de audio que suena seguro también puede equivocarse. Lo que vayas a citar sale de la fuente, no del audio ni del mapa.</div>
+
+<!-- PASO 9 -->
+<div class="paso-cab" id="paso-9"><span class="num">9</span><span class="n">Paso 9</span><h2>Guardar y exportar sin perder las citas</h2></div>
+<p class="objetivo"><b>Objetivo:</b> llevarte la respuesta verificada a un documento.</p>
+<ol class="pasos">
+  <li>Bajo cada respuesta, pulsa «Guardar en una nota». La nota queda en Studio y, mientras tenga citas, no se puede editar.</li>
+  <li>En el menú <kbd>⋮</kbd> de la nota elige «Exportar a Documentos» (o «Exportar a Hojas de cálculo») (Figura 15).</li>
+  <li>Abre el documento que se creó en tu Drive y mira las citas (Figura 16).</li>
+</ol>
+<div class="par">
+  <figure>
+    <p class="fig-num">Figura 15</p>
+    <p class="fig-tit">Exportar una nota</p>
+    <img src="img/nb-exportar-nota.webp" alt="Menú de una nota guardada con las opciones Convertir en fuente, Exportar a Documentos y Exportar a Hojas de cálculo." width="1536" height="639" loading="lazy">
+    <figcaption><i>Nota.</i> (1) La nota guardada. (2) «Exportar a Documentos». Captura propia, 2 de noviembre de 2026.</figcaption>
+  </figure>
+  <figure>
+    <p class="fig-num">Figura 16</p>
+    <p class="fig-tit">En el documento, las citas se vuelven números sueltos</p>
+    <img src="img/nb-doc-exportado.webp" alt="Documento de Google con la respuesta exportada: las citas aparecen como números sueltos sin enlace al pasaje." width="1536" height="639" loading="lazy">
+    <figcaption><i>Nota.</i> (1) y (2) «…alto riesgo 1.», «…en Chile 1, 2.»: los números ya no llevan a ningún pasaje. Captura propia, 2 de noviembre de 2026.</figcaption>
+  </figure>
+</div>
+<div class="real"><b>Lo que pasó de verdad</b>Al exportar, las citas pierden el enlace. Si el artículo no está escrito en la respuesta, se pierde en el camino. Por eso las reglas del paso 4 piden «artículo e inciso de cada afirmación»: así el dato viaja dentro del texto.</div>
+
+<!-- PASO 10 -->
+<div class="paso-cab" id="paso-10"><span class="num">10</span><span class="n">Paso 10</span><h2>Redactar con Claude: el método de las dos llaves</h2></div>
+<p class="objetivo"><b>Objetivo:</b> convertir la nota verificada en una minuta, sin agregar nada que no esté respaldado.</p>
+<p>Cada herramienta hace lo que mejor sabe. Claude busca, ordena, redacta y critica. Gemini Notebook responde desde tus fuentes y cita. Ninguna abre la puerta sola: <b>tú eliges las fuentes, abres cada cita y firmas</b>.</p>
+<figure class="diagrama">
+  <p class="fig-num">Figura 17</p>
+  <p class="fig-tit">El método de las dos llaves</p>
+  <svg viewBox="0 0 760 250" role="img" aria-label="Diagrama del método: Claude busca normas oficiales; tú descargas los PDF; Gemini Notebook responde con citas y deja una nota; la nota se exporta a Documentos; Claude redacta y marca VERIFICAR; tú compruebas en la fuente oficial y firmas.">
+    <rect class="caja-a" x="10" y="30" width="160" height="80" rx="10"/><text class="txa" x="24" y="56">CLAUDE</text><text class="tx2" x="24" y="78">busca normas</text><text class="tx2" x="24" y="96">oficiales y enlaces</text>
+    <path class="lin-a" d="M170 70 H210"/>
+    <rect class="caja-w" x="210" y="30" width="140" height="80" rx="10"/><text class="txa" x="224" y="56" style="fill:var(--aviso)">TÚ</text><text class="tx2" x="224" y="78">descargas los PDF</text><text class="tx2" x="224" y="96">oficiales</text>
+    <path class="lin-a" d="M350 70 H390"/>
+    <rect class="caja-a" x="390" y="30" width="170" height="80" rx="10"/><text class="txa" x="404" y="56">GEMINI NOTEBOOK</text><text class="tx2" x="404" y="78">responde con citas</text><text class="tx2" x="404" y="96">y deja una nota</text>
+    <path class="lin-a" d="M560 70 H600"/>
+    <rect class="caja-d" x="600" y="30" width="150" height="80" rx="10"/><text class="tx" x="614" y="60">Nota → Docs</text><text class="tx2" x="614" y="82">con el artículo</text><text class="tx2" x="614" y="98">escrito</text>
+    <path class="lin-a" d="M675 110 V150 H560"/>
+    <rect class="caja-a" x="390" y="140" width="170" height="80" rx="10"/><text class="txa" x="404" y="166">CLAUDE</text><text class="tx2" x="404" y="188">redacta y marca</text><text class="tx2" x="404" y="206">[VERIFICAR]</text>
+    <path class="lin-a" d="M390 180 H350"/>
+    <rect class="caja-w" x="170" y="140" width="180" height="80" rx="10"/><text class="txa" x="184" y="166" style="fill:var(--aviso)">TÚ</text><text class="tx2" x="184" y="188">compruebas en la</text><text class="tx2" x="184" y="206">fuente oficial y firmas</text>
+  </svg>
+  <figcaption><i>Nota.</i> Elaboración propia. Las dos llaves son Claude y Gemini Notebook; la persona es la que abre la puerta.</figcaption>
+</figure>
+<ol class="pasos">
+  <li>En Claude, pulsa el botón «+» → «Conectores» y activa <b>Google Drive</b> (Figura 18). Si no aparece en tu plan, copia el texto de la nota y pégalo en el chat: el método funciona igual.</li>
+  <li>Escribe el encargo del recuadro, con el nombre de tu documento.</li>
+  <li>Revisa lo que marcó con [VERIFICAR] y compruébalo en la fuente oficial (Figuras 19 y 20).</li>
+</ol>
+<figure>
+  <p class="fig-num">Figura 18</p>
+  <p class="fig-tit">Activar el conector de Google Drive en Claude</p>
+  <img src="img/cl-conectores.webp" alt="Menú de Claude con la opción Conectores abierta y Google Drive activado." width="660" height="480" loading="lazy" style="max-width:520px;margin:0 auto">
+  <figcaption><i>Nota.</i> (1) «+» → «Conectores». (2) Google Drive activado. Captura propia en claude.ai, 2 de noviembre de 2026.</figcaption>
+</figure>
+<div class="prompt">
+  <div class="prompt-cab"><span>Encargo para Claude</span><button type="button" data-copiar>Copiar</button></div>
+<pre>Busca en mi Google Drive el documento «[nombre de tu nota]» (lo exporté desde Gemini Notebook). Con SOLO lo que dice ese documento, redacta una minuta de cinco líneas para un cliente: ¿hay en Chile una ley de IA vigente y qué norma rige hoy los datos personales que procesa un sistema de IA? Reglas: no agregues nada que no esté en el documento; marca con [VERIFICAR] cada dato que el documento no respalde con un artículo; al final, lista lo que debo comprobar en la fuente oficial.</pre>
+</div>
+<div class="par">
+  <figure>
+    <p class="fig-num">Figura 19</p>
+    <p class="fig-tit">Claude lee la nota y advierte el problema de las citas</p>
+    <img src="img/cl-lee-drive.webp" alt="Chat de Claude: usa Google Drive, encuentra la nota y advierte que el documento no cita artículos; los números son referencias a las fuentes del cuaderno." width="820" height="500" loading="lazy">
+    <figcaption><i>Nota.</i> (1) El encargo. (2) Claude usó Google Drive. (3) «Los números 1–8 que contiene son referencias a las fuentes del cuaderno, no a artículos de ley». Captura propia en claude.ai, 2 de noviembre de 2026.</figcaption>
+  </figure>
+  <figure>
+    <p class="fig-num">Figura 20</p>
+    <p class="fig-tit">La minuta, con cada dato sin artículo marcado</p>
+    <img src="img/cl-minuta-verificar.webp" alt="Minuta de cinco puntos redactada por Claude con marcas VERIFICAR y una lista de lo que hay que comprobar en la fuente oficial." width="760" height="520" loading="lazy">
+    <figcaption><i>Nota.</i> (1) Distingue «no consta en las fuentes» de «no existe». (2) Marca [VERIFICAR] lo que no tiene artículo. (3) Deja la lista de comprobaciones. Captura propia en claude.ai, 2 de noviembre de 2026.</figcaption>
+  </figure>
+</div>
+<div class="simple"><b>En simple:</b> Claude no sabe más que la nota, y eso es lo que queremos. Su trabajo aquí es redactar bien y avisarte de lo que falta. El tuyo, comprobar cada [VERIFICAR] en LeyChile, el Senado o EUR-Lex.</div>
+<p>Si tienes un plan de pago, también puedes empezar el método por Claude, con su función «Investigación», para que te proponga las fuentes oficiales:</p>
+<div class="prompt">
+  <div class="prompt-cab"><span>Encargo para buscar fuentes (opcional)</span><button type="button" data-copiar>Copiar</button></div>
+<pre>Necesito las fuentes oficiales y vigentes sobre [tema] en Chile. Dame solo normas, proyectos de ley y documentos de organismos públicos, con su enlace oficial (LeyChile, Diario Oficial, Senado, Cámara, Poder Judicial). Indica para cada una si está vigente, con vigencia diferida o en tramitación. No resumas su contenido: solo la lista.</pre>
+</div>
+
+<!-- PASO 11 -->
+<div class="paso-cab" id="paso-11"><span class="num">11</span><span class="n">Paso 11 · Opcional</span><h2>Una receta para Claude: «fuentes primero»</h2></div>
+<p class="objetivo"><b>Objetivo:</b> no tener que repetir las reglas cada vez.</p>
+<p>Una <i>skill</i> (receta) guarda las reglas del método para que Claude las aplique cuando le pidas redactar «solo con las fuentes»: citar artículo e inciso, marcar [VERIFICAR], distinguir «no consta» de «no existe», vigente de proyecto, y Chile de otros países.</p>
+<a class="descarga" href="fuentes-primero.zip" download>⬇ Descargar la receta «fuentes primero» (ZIP)</a>
+<ol class="pasos">
+  <li>En Claude, activa «Crear y editar archivos» en la configuración.</li>
+  <li>Ve a Personalización → Skills → «Agregar» → «Subir Skill» y elige el ZIP (Figura 21).</li>
+</ol>
+<figure>
+  <p class="fig-num">Figura 21</p>
+  <p class="fig-tit">Subir una receta a Claude</p>
+  <img src="img/cl-subir-skill.webp" alt="Página de Skills de Claude con el menú Agregar abierto y las opciones Subir Skill, Crear una Skill y Crear con Claude." width="1000" height="400" loading="lazy">
+  <figcaption><i>Nota.</i> (1) Skills. (2) «Agregar» → «Subir Skill». Captura propia en claude.ai, 2 de noviembre de 2026.</figcaption>
+</figure>
+
+<!-- MCP -->
+<h2 class="sec" id="mcp"><span class="n">16 · Para quien quiera ir más lejos</span>La ruta avanzada: conectar Claude y el cuaderno con MCP</h2>
+<p>Hay tres maneras de pasar información entre las dos herramientas. Para la mayoría, las dos primeras bastan.</p>
+<div class="rutas">
+  <div class="ruta"><span class="nivel">Básica</span><b>Copiar y pegar</b>Copias la respuesta (con sus artículos) y la pegas en Claude.<ul><li>Sin configurar nada</li><li>Funciona en cualquier plan</li></ul></div>
+  <div class="ruta"><span class="nivel">Recomendada</span><b>Nota → Docs → Drive</b>La ruta de esta guía: exportas la nota y Claude la lee con su conector.<ul><li>Funciones oficiales de ambas empresas</li><li>Queda una copia que puedes revisar</li></ul></div>
+  <div class="ruta riesgo"><span class="nivel">Avanzada · con riesgos</span><b>Servidor MCP comunitario</b>Claude Code o Claude Desktop consultan el cuaderno directamente.<ul><li>No es de Google: lo mantiene una persona</li><li>Guarda en tu computador el acceso a tu cuenta</li></ul></div>
+</div>
+<p>MCP es un estándar abierto que Anthropic presentó en noviembre de 2024 y que desde diciembre de 2025 administra una fundación de la Linux Foundation. Permite que Claude «enchufe» herramientas externas. Google <b>no</b> ofrece un conector oficial para los cuadernos personales. Uno de los más usados es comunitario, <code>gemini-notebook-mcp-cli</code> (licencia MIT, versión 0.15.9 del 2 de noviembre de 2026): se instala desde la terminal, inicia sesión en tu cuenta de Google y guarda en tu computador las «cookies» de esa sesión, que duran unas semanas.</p>
+<div class="alerta"><b>Por qué no la recomendamos para trabajo profesional.</b> Su propio autor advierte que usa interfaces de Google no documentadas que pueden no ajustarse a sus términos de servicio. Los proyectos anteriores más conocidos se archivaron en septiembre de 2026. Si quieres probarla, usa una cuenta de Google de prueba y nunca documentos de clientes.</div>
+
+<!-- USOS -->
+<h2 class="sec" id="usos"><span class="n">17 · Aplicaciones</span>Ideas para estudiantes y para abogados</h2>
+<div class="publicos">
+  <div class="publico"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-5 9 5-9 5zM7 11v5c3 2 7 2 10 0v-5"/></svg>Si estudias Derecho</h4><ul>
+    <li><b>Un cuaderno por ramo:</b> el programa, las normas y los fallos que entran en la prueba.</li>
+    <li><b>Examen de grado:</b> tarjetas y cuestionarios de Studio desde los códigos oficiales; corrige con la fuente, no con la memoria.</li>
+    <li><b>Fichas de fallos:</b> pide hechos, decisión y considerandos, cada uno con su cita.</li>
+    <li><b>Tesis o memoria:</b> úsalo para encontrar el pasaje; cita siempre la fuente primaria, nunca al cuaderno.</li>
+    <li><b>Mientras aprendes,</b> intenta responder tú primero y usa la herramienta para corregirte.</li>
+  </ul></div>
+  <div class="publico"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M5 8h14M7 8l-3 6h6zM17 8l-3 6h6z"/></svg>Si ejerces</h4><ul>
+    <li><b>Mapa normativo de un cliente:</b> las normas aplicables y su vigencia, con artículo e inciso.</li>
+    <li><b>Minuta o informe:</b> el método de las dos llaves, con cada [VERIFICAR] resuelto antes de enviar.</li>
+    <li><b>Revisar el escrito de la contraparte:</b> sus citas, contra la fuente oficial.</li>
+    <li><b>Contradicciones en una causa:</b> pide comparar declaraciones o documentos, y verifica cada una en la carpeta.</li>
+    <li><b>Documentos del cliente:</b> solo anonimizados, o en una cuenta institucional con garantías y con su consentimiento informado.</li>
+  </ul></div>
+</div>
+
+<!-- CONTROL -->
+<h2 class="sec" id="control"><span class="n">18 · Lista de control</span>Antes de usar lo que te dio la IA</h2>
+<div class="tabla chk">
+  <p class="tab-num">Tabla 4</p>
+  <p class="tab-tit">Revisión rápida antes de entregar o firmar</p>
+  <table>
+    <thead><tr><th></th><th>Revisión</th><th>Dónde</th></tr></thead>
+    <tbody>
+      <tr><td><input type="checkbox" aria-label="Hecho"></td><td>Abrí cada fuente y leyó el documento, no un aviso</td><td>Guía de la fuente</td></tr>
+      <tr><td><input type="checkbox" aria-label="Hecho"></td><td>Todas las fuentes son oficiales y del mismo tema</td><td>Panel de fuentes</td></tr>
+      <tr><td><input type="checkbox" aria-label="Hecho"></td><td>Hice la pregunta trampa y respondió «No consta»</td><td>Chat</td></tr>
+      <tr><td><input type="checkbox" aria-label="Hecho"></td><td>Abrí cada cita y la comparé palabra por palabra</td><td>Chat</td></tr>
+      <tr><td><input type="checkbox" aria-label="Hecho"></td><td>Distinguí norma vigente, vigencia diferida y proyecto</td><td>Fuente oficial</td></tr>
+      <tr><td><input type="checkbox" aria-label="Hecho"></td><td>No mezclé normas de otros países con las chilenas</td><td>Fuente oficial</td></tr>
+      <tr><td><input type="checkbox" aria-label="Hecho"></td><td>Resolví cada [VERIFICAR] de Claude</td><td>LeyChile, Senado, EUR-Lex</td></tr>
+      <tr><td><input type="checkbox" aria-label="Hecho"></td><td>No hay datos de clientes que no debían estar</td><td>Todo el trabajo</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ERRORES -->
+<h2 class="sec" id="errores"><span class="n">19 · Ayuda</span>Errores frecuentes</h2>
+<div class="tabla">
+  <p class="tab-num">Tabla 5</p>
+  <p class="tab-tit">Síntomas habituales, causa probable y qué hacer</p>
+  <table>
+    <thead><tr><th>Lo que ves</th><th>Causa probable</th><th>Qué hacer</th></tr></thead>
+    <tbody>
+      <tr><td>El resumen del cuaderno habla de «retrasos» o de un «navegador»</td><td>Una fuente vacía: la página no se dejó leer</td><td>Descarga el PDF oficial y súbelo (paso 2)</td></tr>
+      <tr><td>Responde cosas que no están en tus documentos</td><td>Faltan las reglas, o hay fuentes marcadas que no querías</td><td>Revisa «Configurar chat» y las casillas (pasos 3 y 4)</td></tr>
+      <tr><td>Cita un proyecto como si fuera ley</td><td>Mezcla de fuentes</td><td>Pide que distinga vigente, diferida y proyecto</td></tr>
+      <tr><td>Los números de cita no llevan a nada en el documento</td><td>Se exportó la nota</td><td>Pide el artículo dentro del texto antes de exportar (paso 9)</td></tr>
+      <tr><td>Claude agrega datos que no estaban</td><td>El encargo no limitó las fuentes</td><td>Usa «con SOLO lo que dice ese documento» o la receta</td></tr>
+      <tr><td>Fast Research trajo blogs y prensa</td><td>Todo viene marcado por defecto</td><td>Desmarca e importa solo lo oficial (paso 7)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- DEBERES -->
+<h2 class="sec" id="deberes"><span class="n">20 · Ética profesional</span>Deberes profesionales</h2>
+<p>Usar IA no cambia quién responde por el trabajo. Así lo dicen, en términos coincidentes, las guías más recientes:</p>
+<ul>
+  <li><b>Colegio de Abogados de Chile (julio de 2026).</b> Su guía de sugerencias pide que el abogado verifique personalmente toda cita que provenga de un sistema de IA; ese deber no se cumple con la verificación del propio sistema u otro. También pide cuidar la confidencialidad (ver el recuadro del capítulo 4).</li>
+  <li><b>Academia Judicial (2026).</b> Su guía para juezas y jueces, tras un ejercicio comparativo, describe a NotebookLM como «la herramienta de apoyo más segura para evitar errores de transcripción o interpretación», porque cita la fuente exacta, y advierte que su uso es referencial y bajo responsabilidad de quien lo usa.</li>
+  <li><b>Poder Judicial.</b> Aprobó Copilot Chat como herramienta de IA institucional (oficio circular de agosto de 2026). En octubre de 2026, la Corte Suprema acordó el texto de un futuro auto acordado sobre IA, que todavía no está vigente.</li>
+  <li><b>American Bar Association (2024).</b> Su Opinión 512, de Estados Unidos, resume los deberes de competencia, confidencialidad, comunicación con el cliente, supervisión, veracidad ante el tribunal y honorarios razonables.</li>
+</ul>
+<aside class="margen"><img src="../tutorial/img/eva.webp" alt=""><span><b>EVA</b>Que otra IA revise la cita no cuenta. Ni yo. La verificación es tuya.</span></aside>
+
+<!-- LIMITES -->
+<h2 class="sec" id="limites"><span class="n">21 · Límites</span>Alcance y límites de esta guía</h2>
+<p>Todos los pasos se ejecutaron el 2 de noviembre de 2026 en cuentas reales: Gemini Notebook con interfaz en español y plan de pago, y Claude con su conector de Google Drive. Las capturas muestran esa fecha; los botones cambian seguido, y la versión latinoamericana puede decir «agregar» donde aquí dice «añadir». Si algo no coincide, manda la ayuda oficial citada abajo. No pudimos confirmar si el conector de Drive de Claude está disponible en el plan gratuito: las páginas de Anthropic se contradicen.</p>
+<p>Los datos jurídicos usados como ejemplo (la vigencia de la Ley 21.719, el proyecto de ley de IA y su postergación) son los del 2 de noviembre de 2026 y pueden cambiar. Esta guía enseña un método de trabajo. No es asesoría jurídica ni resuelve si es lícito subir un documento concreto a un servicio externo.</p>
+
+<section class="referencias" id="referencias" aria-labelledby="ref-t">
+<h2 class="sec" id="ref-t"><span class="n">Bibliografía</span>Referencias</h2>
+<p>Academia Judicial de Chile. (2026). <i>Guía sobre inteligencia artificial para juezas y jueces</i> (R. Lillo, E. Ruiz y C. Soto, Autores). <a href="https://ia.academiajudicial.cl/wp-content/uploads/2026/09/Guia-sobre-inteligencia-artificial-para-juezas-y-jueces.pdf">https://ia.academiajudicial.cl/wp-content/uploads/2026/09/Guia-sobre-inteligencia-artificial-para-juezas-y-jueces.pdf</a></p>
+<p>American Bar Association, Standing Committee on Ethics and Professional Responsibility. (2024). <i>Formal opinion 512: Generative artificial intelligence tools</i>. <a href="https://www.americanbar.org/content/dam/aba/administrative/professional_responsibility/ethics-opinions/aba-formal-opinion-512.pdf">https://www.americanbar.org/content/dam/aba/administrative/professional_responsibility/ethics-opinions/aba-formal-opinion-512.pdf</a></p>
+<p>Anthropic. (2024, 25 de noviembre). <i>Introducing the Model Context Protocol</i>. <a href="https://www.anthropic.com/news/model-context-protocol">https://www.anthropic.com/news/model-context-protocol</a></p>
+<p>Anthropic. (s.f.). <i>Use Google Workspace connectors</i>. Claude Help Center. Recuperado el 2 de noviembre de 2026, de <a href="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors">https://support.claude.com/en/articles/10166901-use-google-workspace-connectors</a></p>
+<p>Biblioteca del Congreso Nacional de Chile. (s.f.). <i>Ley 21.719, que regula la protección y el tratamiento de los datos personales y crea la Agencia de Protección de Datos Personales</i>. LeyChile. Recuperado el 2 de noviembre de 2026, de <a href="https://www.bcn.cl/leychile/navegar?idNorma=1209272">https://www.bcn.cl/leychile/navegar?idNorma=1209272</a></p>
+<p>Charlotin, D. (2026). <i>AI hallucination cases</i> [Base de datos]. Recuperado el 2 de noviembre de 2026, de <a href="https://www.damiencharlotin.com/hallucinations/">https://www.damiencharlotin.com/hallucinations/</a></p>
+<p>Colegio de Abogados de Chile. (2026). <i>Guía de sugerencias para el uso responsable de inteligencia artificial en el ejercicio profesional</i>. <a href="https://colegioabogados.cl/wp-content/uploads/2026/07/Gu%C3%ADa-sobre-Uso-de-Sistemas-de-IA-por-Abogados-julio-2026.pdf">https://colegioabogados.cl/wp-content/uploads/2026/07/Gu%C3%ADa-sobre-Uso-de-Sistemas-de-IA-por-Abogados-julio-2026.pdf</a></p>
+<p>Corte Suprema de Chile. (2026, 22 de abril). <i>Rol 23.322-2025</i>. Poder Judicial. <a href="https://www.pjud.cl/prensa-y-comunicaciones/getRulingNew/77673">https://www.pjud.cl/prensa-y-comunicaciones/getRulingNew/77673</a></p>
+<p>Dahl, M., Magesh, V., Suzgun, M. y Ho, D. E. (2024). Large legal fictions: Profiling legal hallucinations in large language models. <i>Journal of Legal Analysis, 16</i>(1), 64–93. <a href="https://doi.org/10.1093/jla/laae003">https://doi.org/10.1093/jla/laae003</a></p>
+<p>Google. (2026, 16 de julio). <i>NotebookLM is now Gemini Notebook</i>. The Keyword. <a href="https://blog.google/innovation-and-ai/products/gemini-notebook/notebooklm-gemini-notebook/">https://blog.google/innovation-and-ai/products/gemini-notebook/notebooklm-gemini-notebook/</a></p>
+<p>Google. (s.f.-a). <i>Cómo agregar o descubrir fuentes nuevas para tu cuaderno</i>. Ayuda de Gemini Notebook. Recuperado el 2 de noviembre de 2026, de <a href="https://support.google.com/gemininotebook/answer/16215270?hl=es-419">https://support.google.com/gemininotebook/answer/16215270?hl=es-419</a></p>
+<p>Google. (s.f.-b). <i>Información sobre Gemini Notebook</i>. Ayuda de Gemini Notebook. Recuperado el 2 de noviembre de 2026, de <a href="https://support.google.com/gemininotebook/answer/16164461?hl=es">https://support.google.com/gemininotebook/answer/16164461?hl=es</a></p>
+<p>Hagar, N., Agustianto, W. y Diakopoulos, N. (2025). <i>Not wrong, but untrue: LLM overconfidence in document-based queries</i> [Prepublicación]. arXiv. <a href="https://doi.org/10.48550/arXiv.2509.25498">https://doi.org/10.48550/arXiv.2509.25498</a></p>
+<p>jacob-bd. (2026). <i>gemini-notebook-mcp-cli</i> (Versión 0.15.9) [Software]. GitHub. <a href="https://github.com/jacob-bd/gemini-notebook-mcp-cli">https://github.com/jacob-bd/gemini-notebook-mcp-cli</a></p>
+<p>Lewis, P., Perez, E., Piktus, A., Petroni, F., Karpukhin, V., Goyal, N., Küttler, H., Lewis, M., Yih, W., Rocktäschel, T., Riedel, S. y Kiela, D. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. <i>Advances in Neural Information Processing Systems, 33</i>, 9459–9474. <a href="https://arxiv.org/abs/2005.11401">https://arxiv.org/abs/2005.11401</a></p>
+<p>Liu, N. F., Lin, K., Hewitt, J., Paranjape, A., Bevilacqua, M., Petroni, F. y Liang, P. (2024). Lost in the middle: How language models use long contexts. <i>Transactions of the Association for Computational Linguistics, 12</i>, 157–173. <a href="https://doi.org/10.1162/tacl_a_00638">https://doi.org/10.1162/tacl_a_00638</a></p>
+<p>Magesh, V., Surani, F., Dahl, M., Suzgun, M., Manning, C. D. y Ho, D. E. (2025). Hallucination-free? Assessing the reliability of leading AI legal research tools. <i>Journal of Empirical Legal Studies, 22</i>(2), 216–242. <a href="https://doi.org/10.1111/jels.12413">https://doi.org/10.1111/jels.12413</a></p>
+<p><i>Mata v. Avianca, Inc.</i>, No. 1:22-cv-01461 (PKC) (S.D.N.Y. 22 de junio de 2023). <a href="https://www.courtlistener.com/docket/63107798/mata-v-avianca-inc/">https://www.courtlistener.com/docket/63107798/mata-v-avianca-inc/</a></p>
+<p>Reglamento (UE) 2024/1689 del Parlamento Europeo y del Consejo, de 13 de junio de 2024, por el que se establecen normas armonizadas en materia de inteligencia artificial. (2024). <i>Diario Oficial de la Unión Europea</i>, L 2024/1689. <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">https://eur-lex.europa.eu/eli/reg/2024/1689/oj</a></p>
+</section>
+
+<p class="autoria"><b>Nota de autoría.</b> Esta guía es la versión para egresados y estudiantes del taller «Claude + Gemini Notebook» de EVA ACADEMY. El texto y las figuras se prepararon con asistencia de IA (Claude) el 2 y 3 de noviembre de 2026, a partir de una investigación en tres rondas con verificación independiente; cada dato se contrastó con la fuente citada. Las capturas son propias y se tomaron en cuentas reales, con los datos personales difuminados o recortados; las de LeyChile pertenecen a la Biblioteca del Congreso Nacional y se reproducen con fines educativos. La revisión jurídica está pendiente.</p>
+
+</main>
+
+<footer class="pie">EVA · Escuela de Derecho PUCV · Contenido educativo, no asesoría jurídica · Datos jurídicos al 2 de noviembre de 2026</footer>
+
+<div class="ampliar" hidden role="dialog" aria-label="Figura ampliada"><img alt=""></div>
+<div class="aviso-copia" role="status" aria-live="polite"></div>
+<script src="../tutorial/tutorial.js"></script>
+</body>
+</html>
