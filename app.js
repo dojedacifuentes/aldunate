@@ -1162,3 +1162,4 @@ function entradaHTML() {
 iniciarEva();
 ruta();
 if (!vista0) bienvenida();
+addEventListener('load', () => (window.requestIdleCallback || setTimeout)(calentarImagenes, { timeout: 2500 }), { once: true });

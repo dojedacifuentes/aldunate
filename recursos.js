@@ -68,9 +68,30 @@ const IMG_ALT = {
   'juego-familia': 'Pantalla de inicio de Expediente 1725: el título en letras de píxeles sobre una calle de barrio dibujada en pixel art.',
   'juego-publico': 'Pantalla de inicio de POTESTAS: el título en letras de píxeles frente a una plaza con un edificio de columnas.',
 };
+const TAM_PORTADA = '(max-width: 860px) 100vw, 340px';
+const fuentesPortada = (b) => `${b}-480.webp 480w, ${b}-800.webp 800w`;
 function imgPortada(clave) {
   const b = `img/tarjetas/${clave}`;
-  return `<img src="${b}-800.webp" srcset="${b}-480.webp 480w, ${b}-800.webp 800w" sizes="(max-width: 860px) 100vw, 340px" width="800" height="450" alt="${IMG_ALT[clave]}" loading="lazy" decoding="async">`;
+  return `<img src="${b}-800.webp" srcset="${fuentesPortada(b)}" sizes="${TAM_PORTADA}" width="800" height="450" alt="${IMG_ALT[clave]}" loading="lazy" decoding="async">`;
+}
+/* Cada sección arma sus tarjetas al abrirse, y recién ahí el navegador pedía las imágenes. Con el sitio ya quieto se bajan
+   de a tres y con baja prioridad, con los mismos srcset y sizes de imgPortada para que caigan en la misma caché.
+   En el teléfono, sólo los cursos (ahí cada imagen es la grande); con ahorro de datos, nada. */
+function calentarImagenes() {
+  const red = navigator.connection;
+  if (red && (red.saveData || /2g/.test(red.effectiveType))) return;
+  const telefono = matchMedia('(max-width: 860px)').matches;
+  const claves = Object.keys(IMG_ALT).filter((k) => !telefono || k.startsWith('curso-'));
+  const cola = claves.map((k) => { const b = `img/tarjetas/${k}`; return { sizes: TAM_PORTADA, srcset: fuentesPortada(b), src: `${b}-800.webp` }; });
+  cola.unshift({ src: 'img/tarjetas/eva-academy-360.webp' }, { src: 'img/tarjetas/automatizacion-800.webp' });   // lo primero que se ve en «Mis cursos»
+  if (!telefono) CURSOS.forEach((_, k) => cola.push({ src: `img/tarjetas/curso-${k + 1}-800.webp` }));   // la ficha del curso usa la grande
+  const siguiente = () => {
+    const datos = cola.shift(); if (!datos) return;
+    const im = new Image();
+    im.fetchPriority = 'low'; im.onload = im.onerror = siguiente;
+    Object.assign(im, datos);
+  };
+  for (let i = 0; i < 3; i++) siguiente();
 }
 function portada(k, color, num, motivo = MOTIVOS[k], img = '') {
   if (img) return `<div class="portada con-img" style="--c:${color}">${imgPortada(img)}<span class="p-num mono">${num}</span></div>`;
