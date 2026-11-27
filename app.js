@@ -993,7 +993,7 @@ function montar(id, piezas = PIEZAS) {
   const v = $('#vista');
   clearInterval(reloj);
   v.innerHTML = `<div class="vista vista-${id}">${html()}</div>`;
-  EF.llegar(v, piezas);
+  EF.llegar(v, piezas, 'seccion');
   const menu = MENU_DE[id] || id;
   document.querySelectorAll('[data-v]').forEach((a) => (a.dataset.v === menu ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
   moverIndicador();

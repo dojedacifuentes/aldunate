@@ -111,8 +111,20 @@
 
   /* ---------- Movimiento ---------- */
   // Las piezas de una pantalla entran subiendo, una tras otra (40 ms entre cada una, máximo 14).
-  function llegar(caja, sel) {
+  // Al cambiar de sección (modo 'seccion') la entrada es corta, porque se ve muchas veces al día: las seis primeras
+  // piezas salen con pausas que se acortan, el resto llega con la última y todo queda quieto en unos 300 ms.
+  const PAUSAS = [0, 30, 55, 75, 90, 100];
+  function llegar(caja, sel, modo) {
     if (quieto) return;
+    if (modo === 'seccion') {
+      // Se anima «translate» y no «transform», para no pisar el transform propio de algunas piezas.
+      [...caja.querySelectorAll(sel)].forEach((el, i) => {
+        const d = PAUSAS[Math.min(i, PAUSAS.length - 1)];
+        el.animate([{ translate: '0 8px' }, { translate: '0 0' }], { duration: 200, easing: 'cubic-bezier(.23, 1, .32, 1)', delay: d, fill: 'backwards' });
+        el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150, easing: 'ease-out', delay: d, fill: 'backwards' });
+      });
+      return;
+    }
     [...caja.querySelectorAll(sel)].slice(0, 14).forEach((el, i) => {
       const d = i * 40;
       el.animate([{ transform: 'translateY(16px) scale(.985)' }, { transform: 'none' }], { duration: M.normal.ms, easing: M.normal.curva, delay: d, fill: 'backwards' });

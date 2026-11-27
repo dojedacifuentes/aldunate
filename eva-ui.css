@@ -4,7 +4,7 @@
   -webkit-backdrop-filter: blur(16px) saturate(160%); backdrop-filter: blur(16px) saturate(160%);
   box-shadow: 0 10px 28px rgba(3,5,13,.28), inset 0 1px 0 rgba(255,255,255,.12);
   transition: transform var(--m-agil-t) var(--m-agil), box-shadow .2s; }
-.eva-fab:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(3,5,13,.34), inset 0 1px 0 rgba(255,255,255,.12); }
+@media (hover: hover) and (pointer: fine) { .eva-fab:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(3,5,13,.34), inset 0 1px 0 rgba(255,255,255,.12); } }
 .eva-fab:active { transform: scale(.95); }
 .eva-fab:focus-visible { outline: 2px solid #5a60ff; outline-offset: 3px; }
 .eva-fab .eva-iso { position: relative; width: 26px; height: 46px; overflow: visible; filter: drop-shadow(0 0 3px rgba(90,96,255,.9)) drop-shadow(0 0 7px rgba(162,77,255,.45)); }
@@ -17,7 +17,8 @@
 .eva-tip { position: absolute; right: calc(100% + 12px); top: 50%; transform: translate(6px, -50%); white-space: nowrap; pointer-events: none;
   background: var(--panel); color: var(--texto); border: 1px solid var(--borde); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 600;
   box-shadow: 0 8px 20px rgba(0,0,0,.12); opacity: 0; transition: opacity .15s, transform var(--m-agil-t) var(--m-agil); }
-.eva-fab:hover .eva-tip, .eva-fab:focus-visible .eva-tip { opacity: 1; transform: translate(0, -50%); }
+@media (hover: hover) and (pointer: fine) { .eva-fab:hover .eva-tip { opacity: 1; transform: translate(0, -50%); } }
+.eva-fab:focus-visible .eva-tip { opacity: 1; transform: translate(0, -50%); }
 .eva-fab.abierto .eva-tip { opacity: 0; }
 :root[data-tema="claro"] .eva-tip { background: rgba(255,252,246,.97); }
 
@@ -34,7 +35,7 @@
 .eva-mini { width: 36px; height: 36px; border-radius: 10px; background: #03050d; display: grid; place-items: center; flex: none; }
 .eva-mini .eva-iso { width: 14px; height: 26px; }
 .eva-cerrar { margin-left: auto; width: 34px; height: 34px; border-radius: 50%; border: 0; background: none; font-size: 22px; color: var(--texto-2); }
-.eva-cerrar:hover { background: var(--suave); }
+@media (hover: hover) and (pointer: fine) { .eva-cerrar:hover { background: var(--suave); } }
 .eva-cuerpo { padding: 14px 16px 6px; }
 .eva-msj { margin: 0 0 10px; padding: 12px 14px; border-radius: 4px 14px 14px 14px; background: var(--suave); border: 1px solid var(--borde); font-size: 14px; }
 .eva-ctx { margin: 0 0 12px; font-size: 13px; color: var(--texto-2); padding-left: 12px; border-left: 2px solid #5a60ff; }
@@ -42,7 +43,7 @@
 .eva-acc { display: grid; gap: 6px; }
 .eva-acc button { display: flex; align-items: center; justify-content: space-between; gap: 10px; text-align: left; padding: 10px 12px; border-radius: 10px;
   border: 1px solid var(--borde); background: var(--panel); font-size: 14px; font-weight: 500; transition: border-color .15s, transform var(--m-agil-t) var(--m-agil); }
-.eva-acc button:hover { border-color: var(--rojo); }
+@media (hover: hover) and (pointer: fine) { .eva-acc button:hover { border-color: var(--rojo); } }
 .eva-acc button:active { transform: scale(.98); }
 .eva-acc button span { color: var(--texto-2); font-size: 18px; line-height: 1; }
 .eva-acc .eva-destacada { background: var(--rojo-suave); border-color: transparent; color: var(--rojo); font-weight: 600; }
@@ -75,10 +76,10 @@
 .eva-sub { margin: 14px 0 6px; font-size: 10px; letter-spacing: .08em; color: var(--texto-2); }
 .eva-preg { display: flex; flex-wrap: wrap; gap: 6px; }
 .eva-preg button { border: 1px solid var(--borde); background: none; border-radius: 999px; padding: 6px 12px; font-size: 13px; text-align: left; color: var(--texto); }
-.eva-preg button:hover { border-color: #5a60ff; }
+@media (hover: hover) and (pointer: fine) { .eva-preg button:hover { border-color: #5a60ff; } }
 .eva-mapa { display: grid; gap: 6px; }
 .eva-mapa button { display: flex; align-items: center; gap: 12px; text-align: left; padding: 10px 12px; border: 1px solid var(--borde); border-radius: 12px; background: var(--panel); color: var(--texto); }
-.eva-mapa button:hover { border-color: var(--rojo); }
+@media (hover: hover) and (pointer: fine) { .eva-mapa button:hover { border-color: var(--rojo); } }
 .eva-mapa button[aria-current="true"] { background: var(--rojo-suave); border-color: transparent; }
 .eva-mapa svg { color: var(--rojo); flex: none; }
 .eva-mapa b { display: block; font-size: 14px; } .eva-mapa small { display: block; font-size: 12px; color: var(--texto-2); }
